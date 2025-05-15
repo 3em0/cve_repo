@@ -23,7 +23,7 @@ Host: dem0.com
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
 Accept: */*
 ```
-
+![alt text](../dists/phpwcms2.png)
 Example of vulnerable code:
 ```php
 $img_file = (isset($_GET['imgfile'])) ? trim($_GET['imgfile']) : 'img/leer.gif';

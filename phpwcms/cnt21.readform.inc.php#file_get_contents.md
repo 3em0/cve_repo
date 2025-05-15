@@ -33,3 +33,7 @@ csrf_token_name=csrf6825cb2230f394.61788130&csrf_token_value=08854df019d6a36b5c0
 
 ## 0x03 Repair suggestions
 To prevent the exploitation of this vulnerability, it is important to implement proper input validation for the 'cpage_custom' parameter. The application should restrict the protocols that can be used with file_get_contents() to only allow safe values, explicitly blocking dangerous protocols like 'phar://', 'php://', and other potentially malicious stream wrappers. Additionally, implementing a whitelist approach that only allows specific protocols (such as 'http://' and 'https://') would provide stronger protection. Proper sanitization and validation of user input are critical for mitigating this risk.
+
+This vulnerability can also lead to arbitrary file read issues. See the reference link below:
+
+[https://www.synacktiv.com/publications/php-filter-chains-file-read-from-error-based-oracle](https://www.synacktiv.com/publications/php-filter-chains-file-read-from-error-based-oracle)

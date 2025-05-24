@@ -12,7 +12,7 @@ php version: 7.x
 The phpwcms Content Management System is vulnerable to PHP Object Injection and Local File Disclosure through the image_resized.php script. The vulnerability exists because user input from the 'imgfile' GET parameter is passed to the PHP getimagesize() function without proper validation. While the script attempts to sanitize the input by removing 'http://' and 'https://' prefixes, it fails to handle other protocols like 'phar://' or PHP filter wrappers, allowing attackers to bypass this protection.
 
 This vulnerability allows an attacker to:
-1. Trigger PHP Object Injection through PHAR deserialization (only when a POP chain exists in the application)
+1. Trigger PHP Object Injection through PHAR deserialization, which can lead to code execution
 2. Read local files through PHP filter chains using error-based oracle techniques, as described in [PHP filter chains for file read from error-based oracle](https://www.synacktiv.com/publications/php-filter-chains-file-read-from-error-based-oracle)
 
 The vulnerability is particularly dangerous because it's exposed without authentication requirements, making it accessible to unauthenticated attackers.

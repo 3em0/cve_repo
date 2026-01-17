@@ -12,8 +12,6 @@ A critical Insecure Direct Object Reference (IDOR) vulnerability exists in HotCR
 | **Product** | HotCRP Conference Review Software |
 | **Affected Versions** | c8a7b0655753ab3ace1bc4c72c64b93e80594e8d  |
 | **Vulnerability Type** | CWE-639: Authorization Bypass Through User-Controlled Key |
-| **CVSS v3.1 Score** | 6.5 (Medium) |
-| **CVSS v3.1 Vector** | AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N |
 
 ## Description
 

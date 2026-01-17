@@ -8,7 +8,7 @@ A critical Insecure Direct Object Reference (IDOR) vulnerability exists in HotCR
 
 | Field | Value |
 |-------|-------|
-| **Vendor** | HotCRP (Eddie Kohler) |
+| **Vendor** | HotCRP (Eddie Kohler)：https://github.com/kohler/hotcrp |
 | **Product** | HotCRP Conference Review Software |
 | **Affected Versions** | c8a7b0655753ab3ace1bc4c72c64b93e80594e8d  |
 | **Vulnerability Type** | CWE-639: Authorization Bypass Through User-Controlled Key |

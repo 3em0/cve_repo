@@ -135,7 +135,6 @@ If unable to upgrade immediately, administrators can:
 ## References
 
 - HotCRP GitHub Repository: https://github.com/kohler/hotcrp
-- Fix Commit: https://github.com/kohler/hotcrp/commit/ceacd5f1476458792c44c6a993670f02c984b4a0
 - CWE-639: https://cwe.mitre.org/data/definitions/639.html
 - OWASP IDOR: https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/05-Authorization_Testing/04-Testing_for_Insecure_Direct_Object_References
 

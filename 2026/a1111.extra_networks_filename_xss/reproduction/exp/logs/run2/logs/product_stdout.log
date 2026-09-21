@@ -1,0 +1,122 @@
+=== phase neg ===
+
+################################################################
+[1m[32mInstall script for stable-diffusion + Web UI
+[1m[34mTested on Debian 11 (Bullseye), Fedora 34+ and openSUSE Leap 15.4 or newer.[0m
+################################################################
+
+################################################################
+Running on [1m[32mroot[0m user
+################################################################
+
+################################################################
+Repo already cloned, using it as install directory
+################################################################
+
+################################################################
+python venv already activate or run without venv: 
+################################################################
+
+################################################################
+Launching launch.py...
+################################################################
+glibc version is 2.36
+[1m[31mCannot locate TCMalloc. Do you have tcmalloc or google-perftool installed on your system? (improves CPU memory usage)[0m
+Launching Web UI with arguments: -f --api --skip-prepare-environment --skip-torch-cuda-test --skip-version-check --no-half --use-cpu all --no-download-sd-model --skip-load-model-at-start --port 7860 --lora-dir /app/webui/models/Lora_neg
+/usr/local/lib/python3.10/site-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+no module 'xformers'. Processing without...
+no module 'xformers'. Processing without...
+No module 'xformers'. Proceeding without it.
+Warning: caught exception 'Torch not compiled with CUDA enabled', memory monitor disabled
+Running on local URL:  http://127.0.0.1:7860
+
+To create a public link, set `share=True` in `launch()`.
+Startup time: 5.8s (import torch: 2.9s, import gradio: 0.6s, setup paths: 0.4s, initialize shared: 0.2s, other imports: 0.3s, load scripts: 0.5s, create ui: 0.3s, gradio launch: 0.4s, add APIs: 0.1s).
+loading stable diffusion model: FileNotFoundError
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+  File "/usr/local/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/local/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 807, in run
+    result = context.run(func, *args)
+  File "/usr/local/lib/python3.10/site-packages/gradio/utils.py", line 707, in wrapper
+    response = f(*args, **kwargs)
+  File "/app/webui/modules/ui.py", line 1165, in <lambda>
+    update_image_cfg_scale_visibility = lambda: gr.update(visible=shared.sd_model and shared.sd_model.cond_stage_key == "edit")
+  File "/app/webui/modules/shared_items.py", line 175, in sd_model
+    return modules.sd_models.model_data.get_sd_model()
+  File "/app/webui/modules/sd_models.py", line 693, in get_sd_model
+    load_model()
+  File "/app/webui/modules/sd_models.py", line 788, in load_model
+    checkpoint_info = checkpoint_info or select_checkpoint()
+  File "/app/webui/modules/sd_models.py", line 234, in select_checkpoint
+    raise FileNotFoundError(error_message)
+FileNotFoundError: No checkpoints found. When searching for checkpoints, looked at:
+ - file /app/webui/model.ckpt
+ - directory /app/webui/models/Stable-diffusionCan't run without a checkpoint. Find and place a .ckpt or .safetensors file into any of those locations.
+
+
+Stable diffusion model failed to load
+=== phase pos ===
+
+################################################################
+[1m[32mInstall script for stable-diffusion + Web UI
+[1m[34mTested on Debian 11 (Bullseye), Fedora 34+ and openSUSE Leap 15.4 or newer.[0m
+################################################################
+
+################################################################
+Running on [1m[32mroot[0m user
+################################################################
+
+################################################################
+Repo already cloned, using it as install directory
+################################################################
+
+################################################################
+python venv already activate or run without venv: 
+################################################################
+
+################################################################
+Launching launch.py...
+################################################################
+glibc version is 2.36
+[1m[31mCannot locate TCMalloc. Do you have tcmalloc or google-perftool installed on your system? (improves CPU memory usage)[0m
+Launching Web UI with arguments: -f --api --skip-prepare-environment --skip-torch-cuda-test --skip-version-check --no-half --use-cpu all --no-download-sd-model --skip-load-model-at-start --port 7860 --lora-dir /app/webui/models/Lora_pos
+/usr/local/lib/python3.10/site-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+no module 'xformers'. Processing without...
+no module 'xformers'. Processing without...
+No module 'xformers'. Proceeding without it.
+Warning: caught exception 'Torch not compiled with CUDA enabled', memory monitor disabled
+Running on local URL:  http://127.0.0.1:7860
+
+To create a public link, set `share=True` in `launch()`.
+Startup time: 5.5s (import torch: 2.8s, import gradio: 0.6s, setup paths: 0.4s, initialize shared: 0.2s, other imports: 0.3s, load scripts: 0.4s, create ui: 0.2s, gradio launch: 0.4s, add APIs: 0.1s).
+loading stable diffusion model: FileNotFoundError
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.10/threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+  File "/usr/local/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/local/lib/python3.10/site-packages/anyio/_backends/_asyncio.py", line 807, in run
+    result = context.run(func, *args)
+  File "/usr/local/lib/python3.10/site-packages/gradio/utils.py", line 707, in wrapper
+    response = f(*args, **kwargs)
+  File "/app/webui/modules/ui.py", line 1165, in <lambda>
+    update_image_cfg_scale_visibility = lambda: gr.update(visible=shared.sd_model and shared.sd_model.cond_stage_key == "edit")
+  File "/app/webui/modules/shared_items.py", line 175, in sd_model
+    return modules.sd_models.model_data.get_sd_model()
+  File "/app/webui/modules/sd_models.py", line 693, in get_sd_model
+    load_model()
+  File "/app/webui/modules/sd_models.py", line 788, in load_model
+    checkpoint_info = checkpoint_info or select_checkpoint()
+  File "/app/webui/modules/sd_models.py", line 234, in select_checkpoint
+    raise FileNotFoundError(error_message)
+FileNotFoundError: No checkpoints found. When searching for checkpoints, looked at:
+ - file /app/webui/model.ckpt
+ - directory /app/webui/models/Stable-diffusionCan't run without a checkpoint. Find and place a .ckpt or .safetensors file into any of those locations.
+
+
+Stable diffusion model failed to load

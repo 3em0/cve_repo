@@ -1,0 +1,16 @@
+{
+  "dom_milestones": [],
+  "extensions_dir": [
+    "put extensions here.txt"
+  ],
+  "phase": "neg",
+  "product_reachable": true,
+  "stage1": {
+    "content": null,
+    "present": false
+  },
+  "stage2": {
+    "content": null,
+    "present": false
+  }
+}

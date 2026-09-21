@@ -1,0 +1,48 @@
+{
+  "root_key": "a1111.safetensors_yaml_target",
+  "seq": 3,
+  "product": {
+    "repo": "AUTOMATIC1111/stable-diffusion-webui",
+    "version": "v1.10.1",
+    "commit": "82a973c04367123ae98bd9abdf80d9eda9b910e2",
+    "entrypoint": "bash webui.sh -f --api --skip-prepare-environment --skip-torch-cuda-test --skip-version-check --no-half --use-cpu all --no-download-sd-model --skip-load-model-at-start --port 7860",
+    "vendored_dependency_note": "Stability-AI/stablediffusion (the `ldm` package A1111 pins at cf1d67a6fd5ea1aa600c4df58e5b47da45f6bdbf) returns HTTP 404 on GitHub as of 2026-09-20; the exact pinned tree was recovered from Software Heritage swh:1:dir:e950a2c522706eca6ce024985218623a35d2c8e0 and vendored into the image."
+  },
+  "attacker_capability": "one downloaded model package unpacked into models/Stable-diffusion/ : model.safetensors + model.yaml + hubconf.py. No code is run on the victim machine by us; nothing is imported.",
+  "victim_action": "select the checkpoint -- driven through the product's own public HTTP API, POST /sdapi/v1/options {\"sd_model_checkpoint\": \"<title>\"}",
+  "taint_path": [
+    "modules/sd_models.py:332-347 get_checkpoint_state_dict -> read_state_dict -> safetensors.torch.load_file",
+    "modules/sd_models_config.py:117-136 find_checkpoint_config -> find_checkpoint_config_near_filename returns <basename>.yaml (pathname is the only relation checked)",
+    "modules/sd_models.py:809 OmegaConf.load(checkpoint_config)",
+    "modules/sd_models.py:599-602 repair_config injects model.params.use_ema=False",
+    "modules/sd_models.py:766-775 instantiate_from_config: constructor = get_obj_from_str(config['target']); constructor(**params)",
+    "modules/sd_models.py:778-783 get_obj_from_str: importlib.import_module(module) + getattr -- no registry, no allowlist",
+    "torch/hub.py load(source='local') -> _load_local -> _import_module('hubconf', <artifact dir>/hubconf.py) -- top-level module code of an attacker-shipped file runs as the WebUI process"
+  ],
+  "sink_policy": "real_exec_touch",
+  "canary": {
+    "path": "/out/pwned_by_a1111_yaml_target",
+    "content": "MBE2E-CANARY-a1111-yaml-target-v1",
+    "written_by": "top-level code of models/Stable-diffusion/mbe2e_pack/hubconf.py"
+  },
+  "negative_control": {
+    "package": "models/Stable-diffusion/mbe2e_neg/",
+    "difference": "ONLY the sidecar YAML's model.target string (torch.nn.Identity instead of torch.hub.load). The same hubconf.py payload file is present on disk in the negative package.",
+    "expectation": "the sidecar is read (product log prints 'Creating model from config: models/Stable-diffusion/mbe2e_neg/model.yaml') but no canary is written",
+    "selected_first": true
+  },
+  "expected_grade": "E2_product_e2e",
+  "notes": [
+    "repair_config() unconditionally injects use_ema=False, which is why a naive subprocess.run gadget FAILS on the real product path even though it works when instantiate_from_config is called by hand. Any gadget must absorb **kwargs.",
+    "--skip-load-model-at-start is used so the ONLY checkpoint load in the whole run is the one the victim's API call triggers; this removes any ambiguity about when the canary was written.",
+    "Run time is --network none; torch.hub source='local' means no network is needed at any point."
+  ],
+  "victim_preconditions": [
+    {
+      "step": "运行 AUTOMATIC1111/stable-diffusion-webui @ 82a973c04367",
+      "realistic": true,
+      "why": "受害者本来就在用这个产品；这是使用前提，不是攻击者能力"
+    }
+  ],
+  "victim_preconditions_note": "由 scripts/backfill_preconditions.py 从本目录 Dockerfile 实际执行的步骤推导；任何 realistic:false 的项必须出现在报告的「验证边界」段落。"
+}

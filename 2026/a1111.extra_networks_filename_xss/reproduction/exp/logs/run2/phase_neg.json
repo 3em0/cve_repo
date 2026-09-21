@@ -1,0 +1,14 @@
+{
+  "dom_markers": [],
+  "lora_file_sha256": {
+    "benign_lora.safetensors": "ea3128f9882454300b3b6f81bf70aec8f91cf181f9c45ecc834a648af33d4570"
+  },
+  "lora_files": [
+    "benign_lora.safetensors"
+  ],
+  "option_after": "",
+  "option_before": "",
+  "option_rewritten_by_page": false,
+  "phase": "neg",
+  "product_reachable": true
+}

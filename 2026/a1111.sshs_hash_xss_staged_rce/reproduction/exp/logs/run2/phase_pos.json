@@ -1,0 +1,51 @@
+{
+  "after_browser": {
+    "extensions_dir": [
+      "mbe2e_lora",
+      "put extensions here.txt"
+    ],
+    "stage1": {
+      "content": "MBE2E-CANARY-a1111-sshs-stage1-v1",
+      "present": true,
+      "sha256": "66ed97156a320f0f3b48ca086f39b994632262a7f32542d04d1deaa77077bfee"
+    }
+  },
+  "before": {
+    "extensions_dir": [
+      "put extensions here.txt"
+    ],
+    "stage1": {
+      "content": null,
+      "present": false
+    },
+    "stage2": {
+      "content": null,
+      "present": false
+    }
+  },
+  "console_messages": 3,
+  "dom_milestones": [
+    "INSTALL_CLICKED",
+    "INSTALL_UNCONFIRMED",
+    "RESTART_CLICKED",
+    "XSS_RAN"
+  ],
+  "extensions_dir_final": [
+    "mbe2e_lora",
+    "put extensions here.txt"
+  ],
+  "installer_ran_in_product_log": false,
+  "phase": "pos",
+  "product_reachable": true,
+  "product_restarted_itself": true,
+  "stage1": {
+    "content": "MBE2E-CANARY-a1111-sshs-stage1-v1",
+    "present": true,
+    "sha256": "66ed97156a320f0f3b48ca086f39b994632262a7f32542d04d1deaa77077bfee"
+  },
+  "stage2": {
+    "content": "MBE2E-CANARY-a1111-sshs-stage2-v1",
+    "present": true,
+    "sha256": "835b15bc74e1d8de480e433ef47b93604de5553cf34c06793769d163655d48f3"
+  }
+}

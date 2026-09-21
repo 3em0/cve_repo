@@ -1,0 +1,60 @@
+{
+  "artifact_sha256": {
+    "Put Stable Diffusion checkpoints here.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mbe2e_neg/hubconf.py": "7effec8d1506e29632cbf1f843023c93c73b5e71d005ba41ec52d4de75653be4",
+    "mbe2e_neg/model.safetensors": "19683dd1652104af65b6a69d6a8f2721770e32b8a3c59267e61a67548caad5a0",
+    "mbe2e_neg/model.yaml": "d9644ed1dc050ffc2bb77a34d89bbbcce64f05b8d93d322acbb250ca746cecba",
+    "mbe2e_pack/hubconf.py": "7effec8d1506e29632cbf1f843023c93c73b5e71d005ba41ec52d4de75653be4",
+    "mbe2e_pack/model.safetensors": "d5f1f2669119094351dcd419f93e40bec964ff6a08223a0f6ad1598cf34e5133",
+    "mbe2e_pack/model.yaml": "c16486ed819b1c6cce7ee1ce50b9c07c25fbaf98c13784fcff45ad228bada042"
+  },
+  "canary_after_negative_selection": {
+    "content": null,
+    "present": false,
+    "sha256": null
+  },
+  "canary_after_positive_selection": {
+    "content": "MBE2E-CANARY-a1111-yaml-target-v1",
+    "present": true,
+    "sha256": "2a47fd520fc9511d3c0250b6ac59f03fffd7c51082ed407047a72a8a6728bb95"
+  },
+  "canary_before_any_selection": {
+    "content": null,
+    "present": false,
+    "sha256": null
+  },
+  "canary_path": "/out/pwned_by_a1111_yaml_target",
+  "drive_method": "http",
+  "http_status": {
+    "select_negative": 200,
+    "select_positive": 200
+  },
+  "listed_checkpoints": [
+    "mbe2e_neg/model.safetensors",
+    "mbe2e_pack/model.safetensors"
+  ],
+  "negative_sidecar_was_read": true,
+  "positive_sidecar_was_read": true,
+  "product": "AUTOMATIC1111/stable-diffusion-webui",
+  "product_commit": "82a973c04367123ae98bd9abdf80d9eda9b910e2",
+  "product_commit_verified": "1",
+  "root_key": "a1111.safetensors_yaml_target",
+  "sink_effect": "canary_file",
+  "steps": [
+    {
+      "count": 2,
+      "step": "list_models"
+    },
+    {
+      "canary_after": false,
+      "http": 200,
+      "step": "select_negative"
+    },
+    {
+      "canary_after": true,
+      "http": 200,
+      "step": "select_positive"
+    }
+  ],
+  "verdict": "E2_product_e2e"
+}

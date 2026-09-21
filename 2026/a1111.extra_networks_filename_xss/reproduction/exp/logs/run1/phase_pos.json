@@ -1,0 +1,16 @@
+{
+  "dom_markers": [
+    "W200"
+  ],
+  "lora_file_sha256": {
+    "x\"><img src=x onerror='var s=String.fromCharCode(47);fetch(s+\"sdapi\"+s+\"v1\"+s+\"refresh-checkpoints\",{method:\"POST\"}).then(r=>document.documentElement.dataset.mbe2e=\"W\"+r.status)'>.safetensors": "aaacf851beafd7b901ca9bf9fd7f17deb2d0c0edf0dc853566d8dd3bd3a8623d"
+  },
+  "lora_files": [
+    "x\"><img src=x onerror='var s=String.fromCharCode(47);fetch(s+\"sdapi\"+s+\"v1\"+s+\"refresh-checkpoints\",{method:\"POST\"}).then(r=>document.documentElement.dataset.mbe2e=\"W\"+r.status)'>.safetensors"
+  ],
+  "option_after": "",
+  "option_before": "",
+  "option_rewritten_by_page": false,
+  "phase": "pos",
+  "product_reachable": true
+}

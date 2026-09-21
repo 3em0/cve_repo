@@ -1,0 +1,1 @@
+bash webui.sh -f --api --skip-prepare-environment --skip-torch-cuda-test --skip-version-check --no-half --use-cpu all --no-download-sd-model --skip-load-model-at-start --port 7860

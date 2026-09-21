@@ -1,0 +1,27 @@
+{
+  "mbe2e_neg/hubconf.py": {
+    "sha256": "7effec8d1506e29632cbf1f843023c93c73b5e71d005ba41ec52d4de75653be4",
+    "size": 267
+  },
+  "mbe2e_neg/model.safetensors": {
+    "sha256": "19683dd1652104af65b6a69d6a8f2721770e32b8a3c59267e61a67548caad5a0",
+    "size": 152
+  },
+  "mbe2e_neg/model.yaml": {
+    "sha256": "d9644ed1dc050ffc2bb77a34d89bbbcce64f05b8d93d322acbb250ca746cecba",
+    "size": 48
+  },
+  "mbe2e_pack/hubconf.py": {
+    "sha256": "7effec8d1506e29632cbf1f843023c93c73b5e71d005ba41ec52d4de75653be4",
+    "size": 267
+  },
+  "mbe2e_pack/model.safetensors": {
+    "sha256": "d5f1f2669119094351dcd419f93e40bec964ff6a08223a0f6ad1598cf34e5133",
+    "size": 152
+  },
+  "mbe2e_pack/model.yaml": {
+    "sha256": "c16486ed819b1c6cce7ee1ce50b9c07c25fbaf98c13784fcff45ad228bada042",
+    "size": 129
+  }
+}
+artifact_manifest_sha256 9d1e06f16658732820f870992059913c3458bc90c8180f57fbef33dd33c2295b

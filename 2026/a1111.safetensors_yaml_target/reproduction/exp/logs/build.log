@@ -1,0 +1,34 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon  18.43kB
+Step 1/9 : FROM mbe2e/prod:a1111-82a973c0
+ ---> 2d140cfbf434
+Step 2/9 : LABEL mbe2e=1
+ ---> Using cache
+ ---> 51d5aabaab77
+Step 3/9 : COPY artifact/ /app/webui/models/Stable-diffusion/
+ ---> eb694ad6fe0a
+Step 4/9 : COPY drive.py /work/drive.py
+ ---> 00d7835de22b
+Step 5/9 : COPY entrypoint.sh /work/entrypoint.sh
+ ---> 747956fa4903
+Step 6/9 : RUN mkdir -p /out /evidence/logs && chmod +x /work/entrypoint.sh
+ ---> Running in 39eb173ef4dd
+ ---> Removed intermediate container 39eb173ef4dd
+ ---> ec7e3243aed5
+Step 7/9 : WORKDIR /work
+ ---> Running in e40d3c764092
+ ---> Removed intermediate container e40d3c764092
+ ---> 702fadcc7e36
+Step 8/9 : ENTRYPOINT ["/work/entrypoint.sh"]
+ ---> Running in d7990b7f2f04
+ ---> Removed intermediate container d7990b7f2f04
+ ---> 9912f7db7aed
+Step 9/9 : LABEL mbe2e=1
+ ---> Running in 24792122af79
+ ---> Removed intermediate container 24792122af79
+ ---> fce21e495bf3
+Successfully built fce21e495bf3
+Successfully tagged mbe2e/v/a1111.safetensors_yaml_target:r1

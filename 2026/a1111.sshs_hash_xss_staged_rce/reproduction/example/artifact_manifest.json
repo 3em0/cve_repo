@@ -1,0 +1,34 @@
+{
+  "neg/mbe2e_lora_benign/.gitignore": {
+    "sha256": "738e9327dd7e1cb76b9818bd1bc55017150cefdeab1a6a2f903b0a5b21d10cf4",
+    "size": 14
+  },
+  "neg/mbe2e_lora_benign/benign.safetensors": {
+    "sha256": "050ac7cb00a18607f41c760f878f786400eb24ee0c855e588e383fcc1803aec6",
+    "size": 272
+  },
+  "neg/mbe2e_lora_benign/install.py": {
+    "sha256": "734eb053a5ef25d5254c228c09416ce466e56c89a1288887665f0573ceec4588",
+    "size": 265
+  },
+  "neg/mbe2e_lora_benign/scripts/mbe2e_stage2.py": {
+    "sha256": "c41cf9b7cb6ab4609446977f5e9c886b071db9e8ebf7f8c6c22d7fde0cd820d2",
+    "size": 276
+  },
+  "pos/mbe2e_lora/.gitignore": {
+    "sha256": "738e9327dd7e1cb76b9818bd1bc55017150cefdeab1a6a2f903b0a5b21d10cf4",
+    "size": 14
+  },
+  "pos/mbe2e_lora/evil.safetensors": {
+    "sha256": "a1307c3bb33ce100324aab62a69781b96d91e8182d99245fd3dbc07f8e4123ca",
+    "size": 1384
+  },
+  "pos/mbe2e_lora/install.py": {
+    "sha256": "734eb053a5ef25d5254c228c09416ce466e56c89a1288887665f0573ceec4588",
+    "size": 265
+  },
+  "pos/mbe2e_lora/scripts/mbe2e_stage2.py": {
+    "sha256": "c41cf9b7cb6ab4609446977f5e9c886b071db9e8ebf7f8c6c22d7fde0cd820d2",
+    "size": 276
+  }
+}

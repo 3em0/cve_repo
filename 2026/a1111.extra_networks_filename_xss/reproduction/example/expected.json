@@ -1,0 +1,55 @@
+{
+  "root_key": "a1111.extra_networks_filename_xss",
+  "seq": 1,
+  "product": {
+    "repo": "AUTOMATIC1111/stable-diffusion-webui",
+    "version": "v1.10.1",
+    "commit": "82a973c04367123ae98bd9abdf80d9eda9b910e2"
+  },
+  "attacker_capability": "the NAME of one file inside a shared model package, unpacked into models/Lora. 191 bytes, within the 255-byte path-component limit. No Python runs on the victim machine.",
+  "victim_action": "start the WebUI and open http://127.0.0.1:7860/ (card HTML is produced by interface.load, modules/ui_extra_networks.py:788 -- no click needed)",
+  "taint_path": [
+    "shared.walk_files over the lora dir -> extensions-builtin/Lora/networks.py list_available_networks",
+    "modules/ui_extra_networks.py:273 btn_copy_path = self.btn_copy_path_tpl.format(filename=item['filename']) -- no html.escape",
+    "html/extra-networks-copy-path-button.html:3 data-clipboard-text=\"{filename}\"",
+    "javascript/extraNetworks.js innerHTML of the card block",
+    "SECOND unescaped sink for the same value: search_terms_from_path(filename) is appended to search_terms and interpolated at modules/ui_extra_networks.py:312-320, also without html.escape. Both sinks carry this payload."
+  ],
+  "sink_policy": "browser_token",
+  "canary": {
+    "browser_token": "document.documentElement[data-mbe2e] = 'W' + the HTTP status the product returned to the page's own POST",
+    "privileged_api_call": "POST /sdapi/v1/refresh-checkpoints issued by the injected script from the WebUI origin"
+  },
+  "negative_control": {
+    "file": "neg/benign_lora.safetensors",
+    "difference": "ordinary filename, identical tensor payload and metadata",
+    "expectation": "no DOM marker, option unchanged",
+    "runs_first": true
+  },
+  "expected_grade": "E2_product_e2e",
+  "not_proven": [
+    "No OS-level code execution is claimed for this root. A1111's custom-code script is gated behind --allow-code and is not used.",
+    "Windows forbids the quote characters in filenames, so this root is Linux/macOS only (and archives unpacked on Unix).",
+    "The demonstrated privileged effect is a same-origin POST the product accepted (HTTP 200), not a persistent state change. A longer payload would need a same-origin bootstrap (e.g. fetching its own model file back through /file=) which was not attempted.",
+    "The same filename ALSO lands in the unescaped search_terms span (modules/ui_extra_networks.py:312-320), so this artifact exercises two unescaped sinks at once; the canary does not distinguish which one fired."
+  ],
+  "payload_size_constraint": "A path component is at most 255 bytes and may not contain '/', so the URL separators are built with String.fromCharCode(47). A full POST /sdapi/v1/options settings-rewrite payload measures 287 bytes and does NOT fit in a filename. That is a genuine limit of this carrier and is why the demonstrated privileged call is a body-less POST rather than a settings write.",
+  "victim_preconditions": [
+    {
+      "step": "运行 AUTOMATIC1111/stable-diffusion-webui @ 82a973c04367",
+      "realistic": true,
+      "why": "受害者本来就在用这个产品；这是使用前提，不是攻击者能力"
+    },
+    {
+      "step": "受害者在浏览器中打开产品页面并查看该模型",
+      "realistic": true,
+      "why": "这正是该字段被渲染的正常操作"
+    },
+    {
+      "step": "产品重启（本次由注入脚本点击产品自身的重启按钮完成，无人工介入）",
+      "realistic": true,
+      "why": "分阶段链的固有条件；本次已证明可由链条自身触发"
+    }
+  ],
+  "victim_preconditions_note": "由 scripts/backfill_preconditions.py 从本目录 Dockerfile 实际执行的步骤推导；任何 realistic:false 的项必须出现在报告的「验证边界」段落。"
+}

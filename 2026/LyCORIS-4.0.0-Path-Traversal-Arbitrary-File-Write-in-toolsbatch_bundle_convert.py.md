@@ -67,7 +67,7 @@ Three unchecked steps chain the safetensors header to the filesystem:
 
    `<sub>` is any sub-key; only the tensor names matter. The malicious sample used for the original Docker verification has SHA-256 `f017926c490a1ebd509ab6241bd92cdf348a6c5d5e2c8ff1b86a273124af7aed`. The screenshots below are from an independent reproduction on Ubuntu 24.04 (WSL2) running the same pinned source tree, with an equivalent regenerated bundle pair (SHA-256 `29056f2f…` / `e259d0cd…`, see `poc/SHA256SUMS.txt`; only the tensor payload bytes differ, the attack-carrying tensor names are identical).
 
-   ![Screenshot 1 — crafted bundle header](2026/images/lycoris-bundle-tensor-name-write-01-poc-header.png)
+   ![Screenshot 1 — crafted bundle header](cve_repo/2026/images/lycoris-bundle-tensor-name-write-01-poc-header.png)
 
    Raw safetensors header dump of the malicious bundle: the two `bundle_emb./out/canary/lycoris_e2.*` tensor names (highlighted) carry the traversal payload, plus SHA-256 of both samples.
 
@@ -80,19 +80,19 @@ Three unchecked steps chain the safetensors header to the filesystem:
        --from_bundle
    ```
 
-   ![Screenshot 2 — CLI run](2026/images/lycoris-bundle-tensor-name-write-02-cli-run.png)
+   ![Screenshot 2 — CLI run](cve_repo/2026/images/lycoris-bundle-tensor-name-write-02-cli-run.png)
 
    The official pinned CLI unpacks the malicious bundle and exits cleanly (`Unpacking ../poc_malicious.safetensors`, exit 0) — no error, no warning.
 
 3. Observe the output: `/out/canary/lycoris_e2.pt` has been created — outside the user-specified `--dst_dir /tmp/lht_mal` — because `os.path.join()` dropped the destination when the embedding-name segment is absolute.
 
-   ![Screenshot 3 — file outside dst_dir](2026/images/lycoris-bundle-tensor-name-write-03-outside-dst.png)
+   ![Screenshot 3 — file outside dst_dir](cve_repo/2026/images/lycoris-bundle-tensor-name-write-03-outside-dst.png)
 
    Listing proving `/out/canary/lycoris_e2.pt` (1981 bytes) exists outside `--dst_dir`, while `/tmp/lht_mal` contains only the unpacked LoRA.
 
 4. Negative control: the same bundle with the embedding name replaced by a plain filename (`bundle_emb.lycoris_e2_clean.string_to_param.<sub>`, original sample SHA-256 `1a47638dc4d0716d8769ccd215a98c4c71a80cb4b0524c7172f4a58352ea3618`) writes only into `--dst_dir`, confirming the tensor name is the sole differentiator.
 
-   ![Screenshot 4 — negative control](2026/images/lycoris-bundle-tensor-name-write-04-negative-control.png)
+   ![Screenshot 4 — negative control](cve_repo/2026/images/lycoris-bundle-tensor-name-write-04-negative-control.png)
 
    Negative-control run: the benign bundle produced only `lycoris_e2_clean.pt` inside its `--dst_dir`, and `/out` remains empty.
 

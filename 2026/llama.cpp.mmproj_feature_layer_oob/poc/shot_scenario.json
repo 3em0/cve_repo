@@ -1,0 +1,43 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_heap-oob-read_20260925",
+  "windowWidth": 1500,
+  "windowHeight": 880,
+  "settleMs": 1500,
+  "steps": [
+    { "keys": "^-" },
+    { "keys": "^-" },
+    { "keys": "^-" },
+    { "keys": "^-" },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_heap-oob-read_20260925" }, { "wait": 800 },
+    { "command": "cls" }, { "wait": 1200 },
+    { "command": "docker images llamacpp-mmproj-asan" }, { "wait": 1500 },
+    { "shot": "01-lab-image.png" },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_heap-oob-read_20260925" }, { "wait": 800 },
+    { "command": ".\\poc\\run_bug1.ps1" }, { "wait": 8000 },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_heap-oob-read_20260925" }, { "wait": 800 },
+    { "command": "cls" }, { "wait": 1200 },
+    { "command": ".\\poc\\show_result.ps1 poc\\out\\result.json" }, { "wait": 2000 },
+    { "shot": "02-verdict-and-negative-control.png" },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_heap-oob-read_20260925" }, { "wait": 800 },
+    { "command": "cls" }, { "wait": 1200 },
+    { "command": "Get-Content poc\\out\\logs\\asan.evil.0.txt -TotalCount 12" }, { "wait": 1500 },
+    { "shot": "03-asan-report-stack.png" },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_heap-oob-read_20260925" }, { "wait": 800 },
+    { "command": "cls" }, { "wait": 1200 },
+    { "command": "Select-String -Path poc\\out\\logs\\asan.evil.0.txt -Pattern 'is located' -SimpleMatch" }, { "wait": 1500 },
+    { "shot": "04-asan-region.png" },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_heap-oob-read_20260925" }, { "wait": 800 },
+    { "command": "cls" }, { "wait": 1200 },
+    { "command": "Get-Content poc\\out\\logs\\product_stderr.benign.log -TotalCount 9" }, { "wait": 1500 },
+    { "shot": "05-negative-control-benign.png" },
+
+    { "wait": 800 }
+  ]
+}

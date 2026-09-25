@@ -1,0 +1,43 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_stack-oob-write_20260925",
+  "windowWidth": 1500,
+  "windowHeight": 880,
+  "settleMs": 1500,
+  "steps": [
+    { "keys": "^-" },
+    { "keys": "^-" },
+    { "keys": "^-" },
+    { "keys": "^-" },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_stack-oob-write_20260925" }, { "wait": 800 },
+    { "command": "cls" }, { "wait": 1200 },
+    { "command": "docker images llamacpp-mmproj-asan" }, { "wait": 1500 },
+    { "shot": "01-lab-image.png" },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_stack-oob-write_20260925" }, { "wait": 800 },
+    { "command": ".\\poc\\run_bug2.ps1" }, { "wait": 10000 },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_stack-oob-write_20260925" }, { "wait": 800 },
+    { "command": "cls" }, { "wait": 1200 },
+    { "command": ".\\poc\\show_bug2_result.ps1" }, { "wait": 2000 },
+    { "shot": "02-stack-oob-write-verdict.png" },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_stack-oob-write_20260925" }, { "wait": 800 },
+    { "command": "cls" }, { "wait": 1200 },
+    { "command": "Select-String -Path poc\\out\\asan_evil.stderr -Pattern 'stack-buffer-overflow' -SimpleMatch" }, { "wait": 1500 },
+    { "shot": "03-asan-summary.png" },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_stack-oob-write_20260925" }, { "wait": 800 },
+    { "command": "cls" }, { "wait": 1200 },
+    { "command": "Get-Content poc\\out\\asan_evil.stderr -TotalCount 24" }, { "wait": 1500 },
+    { "shot": "04-asan-call-chain.png" },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_stack-oob-write_20260925" }, { "wait": 800 },
+    { "command": "cls" }, { "wait": 1200 },
+    { "command": "Get-Content poc\\out\\asan_exit_codes.txt" }, { "wait": 1500 },
+    { "shot": "05-evil-vs-benign-exit-codes.png" },
+
+    { "wait": 800 }
+  ]
+}

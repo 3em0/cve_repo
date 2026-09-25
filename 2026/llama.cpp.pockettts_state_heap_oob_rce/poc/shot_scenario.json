@@ -1,0 +1,43 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_heap-oob-write-rce_20260925",
+  "windowWidth": 1500,
+  "windowHeight": 880,
+  "settleMs": 1500,
+  "steps": [
+    { "keys": "^-" },
+    { "keys": "^-" },
+    { "keys": "^-" },
+    { "keys": "^-" },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_heap-oob-write-rce_20260925" }, { "wait": 800 },
+    { "command": "cls" }, { "wait": 1200 },
+    { "command": "docker images pockettts-oob-rce" }, { "wait": 1500 },
+    { "shot": "01-lab-image.png" },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_heap-oob-write-rce_20260925" }, { "wait": 800 },
+    { "command": ".\\poc\\run_bug3.ps1" }, { "wait": 20000 },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_heap-oob-write-rce_20260925" }, { "wait": 800 },
+    { "command": "cls" }, { "wait": 1200 },
+    { "command": "Select-String -Path ..\\pockettts_gguf_oob_rce_minimal_codex_20260924\\logs\\native.ps1.log -Pattern 'sysmalloc|NATIVE_EXIT'" }, { "wait": 2000 },
+    { "shot": "02-native-abort.png" },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_heap-oob-write-rce_20260925" }, { "wait": 800 },
+    { "command": "cls" }, { "wait": 1200 },
+    { "command": "Select-String -Path poc\\out\\probe_overrun.log -Pattern 'overrun='" }, { "wait": 1500 },
+    { "shot": "03-heap-overrun-measured.png" },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_heap-oob-write-rce_20260925" }, { "wait": 800 },
+    { "command": "cls" }, { "wait": 1200 },
+    { "command": "Select-String -Path poc\\out\\probe_dest.log -Pattern 'offset=2039812'" }, { "wait": 1500 },
+    { "shot": "04-dest-phase-this-host.png" },
+
+    { "command": "cd E:\\Reproduce\\llamacpp_mmproj_3bugs_20260923\\ggml-org-llama.cpp_heap-oob-write-rce_20260925" }, { "wait": 800 },
+    { "command": "cls" }, { "wait": 1200 },
+    { "command": "Select-String -Path poc\\out\\probe_abort.log -Pattern 'abort reached|0x55555ad0cc70|0x55555ad0cc80|0x55555ad0cc90'" }, { "wait": 1500 },
+    { "shot": "05-abort-window-dump.png" },
+
+    { "wait": 800 }
+  ]
+}

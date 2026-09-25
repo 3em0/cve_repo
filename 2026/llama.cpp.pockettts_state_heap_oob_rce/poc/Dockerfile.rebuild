@@ -1,0 +1,107 @@
+# ---------------------------------------------------------------------------
+# bug 3 实验室：Ubuntu 20.04 focal + glibc 2.31-0ubuntu9.15
+#
+# 与原配方 pockettts_gguf_oob_rce_minimal_codex_20260924/docker/Dockerfile.rebuild
+# （由 docker history --no-trunc 逐层复原）的差异，逐条说明：
+#
+#   1. apt / pip 下载源换成可达镜像 —— 本机上 archive.ubuntu.com 与
+#      security.ubuntu.com 返回 502 Bad Gateway，无法完成 apt-get update；
+#      clang-16 的 llvm.org 源换成清华 llvm-apt 镜像（同一仓库内容，版本钉定不变）。
+#
+#   2. 拆成两阶段。装工具链会把 libc6 顺带升到 2.31-0ubuntu9.18，而原始实验
+#      （以及 RCE 工件里硬编码的 libc 地址所标定的对象）是 2.31-0ubuntu9.15，
+#      且 9.15 的 .deb 已从 Ubuntu 仓库下架、无法降级安装。因此运行阶段重新从
+#      同一个钉定基础层开始，只复制编译产物并安装 libstdc++6（该包不牵动 libc6），
+#      运行时 glibc 因此保持基础层的 9.15 —— 构建末尾有断言强制校验。
+#
+#   3. 源码 commit、clang-16 版本、CMake 开关、ENTRYPOINT 全部与原配方一致。
+#
+# 构建上下文 = 钉在 3d82ef62d47fd74e18f36c5eccbdcf965b617b17 的 llama.cpp 源码树。
+# ---------------------------------------------------------------------------
+
+# =========================== stage 1: build ===============================
+FROM ubuntu:20.04@sha256:874aca52f79ae5f8258faff03e10ce99ae836f6e7d2df6ecd3da5c1cad3a912b AS build
+
+ENV DEBIAN_FRONTEND=noninteractive TZ=UTC
+
+# 基础工具链 + gdb（9.2，需 -gdwarf-4 调试信息）
+RUN set -eux; \
+    printf '%s\n' \
+      'deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal main restricted universe multiverse' \
+      'deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-updates main restricted universe multiverse' \
+      'deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-security main restricted universe multiverse' \
+      > /etc/apt/sources.list; \
+    # plain http on purpose: the minimal focal image has no ca-certificates yet,
+    # so https would fail before the package that fixes it can be installed
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+      gnupg wget ca-certificates file git ninja-build cmake build-essential \
+      gdb python3 python3-pip; \
+    rm -rf /var/lib/apt/lists/*
+
+# focal 仓库里的 clang 太老，装 llvm.org 的 clang-16（与原实验室一致）
+RUN set -eux; \
+    wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -; \
+    echo "deb http://mirrors.tuna.tsinghua.edu.cn/llvm-apt/focal/ llvm-toolchain-focal-16 main" \
+      > /etc/apt/sources.list.d/llvm16.list; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+      clang-16=1:16.0.6~++20231112100455+7cbf1a259152-1~exp1~20231112100542.106; \
+    rm -rf /var/lib/apt/lists/*; \
+    clang-16 --version | head -1
+
+# builder 依赖（focal python3.8：gguf + numpy 在容器内跑构造器）
+RUN pip3 install --no-cache-dir -i https://pypi.tuna.tsinghua.edu.cn/simple \
+      gguf==0.18.0 numpy==1.24.4 \
+    && python3 -c "import gguf, numpy; print('gguf+numpy ok')"
+
+# 受害源码（上下文 = 钉版 llama.cpp 树），校验 commit 后只编 llama-tts
+COPY / /src/llamacpp
+RUN cd /src/llamacpp \
+    && git rev-parse HEAD | tee /src/llamacpp_commit.txt \
+    && test "$(cat /src/llamacpp_commit.txt)" = "3d82ef62d47fd74e18f36c5eccbdcf965b617b17"
+RUN cd /src/llamacpp \
+    && cmake -B build -G Ninja \
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+      -DCMAKE_C_COMPILER=clang-16 -DCMAKE_CXX_COMPILER=clang++-16 \
+      -DCMAKE_C_FLAGS_RELWITHDEBINFO="-O2 -gdwarf-4 -DNDEBUG" \
+      -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-O2 -gdwarf-4 -DNDEBUG" \
+      -DLLAMA_BUILD_TESTS=OFF -DLLAMA_BUILD_EXAMPLES=OFF -DLLAMA_BUILD_SERVER=OFF \
+      -DLLAMA_BUILD_APP=OFF -DLLAMA_BUILD_UI=OFF -DLLAMA_USE_PREBUILT_UI=OFF \
+      -DGGML_NATIVE=OFF -DGGML_BACKEND_DL=OFF \
+    && cmake --build build -j "$(nproc)" --target llama-tts \
+    && ls -la /src/llamacpp/build/bin/llama-tts
+
+# ========================= stage 2: runtime ===============================
+# 从同一个钉定基础层重新开始：这一层的 libc6 就是 2.31-0ubuntu9.15，
+# 只装不牵动 libc6 的运行时依赖（llama-tts 的 ldd 只有 libstdc++6 / libgcc_s
+# 两个 libc6 之外的条目）。
+FROM ubuntu:20.04@sha256:874aca52f79ae5f8258faff03e10ce99ae836f6e7d2df6ecd3da5c1cad3a912b AS runtime
+
+ENV DEBIAN_FRONTEND=noninteractive TZ=UTC
+RUN set -eux; \
+    printf '%s\n' \
+      'deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal main restricted universe multiverse' \
+      'deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-updates main restricted universe multiverse' \
+      'deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-security main restricted universe multiverse' \
+      > /etc/apt/sources.list; \
+    # libstdc++6 = the only non-libc runtime dependency of llama-tts; gdb is kept so
+    # that the same image can run the heap-layout probes (it does not drag libc6).
+    apt-get update; \
+    apt-get install -y --no-install-recommends libstdc++6 gdb; \
+    rm -rf /var/lib/apt/lists/*; \
+    /lib/x86_64-linux-gnu/libc.so.6 --version | head -1; \
+    dpkg-query -W libc6 libc-bin | tee /dev/stderr | grep -q "2.31-0ubuntu9.15"; \
+    test "$(dpkg-query -W libc6 libc-bin | grep -c '2.31-0ubuntu9.15')" = "2"
+
+COPY --from=build /src/llamacpp/build/bin /src/llamacpp/build/bin
+COPY --from=build /src/llamacpp_commit.txt /src/llamacpp_commit.txt
+# Sources are carried over as well: gdb resolves file:line breakpoints only when the
+# file named in the debug info is actually present, which the layout probes rely on.
+COPY --from=build /src/llamacpp/tools /src/llamacpp/tools
+
+ENV LLAMA_CACHE=/tmp/llama-cache
+WORKDIR /work
+
+# ASLR 全局关闭：容器内一切命令都经 setarch -R 运行
+ENTRYPOINT ["setarch", "-R", "bash"]

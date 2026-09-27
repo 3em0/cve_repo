@@ -1,0 +1,29 @@
+{
+  "root_key": "kitops.kitfile_model_path_shell_injection",
+  "seq": 125,
+  "product": "kitops-ml/kitops",
+  "product_commit": "b6762849b23a599c834e5f14eda5cebcef40b640",
+  "source_tree_sha256": "eee5ffd35485392f2a5510071455a1975fac2751f4089d8b45ad77afc55c3197",
+  "source_tree_note": "sha256 over sorted 'relpath\\0sha256(content)\\n' for every file in the checkout, skipping .git/__pycache__/*.pyc/*.egg-info",
+  "product_entrypoint": "kit dev start <modelkit-directory>",
+  "surface": "the resolved model file path inside a ModelKit (Kitfile model.path + the file names under it)",
+  "sink": "pkg/lib/harness/llm-harness.go:102  exec.Command(\"sh\", \"-c\", fmt.Sprintf(\"./llamafile --server --model %s ...\", modelPath, ...))",
+  "sink_policy": "real_exec_touch",
+  "canary": {
+    "path": "/out/pwned_by_w11_kitops_kitfile",
+    "content": "PWNED_BY_W11_KITOPS_KITFILE"
+  },
+  "expected_grade": "E2_product_e2e",
+  "negative_controls": [
+    "N1_benign_kit: identical Kitfile, ordinary models/model.gguf -> harness starts, no canary",
+    "N2_no_gguf: ModelKit has no .gguf, findModelFile fails before the harness is started -> no canary"
+  ],
+  "victim_preconditions": [
+    {
+      "step": "运行 kitops-ml/kitops @ b6762849b23a",
+      "realistic": true,
+      "why": "受害者本来就在用这个产品；这是使用前提，不是攻击者能力"
+    }
+  ],
+  "victim_preconditions_note": "由 scripts/backfill_preconditions.py 从本目录 Dockerfile 实际执行的步骤推导；任何 realistic:false 的项必须出现在报告的「验证边界」段落。"
+}

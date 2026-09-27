@@ -1,0 +1,6 @@
+driver: exp/drive.py (never imports the project under test)
+product pin self-check: eee5ffd35485392f2a5510071455a1975fac2751f4089d8b45ad77afc55c3197 == eee5ffd35485392f2a5510071455a1975fac2751f4089d8b45ad77afc55c3197 -> True
+case N1_benign_kit                    argv=kit dev start /artifact/benign_kit --port 18081 rc=0 canary_expected=False canary_present=False content=None
+case N2_no_gguf                       argv=kit dev start /artifact/nogguf_kit --port 18082 rc=1 canary_expected=False canary_present=False content=None
+case A1_model_path_shell_injection    argv=kit dev start /artifact/evil_kit --port 18083 rc=0 canary_expected=True canary_present=True content='PWNED_BY_W11_KITOPS_KITFILE'
+verdict=PASS achieved_grade=E2_product_e2e

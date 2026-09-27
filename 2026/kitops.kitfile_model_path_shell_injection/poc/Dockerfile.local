@@ -1,0 +1,66 @@
+# Local reproduction image for kitops.kitfile_model_path_shell_injection.
+# Adapted from the case's original Dockerfile for machines where the
+# golang:1.25-bookworm image cannot be pulled (registry mirror instability)
+# and the mbe2e/base:py311 base is unavailable. Functionally identical:
+#   - same pinned kitops source, self-verified at run time by the tree digest
+#     (exp/treehash.py vs example/expected.json)
+#   - same Go toolchain version (1.25.14, matching the recorded "go1.25.14")
+#   - same vendored module graph (go mod vendor at the pin)
+#   - Debian 12 (bookworm) base, Python 3.11 from the bookworm archive
+FROM debian:bookworm-slim AS build
+COPY dl/go1.25.14.linux-amd64.tar.gz /tmp/go.tgz
+RUN tar -C /usr/local -xzf /tmp/go.tgz
+ENV PATH=/usr/local/go/bin:$PATH
+COPY src /src
+COPY vendor /src/vendor
+RUN cd /src \
+ && CGO_ENABLED=0 GOFLAGS="-mod=vendor -trimpath" go build -o /kit . \
+ && /kit version
+
+FROM debian:bookworm-slim
+LABEL mbe2e="1"
+
+ENV PYTHONHASHSEED=0 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    HOME=/root
+
+RUN sed -i 's|deb.debian.org|mirrors.ustc.edu.cn|g' /etc/apt/sources.list.d/debian.sources \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends python3 ca-certificates \
+ && ln -s /usr/bin/python3 /usr/local/bin/python \
+ && rm -rf /var/lib/apt/lists/*
+
+COPY --from=build /kit /usr/local/bin/kit
+COPY src /work/kitops
+COPY example /work/example
+COPY exp /work/exp
+
+RUN kit version
+
+# Provision the `kit dev` harness the way a first `kit dev start` does.
+# `pkg/lib/harness/llm_download.go` fetches llamafile from https://jozu.ml/downloads/.
+# If that host is reachable from the build network we let the product provision
+# itself; otherwise we leave an inert placeholder so that `checkHarness()` is
+# satisfied.  Either way the llamafile binary is DOWNSTREAM of the injection:
+# the canary is executed by /bin/sh from the command string kitops itself builds
+# (pkg/lib/harness/llm-harness.go:102), before llamafile would ever be exec'd.
+RUN set -eu; \
+    H="$HOME/.local/share/kitops/harness"; \
+    mkdir -p /work/prov/models; \
+    printf 'manifestVersion: "1.0.0"\npackage:\n  name: prov\n  version: 0.0.1\nmodel:\n  name: prov\n  path: models\n' > /work/prov/Kitfile; \
+    : > /work/prov/models/prov.gguf; \
+    (timeout 120 kit dev start /work/prov --port 18080 >/work/prov/provision.log 2>&1 || true); \
+    (timeout 60 kit dev stop >>/work/prov/provision.log 2>&1 || true); \
+    mkdir -p "$H/ui"; \
+    if [ -s "$H/llamafile" ]; then echo "downloaded_by_product" > /work/harness_provenance.txt; \
+    else printf '#!/bin/sh\nexit 127\n' > "$H/llamafile"; chmod +x "$H/llamafile"; \
+         echo "inert_placeholder_jozu.ml_unreachable_from_container" > /work/harness_provenance.txt; fi; \
+    printf '0.8.16' > "$H/llamafile.version"; \
+    rm -f "$H/process.pid" "$H/harness.log"; \
+    ls -la "$H"; cat /work/harness_provenance.txt
+
+# the attacker's whole capability: three ModelKit context directories
+RUN python /work/example/build_artifact.py /artifact && cat /artifact/SHA256SUMS
+
+WORKDIR /work
+CMD ["python", "/work/exp/drive.py"]

@@ -1,0 +1,22 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\kitops-ml-kitops_shell-injection_2026-09-27\\poc\\repro-run",
+  "windowWidth": 1400,
+  "windowHeight": 680,
+  "settleMs": 1200,
+  "typing": false,
+  "steps": [
+    { "wait": 4000 },
+    { "command": "cd E:\\Reproduce\\kitops-ml-kitops_shell-injection_2026-09-27\\poc\\repro-run" },
+    { "wait": 800 },
+    { "keys": "^-" },
+    { "wait": 600 },
+    { "command": "type harness-log-attack-batch.log" },
+    { "wait": 2000 },
+    { "shot": "13-batch-harness-log.png" },
+    { "command": "type harness-log-attack-original-20260920.log" },
+    { "wait": 2500 },
+    { "shot": "14-original-harness-log.png" },
+    { "command": "exit" }
+  ]
+}

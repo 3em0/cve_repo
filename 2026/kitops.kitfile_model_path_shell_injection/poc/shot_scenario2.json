@@ -1,0 +1,32 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\kitops-ml-kitops_shell-injection_2026-09-27\\poc\\repro-run",
+  "windowWidth": 1400,
+  "windowHeight": 680,
+  "settleMs": 1200,
+  "typing": false,
+  "steps": [
+    { "wait": 4000 },
+    { "command": "cd E:\\Reproduce\\kitops-ml-kitops_shell-injection_2026-09-27\\poc\\repro-run" },
+    { "wait": 800 },
+    { "command": "docker ps" },
+    { "wait": 800 },
+    { "command": "docker run -it --rm --network none -v \"$PWD\\out:/out\" mbe2e/v/kitops.kitfile_model_path_shell_injection:r1-w11 bash" },
+    { "wait": 4000 },
+    { "keys": "^-" },
+    { "wait": 600 },
+    { "command": "rm -f /out/pwned_by_w11_kitops_kitfile" },
+    { "wait": 600 },
+    { "command": "kit dev start /artifact/evil_kit --port 18083" },
+    { "wait": 25000 },
+    { "command": "cat /root/.local/share/kitops/harness/harness.log" },
+    { "wait": 2500 },
+    { "shot": "12-harness-log.png" },
+    { "command": "cat /out/pwned_by_w11_kitops_kitfile" },
+    { "wait": 1500 },
+    { "shot": "11-canary-fired.png" },
+    { "command": "kit dev stop" },
+    { "wait": 1500 },
+    { "command": "exit" }
+  ]
+}

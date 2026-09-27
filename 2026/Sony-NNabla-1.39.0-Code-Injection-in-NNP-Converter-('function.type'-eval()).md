@@ -6,15 +6,15 @@ Sony NNabla 1.39.0 is affected by a code injection in the NNP converter componen
 
 ## Affected Product
 
-| Field | Value |
-|---|---|
-| Vendor | Sony (NNabla project) |
-| Product | NNabla (Neural Network Libraries) |
-| Affected versions | 1.39.0 (verified; official PyPI wheel, Build 240523014612; source pinned at commit `cbf0545bf36b5fa317d71e5f6110bb9827b7da98`, dated 2024-05-22). 1.39.0 is the final release (2024-05-29); the master branch still contains the vulnerable `eval()` calls as of 2026-09-24. Earliest affected version `[unknown]` |
-| Component | `python/src/nnabla/utils/converter/utils.py` — `func_set_nnabla_version_decorate()` (lines 101-123), gate `func_set_import_nnp()` (lines 352-356) |
-| Platform | Any platform running the Python package / `nnabla_cli` |
-| Project status | EOL — development and security support ended per the official 2025-04-03 announcement; GitHub repository archived read-only on 2026-07-29 (API `"archived": true`); no upstream fix is expected |
-| Vulnerability type | CWE-94: Code Injection |
+| Field              | Value                                                        |
+| ------------------ | ------------------------------------------------------------ |
+| Vendor             | Sony (NNabla project)                                        |
+| Product            | NNabla (Neural Network Libraries)                            |
+| Affected versions  | 1.39.0 (verified; official PyPI wheel, Build 240523014612; source pinned at commit `cbf0545bf36b5fa317d71e5f6110bb9827b7da98`, dated 2024-05-22). 1.39.0 is the final release (2024-05-29); the master branch still contains the vulnerable `eval()` calls as of 2026-09-24. Earliest affected version `[unknown]` |
+| Component          | `python/src/nnabla/utils/converter/utils.py` — `func_set_nnabla_version_decorate()` (lines 101-123), gate `func_set_import_nnp()` (lines 352-356) |
+| Platform           | Any platform running the Python package / `nnabla_cli`       |
+| Project status     | EOL — development and security support ended per the official 2025-04-03 announcement; GitHub repository archived read-only on 2026-07-29 (API `"archived": true`); no upstream fix is expected |
+| Vulnerability type | CWE-94: Code Injection                                       |
 
 ## Root Cause
 
@@ -63,7 +63,7 @@ for n in nnp.protobuf.network:            # iterates ALL same-name networks
 
 1. Build `malicious.nnp`: a ZIP container (NNP format) produced with NNabla's own protobuf API (`make_poc.py` in the attached `poc/` directory), containing `nnp_version.txt` and `network.nntxt` with the structure shown under "Sanitized PoC input" — two `network` messages sharing the name `shared` (the first carrying only a benign `Identity` function, the second carrying the payload as `function.type`), and `executor[0].network_name` pointing at `shared`.
 
-![malicious.nnp structure: archive listing and network.nntxt with duplicate network names and the payload function.type](screenshots/01-malicious-nnp-structure.png)
+![malicious.nnp structure: archive listing and network.nntxt with duplicate network names and the payload function.type](images/01-malicious-nnp-structure.png)
 
 This screenshot shows the real archive listing and `network.nntxt`: both networks are named `shared`; only the second network's `function.type` carries the payload.
 
@@ -75,17 +75,17 @@ nnabla_cli convert malicious.nnp out_malicious.nnp --nnp-version 1.39.0
 
 The import phase expands both same-name networks, then `func_set_nnabla_version_decorate` evaluates the second network's type string: the injected command executes and the canary file `pwn_canary.txt` appears; immediately afterwards the process exits 255 with `KeyError` at `utils.py:122`, whose key is the payload string itself.
 
-![nnabla_cli convert on malicious.nnp: duplicate networks expanded, KeyError raised at utils.py:122 with the payload as key, exit 255](screenshots/02-convert-malicious-run.png)
+![nnabla_cli convert on malicious.nnp: duplicate networks expanded, KeyError raised at utils.py:122 with the payload as key, exit 255](images/02-convert-malicious-run.png)
 
 This screenshot shows the real run: both `Expanding shared.` lines, the traceback through `commands.py:145` into `func_set_nnabla_version_decorate`, the `KeyError` carrying the payload as its key, and `[exit 255]`.
 
-![canary file pwn_canary.txt exists (15 bytes) with content nnp-eval-canary, written by the injected command inside the real nnabla_cli process](screenshots/03-canary-landing.png)
+![canary file pwn_canary.txt exists (15 bytes) with content nnp-eval-canary, written by the injected command inside the real nnabla_cli process](images/03-canary-landing.png)
 
 This screenshot shows `ls -l pwn_canary.txt` (15 bytes) and `cat pwn_canary.txt` (`nnp-eval-canary`) — the command injected through `function.type` executed before the crash.
 
 3. Negative control: rebuild the same file with the second network's `function.type` replaced by `Identity` (`control_identity.nnp`) and rerun the conversion. The file converts cleanly (exit 0, `out_control.nnp` written) and no canary appears — isolating the duplicate network's type string as the payload carrier.
 
-![negative control converting cleanly with exit 0, out_control.nnp written, and no canary file](screenshots/04-negative-control.png)
+![negative control converting cleanly with exit 0, out_control.nnp written, and no canary file](images/04-negative-control.png)
 
 This screenshot shows the negative control: `Converting: out_control.nnp successfully!`, `[exit 0]`, no `pwn_canary.txt`, and the output container present.
 
@@ -138,16 +138,16 @@ The payload is all-lowercase because the converter first rewrites the type strin
 
 ## Attack Vector and Severity (CVSS v3.1)
 
-| Metric | Value | Rationale |
-|---|---|---|
-| Attack Vector | Network (N) | The crafted model file is delivered remotely (download, repo, hub, CI artifact) |
-| Attack Complexity | Low (L) | Exploitation is deterministic; no race or mitigation bypass needed |
-| Privileges Required | None (N) | No privileges on the victim beyond getting the file converted |
-| User Interaction | Required (R) | The victim must run the conversion on the attacker-supplied model |
-| Scope | Unchanged (U) | Impact is within the converting user's security context |
-| Confidentiality | High (H) | Arbitrary code execution |
-| Integrity | High (H) | Arbitrary code execution |
-| Availability | High (H) | Arbitrary code execution |
+| Metric              | Value         | Rationale                                                    |
+| ------------------- | ------------- | ------------------------------------------------------------ |
+| Attack Vector       | Network (N)   | The crafted model file is delivered remotely (download, repo, hub, CI artifact) |
+| Attack Complexity   | Low (L)       | Exploitation is deterministic; no race or mitigation bypass needed |
+| Privileges Required | None (N)      | No privileges on the victim beyond getting the file converted |
+| User Interaction    | Required (R)  | The victim must run the conversion on the attacker-supplied model |
+| Scope               | Unchanged (U) | Impact is within the converting user's security context      |
+| Confidentiality     | High (H)      | Arbitrary code execution                                     |
+| Integrity           | High (H)      | Arbitrary code execution                                     |
+| Availability        | High (H)      | Arbitrary code execution                                     |
 
 ```text
 Score: 8.8 (High)
@@ -170,5 +170,4 @@ Vector: CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H
 - Upstream report: `[pending — Sony HackerOne submission; the archived GitHub repository provides no issue tracker or private reporting channel]`
 - CWE: https://cwe.mitre.org/data/definitions/94.html
 - Vendor advisory: `[none]`
-
 

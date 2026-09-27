@@ -1,0 +1,17 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\yolain-ComfyUI-Easy-Use_notes_staged_rce_2026-09-24\\poc",
+  "initCommands": ["wsl -d kali-linux -- env PS1='poc@repro$ ' bash --norc"],
+  "windowWidth": 1400,
+  "windowHeight": 680,
+  "settleMs": 1200,
+  "steps": [
+    { "command": "cd /srv/poc-work/ComfyUI" },
+    { "command": "source ~/.venvs/easyuse/bin/activate" },
+    { "command": "python main.py --cpu --listen 127.0.0.1 --port 8188 --disable-auto-launch --verbose INFO comfyui_detail.log" },
+    { "wait": 100000 },
+    { "shot": "04-server-boot.png" },
+    { "wait": 25000 },
+    { "shot": "05-server-ready.png" }
+  ]
+}

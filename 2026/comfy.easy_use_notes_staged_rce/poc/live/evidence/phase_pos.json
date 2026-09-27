@@ -1,0 +1,76 @@
+{
+  "artifact": {
+    "name": "evil_notes_pos.safetensors",
+    "sha256": "69b170a07f70089b68b3740463264d3851ef1a654e5616e12ab906d4d9fe656e",
+    "size": 1788
+  },
+  "banner_count_after": 2,
+  "banner_count_before": 1,
+  "canary": {
+    "content": "MBE2E-CANARY-comfy-easyuse-notes-stage2",
+    "present": true,
+    "sha256": "ed22d12eb4023a30c6d8234bec55097fe9a1812fec465ee3942f07f09e215826"
+  },
+  "custom_node_init_sha256_after": "35eae873f073bb08a446af204a06d12e7431ee8b67ea415c1ac8009e9388c39e",
+  "custom_node_init_sha256_before": "a893f051fd72f1bce3fd1d3aacc18793c0449ebb78137e0793656c75cc9e93aa",
+  "phase": "pos",
+  "product_log_shows_extra_banner": true,
+  "product_reachable": true,
+  "product_restarted_itself": true,
+  "ui": {
+    "console_errors": [
+      "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "error:ComfyApp graph accessed before initialization",
+      "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "error:Failed to load resource: net::ERR_EMPTY_RESPONSE",
+      "pageerror:Failed to fetch",
+      "error:Failed to load resource: net::ERR_EMPTY_RESPONSE",
+      "error:[Jobs API] Error fetching jobs: TypeError: Failed to fetch\n    at fetchWithUnifiedRemint (http://127.0.0.1:8188/assets/api-DclbNWWy.js:2:1882)\n    at ComfyApi.fetchApi (http://127.0.0.1:8188/assets/ap",
+      "error:Failed to load resource: net::ERR_EMPTY_RESPONSE",
+      "error:[Jobs API] Error fetching jobs: TypeError: Failed to fetch\n    at fetchWithUnifiedRemint (http://127.0.0.1:8188/assets/api-DclbNWWy.js:2:1882)\n    at ComfyApi.fetchApi (http://127.0.0.1:8188/assets/ap",
+      "error:WebSocket connection to 'ws://127.0.0.1:8188/ws?clientId=780a543a24c34240aedaf531e9b07e2d' failed: Connection closed before receiving a handshake response",
+      "error:WebSocket connection to 'ws://127.0.0.1:8188/ws?clientId=780a543a24c34240aedaf531e9b07e2d' failed: Connection closed before receiving a handshake response"
+    ],
+    "control_fired": true,
+    "diagnostics": {
+      "control_attr": "CONTROL_FIRED",
+      "dialog_present": true,
+      "iframe_count": 1,
+      "img_count": 2,
+      "img_natural_width": [
+        0,
+        0
+      ],
+      "innerHTML_setter_native": true,
+      "meta_csp": null,
+      "milestone_attr": "|XSS_RAN",
+      "notes_detail_present": true,
+      "onerror_types": [
+        "function",
+        "function"
+      ],
+      "srcdoc_attr": "SRCDOC_FIRED",
+      "trusted_default_policy": false
+    },
+    "dialog_present": true,
+    "file_opened": true,
+    "menu_clicked": true,
+    "menu_opened_via": "product-convert",
+    "milestone_attr": "|XSS_RAN|UPLOAD_200|COPY_200|REBOOTING",
+    "node_present": true,
+    "page_loaded": true,
+    "screenshots": [
+      "browser_pos_full.png",
+      "browser_pos_dialog.png"
+    ],
+    "srcdoc_attr": "SRCDOC_FIRED",
+    "srcdoc_fired": true
+  },
+  "uploaded_file_present": true
+}

@@ -1,0 +1,169 @@
+{
+  "achieved_grade": "E2_product_e2e",
+  "chain_id": "safetensors_metadata_to_dom_to_staged_rce",
+  "civitai_by_hash": "local responder via playwright route interception (the stand-in the campaign blocker prescribed)",
+  "component": "yolain/ComfyUI-Easy-Use",
+  "component_commit": "450b1ce4ce43b2280521c87f5fa388a898fb2ad2",
+  "control_handler_fired_attack_phase": true,
+  "control_handler_fired_benign_phase": true,
+  "drive_method": "playwright headed chromium, product's own node context menu (View Lora Info...), workflow opened via #comfy-file-input",
+  "honest_boundary": [],
+  "initializer_overwritten": true,
+  "milestones_positive": [
+    "XSS_RAN",
+    "UPLOAD_200",
+    "COPY_200",
+    "REBOOTING"
+  ],
+  "negative": {
+    "artifact": {
+      "name": "evil_notes_neg.safetensors",
+      "sha256": "a737b81b3cc8190604c28a60b3f8551e62c306e6b603a442a87b16a87577b9ee",
+      "size": 316
+    },
+    "banner_count_after": 1,
+    "banner_count_before": 1,
+    "canary": {
+      "content": null,
+      "present": false
+    },
+    "custom_node_init_sha256_after": "a893f051fd72f1bce3fd1d3aacc18793c0449ebb78137e0793656c75cc9e93aa",
+    "custom_node_init_sha256_before": "a893f051fd72f1bce3fd1d3aacc18793c0449ebb78137e0793656c75cc9e93aa",
+    "phase": "neg",
+    "product_log_shows_extra_banner": false,
+    "product_reachable": true,
+    "product_restarted_itself": false,
+    "ui": {
+      "console_errors": [
+        "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error:ComfyApp graph accessed before initialization",
+        "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error:Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "control_fired": true,
+      "diagnostics": {
+        "control_attr": "CONTROL_FIRED",
+        "dialog_present": true,
+        "iframe_count": 0,
+        "img_count": 1,
+        "img_natural_width": [
+          0
+        ],
+        "innerHTML_setter_native": true,
+        "meta_csp": null,
+        "milestone_attr": null,
+        "notes_detail_present": true,
+        "onerror_types": [
+          "function"
+        ],
+        "srcdoc_attr": null,
+        "trusted_default_policy": false
+      },
+      "dialog_present": true,
+      "file_opened": true,
+      "menu_clicked": true,
+      "menu_opened_via": "product-convert",
+      "milestone_attr": null,
+      "node_present": true,
+      "page_loaded": true,
+      "screenshots": [
+        "browser_neg_full.png",
+        "browser_neg_dialog.png"
+      ],
+      "srcdoc_attr": null,
+      "srcdoc_fired": false
+    },
+    "uploaded_file_present": false
+  },
+  "negative_control_clean": true,
+  "positive": {
+    "artifact": {
+      "name": "evil_notes_pos.safetensors",
+      "sha256": "69b170a07f70089b68b3740463264d3851ef1a654e5616e12ab906d4d9fe656e",
+      "size": 1788
+    },
+    "banner_count_after": 2,
+    "banner_count_before": 1,
+    "canary": {
+      "content": "MBE2E-CANARY-comfy-easyuse-notes-stage2",
+      "present": true,
+      "sha256": "ed22d12eb4023a30c6d8234bec55097fe9a1812fec465ee3942f07f09e215826"
+    },
+    "custom_node_init_sha256_after": "35eae873f073bb08a446af204a06d12e7431ee8b67ea415c1ac8009e9388c39e",
+    "custom_node_init_sha256_before": "a893f051fd72f1bce3fd1d3aacc18793c0449ebb78137e0793656c75cc9e93aa",
+    "phase": "pos",
+    "product_log_shows_extra_banner": true,
+    "product_reachable": true,
+    "product_restarted_itself": true,
+    "ui": {
+      "console_errors": [
+        "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error:ComfyApp graph accessed before initialization",
+        "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error:Failed to load resource: net::ERR_EMPTY_RESPONSE",
+        "pageerror:Failed to fetch",
+        "error:Failed to load resource: net::ERR_EMPTY_RESPONSE",
+        "error:[Jobs API] Error fetching jobs: TypeError: Failed to fetch\n    at fetchWithUnifiedRemint (http://127.0.0.1:8188/assets/api-DclbNWWy.js:2:1882)\n    at ComfyApi.fetchApi (http://127.0.0.1:8188/assets/ap",
+        "error:Failed to load resource: net::ERR_EMPTY_RESPONSE",
+        "error:[Jobs API] Error fetching jobs: TypeError: Failed to fetch\n    at fetchWithUnifiedRemint (http://127.0.0.1:8188/assets/api-DclbNWWy.js:2:1882)\n    at ComfyApi.fetchApi (http://127.0.0.1:8188/assets/ap",
+        "error:WebSocket connection to 'ws://127.0.0.1:8188/ws?clientId=780a543a24c34240aedaf531e9b07e2d' failed: Connection closed before receiving a handshake response",
+        "error:WebSocket connection to 'ws://127.0.0.1:8188/ws?clientId=780a543a24c34240aedaf531e9b07e2d' failed: Connection closed before receiving a handshake response"
+      ],
+      "control_fired": true,
+      "diagnostics": {
+        "control_attr": "CONTROL_FIRED",
+        "dialog_present": true,
+        "iframe_count": 1,
+        "img_count": 2,
+        "img_natural_width": [
+          0,
+          0
+        ],
+        "innerHTML_setter_native": true,
+        "meta_csp": null,
+        "milestone_attr": "|XSS_RAN",
+        "notes_detail_present": true,
+        "onerror_types": [
+          "function",
+          "function"
+        ],
+        "srcdoc_attr": "SRCDOC_FIRED",
+        "trusted_default_policy": false
+      },
+      "dialog_present": true,
+      "file_opened": true,
+      "menu_clicked": true,
+      "menu_opened_via": "product-convert",
+      "milestone_attr": "|XSS_RAN|UPLOAD_200|COPY_200|REBOOTING",
+      "node_present": true,
+      "page_loaded": true,
+      "screenshots": [
+        "browser_pos_full.png",
+        "browser_pos_dialog.png"
+      ],
+      "srcdoc_attr": "SRCDOC_FIRED",
+      "srcdoc_fired": true
+    },
+    "uploaded_file_present": true
+  },
+  "product": "Comfy-Org/ComfyUI",
+  "product_commit": "387f98aa2822f684b8597959a52a467d88cc4806",
+  "product_restarted_itself": true,
+  "root_key": "comfy.easy_use_notes_staged_rce",
+  "sink_effect": "canary_file",
+  "srcdoc_vector_fired_attack_phase": true,
+  "stage2_executed_on_import": true,
+  "uploaded_stage2": true,
+  "verdict": "PASS",
+  "xss_executed_in_origin": true
+}

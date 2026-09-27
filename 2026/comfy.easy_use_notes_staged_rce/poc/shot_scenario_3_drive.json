@@ -1,0 +1,24 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\yolain-ComfyUI-Easy-Use_notes_staged_rce_2026-09-24\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 680,
+  "settleMs": 1200,
+  "steps": [
+    { "command": "python drive.py neg" },
+    { "wait": 100000 },
+    { "shot": "06-drive-neg.png" },
+    { "command": "python drive.py pos" },
+    { "wait": 260000 },
+    { "shot": "07-drive-pos.png" },
+    { "command": "python drive.py merge" },
+    { "wait": 4000 },
+    { "shot": "08-merge-verdict.png" },
+    { "command": "python verify.py" },
+    { "shot": "09-verify-effects.png" },
+    { "command": "Select-String -Path \\\\wsl.localhost\\kali-linux\\srv\\poc-work\\ComfyUI\\comfyui_detail.log -Pattern \"To see the GUI\"" },
+    { "shot": "10-restart-banners.png" },
+    { "command": "Get-ChildItem \\\\wsl.localhost\\kali-linux\\srv\\poc-work\\ComfyUI\\input" },
+    { "shot": "11-staged-stage2-file.png" }
+  ]
+}

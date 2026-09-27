@@ -1,0 +1,18 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\yolain-ComfyUI-Easy-Use_notes_staged_rce_2026-09-24\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 680,
+  "settleMs": 1200,
+  "steps": [
+    { "command": "python --version" },
+    { "shot": "01-env-python.png" },
+    { "command": "python make_poc.py" },
+    { "wait": 2000 },
+    { "shot": "02-make-poc.png" },
+    { "command": "Copy-Item artifacts\\evil_notes_pos.safetensors live\\ComfyUI\\models\\loras\\" },
+    { "command": "Copy-Item artifacts\\evil_notes_neg.safetensors live\\ComfyUI\\models\\loras\\" },
+    { "command": "wsl -d kali-linux -- ls /srv/poc-work/ComfyUI/models/loras" },
+    { "shot": "03-loras-placed.png" }
+  ]
+}

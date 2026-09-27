@@ -1,0 +1,64 @@
+{
+  "artifact": {
+    "name": "evil_notes_neg.safetensors",
+    "sha256": "a737b81b3cc8190604c28a60b3f8551e62c306e6b603a442a87b16a87577b9ee",
+    "size": 316
+  },
+  "banner_count_after": 1,
+  "banner_count_before": 1,
+  "canary": {
+    "content": null,
+    "present": false
+  },
+  "custom_node_init_sha256_after": "a893f051fd72f1bce3fd1d3aacc18793c0449ebb78137e0793656c75cc9e93aa",
+  "custom_node_init_sha256_before": "a893f051fd72f1bce3fd1d3aacc18793c0449ebb78137e0793656c75cc9e93aa",
+  "phase": "neg",
+  "product_log_shows_extra_banner": false,
+  "product_reachable": true,
+  "product_restarted_itself": false,
+  "ui": {
+    "console_errors": [
+      "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "error:ComfyApp graph accessed before initialization",
+      "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "error:Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "error:Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ],
+    "control_fired": true,
+    "diagnostics": {
+      "control_attr": "CONTROL_FIRED",
+      "dialog_present": true,
+      "iframe_count": 0,
+      "img_count": 1,
+      "img_natural_width": [
+        0
+      ],
+      "innerHTML_setter_native": true,
+      "meta_csp": null,
+      "milestone_attr": null,
+      "notes_detail_present": true,
+      "onerror_types": [
+        "function"
+      ],
+      "srcdoc_attr": null,
+      "trusted_default_policy": false
+    },
+    "dialog_present": true,
+    "file_opened": true,
+    "menu_clicked": true,
+    "menu_opened_via": "product-convert",
+    "milestone_attr": null,
+    "node_present": true,
+    "page_loaded": true,
+    "screenshots": [
+      "browser_neg_full.png",
+      "browser_neg_dialog.png"
+    ],
+    "srcdoc_attr": null,
+    "srcdoc_fired": false
+  },
+  "uploaded_file_present": false
+}

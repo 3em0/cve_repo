@@ -1,0 +1,19 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\yolain-ComfyUI-Easy-Use_notes_staged_rce_2026-09-24\\poc",
+  "initCommands": ["wsl -d kali-linux -- env PS1='poc@repro$ ' bash --norc"],
+  "windowWidth": 1400,
+  "windowHeight": 680,
+  "settleMs": 1200,
+  "steps": [
+    { "command": "cp /mnt/e/Reproduce/yolain-ComfyUI-Easy-Use_notes_staged_rce_2026-09-24/poc/ComfyUI-Easy-Use-450b1ce4/__init__.py /srv/poc-work/ComfyUI/custom_nodes/ComfyUI-Easy-Use/__init__.py" },
+    { "command": "rm -f /srv/poc-work/ComfyUI/custom_nodes/ComfyUI-Easy-Use/STAGE2_CANARY.txt" },
+    { "command": "rm -f /srv/poc-work/ComfyUI/input/mbe2e_stage2.py" },
+    { "command": "rm -f /srv/poc-work/ComfyUI/models/loras/evil_notes_pos.sha256" },
+    { "command": "rm -f /srv/poc-work/ComfyUI/models/loras/evil_notes_neg.sha256" },
+    { "command": "rm -f /srv/poc-work/ComfyUI/comfyui_detail.log" },
+    { "command": "ls /srv/poc-work/ComfyUI/custom_nodes/ComfyUI-Easy-Use" },
+    { "shot": "12-cleanup.png" },
+    { "command": "exit" }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\pythongosssss-ComfyUI-Custom-Scripts_modelspec_staged_rce_2026-09-24",
+  "initCommands": [],
+  "windowWidth": 1400,
+  "windowHeight": 680,
+  "settleMs": 900,
+  "typing": false,
+  "steps": [
+    { "wait": 4000 },
+    { "command": "wsl -d kali-linux" },
+    { "wait": 8000 },
+    { "command": "cd ~/cve_repro_modelspec" },
+    { "command": "ls" },
+    { "shot": "modelspec-staged-rce-01-repro-tree.png" },
+
+    { "command": "source venv/bin/activate" },
+    { "command": "python -V" },
+    { "command": "cd poc" },
+    { "command": "source env.sh" },
+    { "command": "git -C \"$COMFY_ROOT\" rev-parse HEAD" },
+    { "command": "git -C \"$COMFY_ROOT/custom_nodes/ComfyUI-Custom-Scripts\" rev-parse HEAD" },
+    { "wait": 800 },
+    { "shot": "modelspec-staged-rce-02-pins.png" },
+
+    { "command": "bash stop_product.sh" },
+    { "command": "rm -f $RUN_DIR/attack_pid.txt $RUN_DIR/victim_init.before.sha256" },
+    { "command": "rm -f $MARKER_PATH $RUN_DIR/drive.json $RUN_DIR/restart.json" },
+    { "command": "rm -f \"$COMFY_ROOT\"/temp/staged_init*.py" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 2500 },
+    { "shot": "modelspec-staged-rce-03-make-poc.png" },
+
+    { "command": "cat $ART_DIR/SHA256SUMS.txt" },
+    { "shot": "modelspec-staged-rce-04-artifact-hashes.png" },
+
+    { "command": "python plant.py" },
+    { "wait": 2500 },
+    { "shot": "modelspec-staged-rce-05-plant-victim.png" },
+
+    { "command": "head -14 $VI" },
+    { "shot": "modelspec-staged-rce-06-victim-initializer-before.png" },
+
+    { "command": "bash start_product.sh" },
+    { "wait": 40000 },
+    { "shot": "modelspec-staged-rce-07-product-up.png" },
+
+    { "command": "cp $RUN_DIR/product.pid $RUN_DIR/attack_pid.txt" },
+
+    { "command": "python drive.py" },
+    { "wait": 110000 },
+    { "shot": "modelspec-staged-rce-08-drive-xss-and-overwrite.png" },
+
+    { "command": "bash stop_product.sh" },
+    { "command": "sha256sum $VI" },
+    { "wait": 800 },
+    { "shot": "modelspec-staged-rce-09-initializer-hash-changed.png" },
+
+    { "command": "head -14 $VI" },
+    { "shot": "modelspec-staged-rce-10-initializer-overwritten.png" },
+
+    { "command": "bash start_product.sh" },
+    { "wait": 30000 },
+    { "shot": "modelspec-staged-rce-11-restart.png" },
+
+    { "command": "python verify_restart.py" },
+    { "wait": 1500 },
+    { "shot": "modelspec-staged-rce-12-restart-verification.png" },
+
+    { "command": "cat $MARKER_PATH" },
+    { "shot": "modelspec-staged-rce-13-marker.png" },
+
+    { "command": "bash stop_product.sh" },
+    { "wait": 1500 },
+    { "shot": "modelspec-staged-rce-14-cleanup.png" }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "token": "LCS-STAGED-CANARY custom_scripts_modelspec",
+  "pid": 1954,
+  "ppid": 1949,
+  "time": "2026-09-27T07:11:09Z",
+  "cwd": "/home/galaxyn/cve_repro_modelspec/src/ComfyUI",
+  "argv": "/home/galaxyn/cve_repro_modelspec/venv/bin/python"
+}

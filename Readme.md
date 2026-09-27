@@ -43,6 +43,7 @@
 - `a1111.extra_networks_filename_xss`：恶意 LoRA 文件名导致存储型 XSS（含完整 Docker 复现环境）
 - `a1111.safetensors_yaml_target`：恶意 YAML sidecar 在模型加载阶段触发进程内代码执行（含完整 Docker 复现环境）
 - `a1111.sshs_hash_xss_staged_rce`：LoRA 元数据 XSS 链接扩展安装与重启后代码执行（添加日期：2026-09-20，含完整 Docker 复现环境）
+  - `comfy.custom_scripts_modelspec_staged_rce`：恶意 LoRA 的 `modelspec.description` 经 `innerHTML` 触发存储型 XSS，再经节点包自有的保存路由覆盖已装节点包的 `__init__.py`，重启后执行（添加日期：2026-09-27，真实 ComfyUI 进程 + 真实浏览器端到端复现）
 - 独立报告：Cookiecutter Django、`ekzhu/datasketch`
 
 ## 说明

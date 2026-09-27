@@ -1,0 +1,23 @@
+{
+  "checks": {
+    "C1_initializer_still_staged": true,
+    "C2_marker_exists": true,
+    "C3_token_matches": true,
+    "C4_pid_is_restarted_process": true,
+    "C5_mtime_after_restart": true
+  },
+  "marker": {
+    "argv": "/home/galaxyn/cve_repro_modelspec/venv/bin/python",
+    "cwd": "/home/galaxyn/cve_repro_modelspec/src/ComfyUI",
+    "pid": 1954,
+    "ppid": 1949,
+    "time": "2026-09-27T07:11:09Z",
+    "token": "LCS-STAGED-CANARY custom_scripts_modelspec"
+  },
+  "marker_path": "/home/galaxyn/cve_repro_modelspec/run/staged_marker.json",
+  "pid_after_restart": 1954,
+  "pid_during_attack": 1681,
+  "staged_sha256": "7cf4c61327f582c3e67a5bbd3e766291d8eec3a53e2df97d32837374ad6b276d",
+  "verdict": "EXECUTED",
+  "victim_init_sha256": "7cf4c61327f582c3e67a5bbd3e766291d8eec3a53e2df97d32837374ad6b276d"
+}

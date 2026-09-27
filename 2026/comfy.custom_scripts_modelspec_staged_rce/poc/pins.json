@@ -1,0 +1,4 @@
+{
+  "ComfyUI": ["", "387f98aa2822f684b8597959a52a467d88cc4806"],
+  "ComfyUI-Custom-Scripts": ["custom_nodes/ComfyUI-Custom-Scripts", "609f3afaa74b2f88ef9ce8d939626065e3247469"]
+}

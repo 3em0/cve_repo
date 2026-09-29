@@ -1,0 +1,75 @@
+{
+  "shell": "cmd",
+  "workingDir": "E:\\Reproduce\\iMoonLab-yolov13_onnx-metadata-eval_2026-09-24\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 900,
+  "settleMs": 1200,
+  "steps": [
+    {
+      "command": "\"%TEMP%\\cve_report_tmp\\mlm02\\venv\\Scripts\\activate.bat\""
+    },
+    {
+      "command": "pip install --no-deps ultralytics==8.0.120"
+    },
+    {
+      "wait": 9000
+    },
+    {
+      "command": "cls"
+    },
+    {
+      "command": "pip show ultralytics"
+    },
+    {
+      "wait": 2500
+    },
+    {
+      "shot": "15-swap-8.0.120.png"
+    },
+    {
+      "command": "cls"
+    },
+    {
+      "command": "python check_env.py"
+    },
+    {
+      "wait": 6000
+    },
+    {
+      "shot": "16-fastsam-msa-hash-proof-8.0.120.png"
+    },
+    {
+      "command": "cls"
+    },
+    {
+      "command": "python run_autobackend.py artifacts\\benign.onnx"
+    },
+    {
+      "wait": 10000
+    },
+    {
+      "shot": "17-fastsam-msa-benign-control.png"
+    },
+    {
+      "command": "cls"
+    },
+    {
+      "command": "python run_autobackend.py artifacts\\evil.onnx"
+    },
+    {
+      "wait": 10000
+    },
+    {
+      "shot": "18-fastsam-msa-evil-run.png"
+    },
+    {
+      "command": "type pwned_by_w11_yolov13_onnx_meta"
+    },
+    {
+      "shot": "19-fastsam-msa-canary-landed.png"
+    },
+    {
+      "command": "del pwned_by_w11_yolov13_onnx_meta"
+    }
+  ]
+}

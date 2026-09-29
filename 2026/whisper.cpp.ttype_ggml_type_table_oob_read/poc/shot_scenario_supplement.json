@@ -1,0 +1,17 @@
+{
+  "shell": "powershell",
+  "workingDir": "%TEMP%\\poc-work",
+  "windowWidth": 1400,
+  "windowHeight": 900,
+  "settleMs": 1500,
+  "initCommands": ["wsl -d kali-linux"],
+  "steps": [
+    { "command": "cd ~/poc-work/whisper.cpp-5670d5c0" },
+    { "command": "sed -n '/ERROR: AddressSanitizer/,/cli.cpp:1087/p' /tmp/evil_full.txt" },
+    { "wait": 800 },
+    { "shot": "08-evil-asan-report.png" },
+    { "command": "sed -n '/cli.cpp:1087/,/SUMMARY: AddressSanitizer/p' /tmp/evil_full.txt" },
+    { "wait": 800 },
+    { "shot": "13-evil-asan-report2.png" }
+  ]
+}

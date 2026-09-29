@@ -1,0 +1,31 @@
+# Reproduction environment for mlm.ultralytics_autobackend_onnx_eval (2026-09-29 screenshots)
+# Python 3.12 tested.  torch comes from the CPU wheel index (small, no CUDA).
+#
+# Usage (3 commands from the folder containing this file):
+#   python -m venv .venv
+#   .venv\Scripts\pip install -r poc\requirements.txt
+#   .venv\Scripts\pip install --no-deps ultralytics==8.3.63
+#
+# The last step uses --no-deps ON PURPOSE: it prevents pip from re-resolving
+# torch from PyPI (a ~2.5 GB CUDA build) and from pulling a second opencv.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.4.1
+torchvision==0.19.1
+numpy==1.26.4
+matplotlib==3.9.2
+opencv-python-headless==4.10.0.84
+Pillow==10.4.0
+PyYAML==6.0.2
+requests==2.32.3
+scipy==1.14.1
+tqdm==4.66.5
+psutil==6.0.0
+py-cpuinfo==9.0.0
+pandas==2.2.3
+seaborn==0.13.2
+ultralytics-thop==2.0.9
+onnx==1.16.2
+onnxruntime==1.19.2
+huggingface-hub==0.25.2
+safetensors==0.4.5
+filelock==3.16.1

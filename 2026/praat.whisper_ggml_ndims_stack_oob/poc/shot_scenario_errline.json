@@ -1,0 +1,13 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\praat-praat_stack-buffer-overflow_2026-09-28\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 800,
+  "settleMs": 1200,
+  "steps": [
+    { "command": "Select-String -Path out\\logs\\asan.evil.0.txt -Pattern 'ERROR: AddressSanitizer'" },
+    { "wait": 1500 },
+    { "shot": "praat-whisper-ggml-ndims-stack-oob-16-asan-error-line.png" },
+    { "command": "exit" }
+  ]
+}

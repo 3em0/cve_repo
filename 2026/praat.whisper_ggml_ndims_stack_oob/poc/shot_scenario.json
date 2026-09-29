@@ -1,0 +1,61 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\praat-praat_stack-buffer-overflow_2026-09-28\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 800,
+  "settleMs": 1200,
+  "steps": [
+    { "command": "pwd" },
+    { "command": "python --version" },
+    { "command": "docker --version" },
+    { "shot": "praat-whisper-ggml-ndims-stack-oob-01-env.png" },
+
+    { "command": "git -C context\\praat-b753a09b rev-parse HEAD" },
+    { "wait": 1500 },
+    { "shot": "praat-whisper-ggml-ndims-stack-oob-02-commit.png" },
+
+    { "command": "Select-String -Path context\\praat-b753a09b\\external\\whispercpp\\whisper.cpp -Pattern \"n_dims\"" },
+    { "wait": 1500 },
+    { "shot": "praat-whisper-ggml-ndims-stack-oob-03-guard-absent.png" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 2500 },
+    { "shot": "praat-whisper-ggml-ndims-stack-oob-04-make-poc.png" },
+
+    { "command": "Get-FileHash context\\artifact\\model_evil.bin, context\\artifact\\model_benign.bin -Algorithm SHA256" },
+    { "wait": 2500 },
+    { "shot": "praat-whisper-ggml-ndims-stack-oob-05-hashes.png" },
+
+    { "command": "mkdir out -Force" },
+
+    { "command": "docker build -t praat-259-repro context" },
+    { "wait": 240000 },
+    { "shot": "praat-whisper-ggml-ndims-stack-oob-06-docker-build.png" },
+
+    { "command": "docker run --rm --network none -v \"${PWD}\\out:/out\" praat-259-repro" },
+    { "wait": 60000 },
+    { "shot": "praat-whisper-ggml-ndims-stack-oob-07-official-run.png" },
+
+    { "command": "Select-String -Path out\\result.json -Pattern '\"verdict\"|\"canary_hit\"|\"negative_control_clean\"'" },
+    { "wait": 1500 },
+    { "shot": "praat-whisper-ggml-ndims-stack-oob-08-verdict-lines.png" },
+
+    { "command": "docker run --rm --network none -v \"${PWD}\\out:/out\" --entrypoint /bin/bash praat-259-repro /exp/run_one.sh evil" },
+    { "wait": 60000 },
+    { "shot": "praat-whisper-ggml-ndims-stack-oob-09-asan-live.png" },
+
+    { "command": "Select-String -Path out\\logs\\asan.evil.0.txt -Pattern 'ERROR: AddressSanitizer' -Context 0,14" },
+    { "wait": 1500 },
+    { "shot": "praat-whisper-ggml-ndims-stack-oob-10-asan-header.png" },
+
+    { "command": "Select-String -Path out\\logs\\asan.evil.0.txt -Pattern 'overflows this variable' -Context 2,0" },
+    { "wait": 1500 },
+    { "shot": "praat-whisper-ggml-ndims-stack-oob-11-asan-ne.png" },
+
+    { "command": "docker run --rm --network none -v \"${PWD}\\out:/out\" --entrypoint /bin/bash praat-259-repro /exp/run_one.sh benign" },
+    { "wait": 60000 },
+    { "shot": "praat-whisper-ggml-ndims-stack-oob-12-benign-control.png" },
+
+    { "command": "exit" }
+  ]
+}

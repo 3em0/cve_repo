@@ -1,0 +1,63 @@
+{
+  "root_key": "praat.whisper_ggml_ndims_stack_oob",
+  "seq": 259,
+  "expected_grade": "E2_product_e2e",
+  "sink_policy": "sanitizer",
+  "sink_effect": "asan_report",
+  "product": {
+    "name": "Praat (praat_barren, batch mode)",
+    "repo": "https://github.com/praat/praat",
+    "pinned_commit": "b753a09ba0f4c2385735f08dacd2086088094d69",
+    "build_system": "the project's own makefile, PRAAT_GRAPHICS=barren PRAAT_AUDIO=none (its own headless configuration)",
+    "build_type": "the project's default -O3 -g1, plus -g",
+    "sanitizers": "-fsanitize=address -fno-omit-frame-pointer (via CFLAGS/CXXFLAGS/LDFLAGS in the environment, which the Makefile appends to)",
+    "guards_left_intact": [
+      "external/whispercpp/whisper.cpp:1495-1503 magic check",
+      "external/whispercpp/whisper.cpp:1521 assert(n_text_state == n_audio_state)",
+      "external/whispercpp/whisper.cpp ftype validity check",
+      "fon/SpeechRecognizer.cpp:142-148 model/language compatibility check"
+    ]
+  },
+  "victim_action": "place the model in <preferences folder>/models/whispercpp/ (where Praat's own dialog says to) and run Objects > New > Speech-to-text recognition > Create SpeechRecognizer... ; in batch mode: praat_barren --pref-dir=<prefs> --run script.praat",
+  "attacker_capability": "one legacy whisper .bin model file",
+  "artifact": {
+    "evil": "model_evil.bin",
+    "evil_sha256": "2f9c3ff68c2fdf59e6fc964427a140507f65e294d3835c2f2d4ec48861e5811a",
+    "benign": "model_benign.bin",
+    "benign_sha256": "fdeedf6436aaa54279b435db7530a8b708a63b95cdc6823739f712968d08a80c",
+    "writer_api": "upstream whisper.cpp's own test fixture models/for-tests-ggml-tiny.bin plus one tensor record in the documented layout",
+    "poison": {
+      "base_fixture": "whisper.cpp models/for-tests-ggml-tiny.bin",
+      "tensor_name": "encoder.ln_post.bias",
+      "benign_n_dims": 1,
+      "evil_n_dims": 1024,
+      "stack_array": "int32_t ne[4] (external/whispercpp/whisper.cpp:1883)",
+      "benign": {
+        "path": "model_benign.bin",
+        "sha256": "fdeedf6436aaa54279b435db7530a8b708a63b95cdc6823739f712968d08a80c",
+        "size": 577023
+      },
+      "evil": {
+        "path": "model_evil.bin",
+        "sha256": "2f9c3ff68c2fdf59e6fc964427a140507f65e294d3835c2f2d4ec48861e5811a",
+        "size": 581115
+      }
+    }
+  },
+  "expected_canary": {
+    "kind": "asan_report",
+    "must_be": "a memory-safety violation whose stack passes through whisper_model_load"
+  },
+  "negative_control": {
+    "artifact": "model_benign.bin",
+    "requirement": "the same base fixture plus a well-formed (n_dims=1) record: zero AddressSanitizer reports"
+  },
+  "victim_preconditions": [
+    {
+      "step": "运行 praat/praat @ b753a09ba0f4",
+      "realistic": true,
+      "why": "受害者本来就在用这个产品；这是使用前提，不是攻击者能力"
+    }
+  ],
+  "victim_preconditions_note": "由 scripts/backfill_preconditions.py 从本目录 Dockerfile 实际执行的步骤推导；任何 realistic:false 的项必须出现在报告的「验证边界」段落。"
+}

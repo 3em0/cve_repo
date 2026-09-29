@@ -1,0 +1,75 @@
+{
+  "shell": "cmd",
+  "workingDir": "E:\\Reproduce\\iMoonLab-yolov13_onnx-metadata-eval_2026-09-24\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 900,
+  "settleMs": 1200,
+  "steps": [
+    {
+      "command": "\"%TEMP%\\cve_report_tmp\\mlm02\\venv\\Scripts\\activate.bat\""
+    },
+    {
+      "command": "pip install --no-deps ultralytics==8.3.39"
+    },
+    {
+      "wait": 9000
+    },
+    {
+      "command": "cls"
+    },
+    {
+      "command": "pip show ultralytics"
+    },
+    {
+      "wait": 2500
+    },
+    {
+      "shot": "10-swap-8.3.39.png"
+    },
+    {
+      "command": "cls"
+    },
+    {
+      "command": "python check_env.py"
+    },
+    {
+      "wait": 6000
+    },
+    {
+      "shot": "11-yoloe-hash-proof-8.3.39.png"
+    },
+    {
+      "command": "cls"
+    },
+    {
+      "command": "python run_autobackend.py artifacts\\benign.onnx"
+    },
+    {
+      "wait": 10000
+    },
+    {
+      "shot": "12-yoloe-benign-control.png"
+    },
+    {
+      "command": "cls"
+    },
+    {
+      "command": "python run_autobackend.py artifacts\\evil.onnx"
+    },
+    {
+      "wait": 10000
+    },
+    {
+      "shot": "13-yoloe-evil-run.png"
+    },
+    {
+      "command": "type pwned_by_w11_yolov13_onnx_meta"
+    },
+    {
+      "shot": "14-yoloe-canary-landed.png"
+    },
+    {
+      "command": "del pwned_by_w11_yolov13_onnx_meta"
+    }
+  ]
+}

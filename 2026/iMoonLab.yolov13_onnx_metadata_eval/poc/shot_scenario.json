@@ -1,0 +1,117 @@
+{
+  "shell": "cmd",
+  "workingDir": "E:\\Reproduce\\iMoonLab-yolov13_onnx-metadata-eval_2026-09-24\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 900,
+  "settleMs": 1200,
+  "steps": [
+    {
+      "command": "\"%TEMP%\\cve_report_tmp\\mlm02\\venv\\Scripts\\activate.bat\""
+    },
+    {
+      "command": "set YOLO_AUTOINSTALL=false"
+    },
+    {
+      "command": "copy \"%TEMP%\\cve_report_tmp\\mlm02\\venv\\Lib\\site-packages\\ultralytics\\assets\\bus.jpg\" ."
+    },
+    {
+      "command": "cls"
+    },
+    {
+      "command": "python --version"
+    },
+    {
+      "command": "pip show ultralytics"
+    },
+    {
+      "wait": 3500
+    },
+    {
+      "shot": "01-env-versions.png"
+    },
+    {
+      "command": "cls"
+    },
+    {
+      "command": "python check_env.py"
+    },
+    {
+      "wait": 6000
+    },
+    {
+      "shot": "02-hash-proof-8.3.63.png"
+    },
+    {
+      "command": "cls"
+    },
+    {
+      "command": "python make_poc.py"
+    },
+    {
+      "wait": 5000
+    },
+    {
+      "shot": "03-make-poc.png"
+    },
+    {
+      "command": "cls"
+    },
+    {
+      "command": "dir artifacts"
+    },
+    {
+      "shot": "04-artifacts.png"
+    },
+    {
+      "command": "cls"
+    },
+    {
+      "command": "yolo predict model=artifacts\\benign.onnx source=bus.jpg device=cpu save=False project=runs name=n1 exist_ok=True"
+    },
+    {
+      "wait": 30000
+    },
+    {
+      "shot": "05-benign-run.png"
+    },
+    {
+      "command": "dir pwned_by_w11_yolov13_onnx_meta"
+    },
+    {
+      "shot": "06-benign-no-canary.png"
+    },
+    {
+      "command": "cls"
+    },
+    {
+      "command": "yolo predict model=artifacts\\nometa.onnx source=bus.jpg device=cpu save=False project=runs name=n2 exist_ok=True"
+    },
+    {
+      "wait": 22000
+    },
+    {
+      "shot": "07-nometa-run.png"
+    },
+    {
+      "command": "cls"
+    },
+    {
+      "command": "yolo predict model=artifacts\\evil.onnx source=bus.jpg device=cpu save=False project=runs name=a1 exist_ok=True"
+    },
+    {
+      "wait": 22000
+    },
+    {
+      "shot": "08-evil-run.png"
+    },
+    {
+      "command": "type pwned_by_w11_yolov13_onnx_meta"
+    },
+    {
+      "shot": "09-canary-landed.png"
+    },
+    {
+      "command": "del pwned_by_w11_yolov13_onnx_meta"
+    }
+  ]
+}

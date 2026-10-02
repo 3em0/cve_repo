@@ -2,7 +2,7 @@
 
 ## Summary
 
-ESPnet (espnet/espnet) git master @ bc6dd4a is affected by an insecure deserialization flaw in the ESPnet3 publication loader. `InferenceModel.from_packed()` gates bundle loading on whether the inference config mentions Python modules that are shipped inside the bundle; any hydra `_target_` that resolves to a module already installed in the victim environment (stdlib, site-packages, or espnet itself) passes the gate with `trust_user_code=False`. The config is then handed to `hydra.utils.instantiate(config.model, device=device)`, which recursively instantiates attacker-chosen callables with attacker-chosen arguments. A publication bundle containing only `meta.yaml`, `conf/inference.yaml`, and `exp/model.safetensors` — no Python sidecar at all — can therefore write arbitrary files on the victim host (demonstrated) or invoke arbitrary installed callables such as `os.system` / `builtins.eval` (same primitive, full code execution).
+ESPnet (espnet/espnet) master @ bc6dd4a and the released PyPI distribution `espnet 202610.post2` (the latest release, uploaded 2026-09-24) are affected by an insecure deserialization flaw in the ESPnet3 publication loader. `InferenceModel.from_packed()` gates bundle loading on whether the inference config mentions Python modules that are shipped inside the bundle; any hydra `_target_` that resolves to a module already installed in the victim environment (stdlib, site-packages, or espnet itself) passes the gate with `trust_user_code=False`. The config is then handed to `hydra.utils.instantiate(config.model, device=device)`, which recursively instantiates attacker-chosen callables with attacker-chosen arguments. A publication bundle containing only `meta.yaml`, `conf/inference.yaml`, and `exp/model.safetensors` — no Python sidecar at all — can therefore write arbitrary files on the victim host (demonstrated) or invoke arbitrary installed callables such as `os.system` / `builtins.eval` (same primitive, full code execution).
 
 ## Affected Product
 
@@ -10,9 +10,9 @@ ESPnet (espnet/espnet) git master @ bc6dd4a is affected by an insecure deseriali
 |---|---|
 | Vendor | ESPnet project (espnet/espnet) |
 | Product | espnet (ESPnet3 publication subsystem) |
-| Affected versions | git commit bc6dd4a (master, 2026-09-09); earlier or later master states `[unknown]` |
+| Affected versions | git commit bc6dd4a (master, 2026-09-09) and PyPI release `espnet 202610.post2` (latest release, uploaded 2026-09-24) — both verified vulnerable; other versions `[unknown]` |
 | Component | `espnet3/publication/inference_model.py` (`from_packed`, `_uses_bundled_code`), `espnet3/systems/base/inference_provider.py` (`build_model`), consumer `espnet3/publication/demo/session.py` (`_build_demo_model`) |
-| Platform | any (Python); verified on Ubuntu (WSL2), Python 3.12.3, hydra-core 1.3.7, omegaconf 2.3.1, torch 2.14.1+cpu |
+| Platform | any (Python); verified on Ubuntu 24.04.3 (WSL2), Python 3.12.3, hydra-core 1.3.7, omegaconf 2.3.1, torch 2.14.1+cpu |
 | Vulnerability type | CWE-502: Insecure Deserialization (arbitrary callable invocation via config-driven instantiation) |
 
 ## Root Cause
@@ -49,7 +49,7 @@ return model
 
 ### Prerequisites
 
-- Python environment with the pinned espnet3 source importable (source checkout on `sys.path`), hydra-core, omegaconf, torch, numpy, safetensors, pyyaml, espnet-model-zoo.
+- Python environment with the pinned espnet3 source importable (source checkout on `sys.path`), hydra-core, omegaconf, torch, numpy, safetensors, pyyaml, espnet-model-zoo. The PoC was verified twice in the same venv: once against the pinned master checkout and once against the installed PyPI distribution `espnet 202610.post2` (the wheel ships `espnet3` in site-packages; the arbitrary write reproduced identically with `trust_user_code=False`).
 - Victim calls `InferenceModel.from_packed(<bundle>, trust_user_code=False)` (the safe default) — this is the exact call made by the bundled Gradio demo (`espnet3/publication/demo/session.py`, `_build_demo_model`, demo config `model.trust_user_code` defaults to `false`) and by `InferenceModel.from_pretrained(<model-tag>)` after downloading a bundle from a model hub.
 - Note: `pathlib.Path.write_text()` does not create parent directories, so the demo target `/tmp/pwned_by_espnet_bundle.txt` uses an existing directory; any path writable by the victim account (new file under an existing directory, or overwrite of an existing writable file) works.
 
@@ -119,9 +119,7 @@ model:
 - Integrity: High — demonstrated arbitrary file write with attacker-chosen path and content; any file writable by the victim account can be overwritten.
 - Availability: High — arbitrary callable invocation enables destructive actions and full process compromise (e.g. `os.system`).
 - Scope: arbitrary code execution equivalent primitive (invocation of any installed callable with attacker-controlled arguments) triggered by loading a malicious model bundle.
-
-
-
+  
 ## Remediation
 
 Move the trust decision from config-string provenance to target resolution. Before instantiating, resolve every `_target_` in the config tree and require each resolved target to come from an explicit allowlist of known-safe builder classes, or from bundle modules that are covered by `trust_user_code=True`; reject — or require explicit user trust for — targets that resolve to stdlib, site-packages, or espnet modules outside the allowlist. Keep the existing `_uses_bundled_code` check as an additional layer, and apply the same validation on the `from_pretrained` model-hub path and in the Gradio demo loader (`session.py`). A short-term workaround for users: never load bundles from untrusted sources, even with `trust_user_code=False`.
@@ -130,7 +128,9 @@ Move the trust decision from config-string provenance to target resolution. Befo
 
 - Source repository: https://github.com/espnet/espnet
 - Pinned commit: https://github.com/espnet/espnet/tree/bc6dd4ad9c522a998c0bd01c8ca30077aaa56e23
+- PyPI distribution: https://pypi.org/project/espnet/ (202610.post2 verified vulnerable)
 - Vulnerable files: `espnet3/publication/inference_model.py`, `espnet3/systems/base/inference_provider.py`, `espnet3/publication/demo/session.py`
 - CWE: https://cwe.mitre.org/data/definitions/502.html
 - Upstream report: `[pending publication]`
 - Vendor advisory: `[none]`
+

@@ -1,0 +1,44 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\HITsz-TMG-Uni-MoE_unsafe-reflection_2026-10-06\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 680,
+  "settleMs": 1000,
+  "steps": [
+    { "command": "python --version" },
+    { "wait": 800 },
+    { "shot": "01-python-env.png" },
+
+    { "command": "type Uni-MoE-6f18a7ae\\COMMIT.txt" },
+    { "wait": 800 },
+    { "shot": "02-pinned-commit.png" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 10000 },
+    { "shot": "03-make-poc-packages.png" },
+
+    { "command": "dir model_pkg_positive" },
+    { "wait": 800 },
+    { "shot": "04-positive-package.png" },
+
+    { "command": "dir model_pkg_negative" },
+    { "wait": 800 },
+    { "shot": "05-negative-package.png" },
+
+    { "command": "python run_poc.py model_pkg_positive" },
+    { "wait": 20000 },
+    { "shot": "06-positive-effect.png" },
+
+    { "command": "dir pwned_unimoetts_canary.txt" },
+    { "wait": 800 },
+    { "shot": "07-canary-on-disk.png" },
+
+    { "command": "python run_poc.py model_pkg_negative" },
+    { "wait": 20000 },
+    { "shot": "08-negative-control.png" },
+
+    { "command": "dir pwned_unimoetts_canary.txt" },
+    { "wait": 800 },
+    { "shot": "09-negative-no-canary.png" }
+  ]
+}

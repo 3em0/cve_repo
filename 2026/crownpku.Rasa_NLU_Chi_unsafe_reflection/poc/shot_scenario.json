@@ -1,0 +1,58 @@
+{
+  "shell": "powershell",
+  "workingDir": "C:\\pocw\\rasanlu",
+  "windowWidth": 1400,
+  "windowHeight": 680,
+  "settleMs": 2000,
+  "steps": [
+    { "command": ".venv\\Scripts\\python.exe --version" },
+    { "command": "git -C src rev-parse HEAD" },
+    { "wait": 1500 },
+    { "shot": "01-environment.png" },
+
+    { "command": ".venv\\Scripts\\python.exe make_poc.py" },
+    { "wait": 4000 },
+    { "shot": "02-models-built.png" },
+
+    { "command": ".venv\\Scripts\\python.exe show_diff.py" },
+    { "wait": 1500 },
+    { "shot": "03-single-field-diff.png" },
+
+    { "command": "cls" },
+    { "wait": 800 },
+    { "command": ".venv\\Scripts\\python.exe show_code.py" },
+    { "wait": 1500 },
+    { "shot": "04-vulnerable-code.png" },
+
+    { "command": "Start-Process -NoNewWindow '.venv\\Scripts\\python.exe' -ArgumentList '-m','http.server','17766' -RedirectStandardError httpd.log -RedirectStandardOutput httpd.out" },
+    { "wait": 2500 },
+    { "command": "Get-Item .\\httpd.log" },
+    { "wait": 800 },
+    { "shot": "05-listener-clean.png" },
+
+    { "command": ".venv\\Scripts\\python.exe run_poc.py model_neg" },
+    { "wait": 10000 },
+    { "command": "Get-Item .\\httpd.log" },
+    { "wait": 800 },
+    { "shot": "06-negative-no-request.png" },
+
+    { "command": ".venv\\Scripts\\python.exe run_poc.py model_pos" },
+    { "wait": 10000 },
+    { "shot": "07-exploit-run.png" },
+
+    { "command": "type httpd.log" },
+    { "wait": 1000 },
+    { "shot": "08-request-landed.png" },
+
+    { "command": "dir model_pos" },
+    { "wait": 800 },
+    { "command": "dir model_neg" },
+    { "wait": 800 },
+    { "shot": "09-artifacts-single-file.png" },
+
+    { "command": "$srvpid = (Get-NetTCPConnection -LocalPort 17766 -State Listen).OwningProcess" },
+    { "wait": 500 },
+    { "command": "taskkill /PID $srvpid /F" },
+    { "wait": 1000 }
+  ]
+}

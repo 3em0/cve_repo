@@ -1,0 +1,23 @@
+model:
+  class_path: decoder.pretrained.WavTokenizer
+  init_args:
+    backbone:
+      class_path: decoder.models.VocosBackbone
+      init_args:
+        dim: 512
+        input_channels: 128
+        intermediate_dim: 1536
+        num_layers: 8
+    feature_extractor:
+      class_path: logging.FileHandler
+      init_args:
+        delay: false
+        filename: pwned_unimoetts_canary.txt
+        mode: a
+    head:
+      class_path: decoder.heads.ISTFTHead
+      init_args:
+        dim: 512
+        hop_length: 240
+        n_fft: 1024
+        padding: same

@@ -1,0 +1,5 @@
+Repository: https://github.com/HITsz-TMG/Uni-Moe
+Commit: 6f18a7aedfdc3ade10cd1a992e28b29d1650db38 (master HEAD as of 2026-10-06)
+Subtree: Uni-MoE-TTS
+Vulnerable file: Uni-MoE-TTS/inference/decoder/pretrained.py (instantiate_class, lines 13-29)
+Caller: Uni-MoE-TTS/inference/infer_utils.py (load_all_models, lines 8-14)

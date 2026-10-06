@@ -1,0 +1,12 @@
+# Minimal dependencies for the pinned-source PoC.
+# rasa_nlu itself is installed with --no-deps from the pinned commit;
+# these are the modules actually imported by the demonstrated chain
+# (rasa_nlu.model -> registry -> DucklingHTTPExtractor / WhitespaceTokenizer).
+requests
+simplejson
+six
+pyyaml
+future
+boto3
+numpy
+packaging

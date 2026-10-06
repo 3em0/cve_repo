@@ -1,0 +1,13 @@
+{
+  "shell": "cmd",
+  "windowWidth": 1400,
+  "windowHeight": 860,
+  "settleMs": 1500,
+  "steps": [
+    { "command": "cd /d %TEMP%\\vnccs-xss-e2e-20261005\\ComfyUI" },
+    { "command": "cd" },
+    { "command": "..\\venv\\Scripts\\python.exe main.py --cpu --disable-auto-launch --port 8188" },
+    { "wait": 90000 },
+    { "shot": "04-server-up.png" }
+  ]
+}

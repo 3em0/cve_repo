@@ -1,0 +1,54 @@
+{
+  "shell": "powershell",
+  "workingDir": "C:\\pocw",
+  "windowWidth": 1550,
+  "windowHeight": 920,
+  "settleMs": 2500,
+  "steps": [
+    { "command": ".venv\\Scripts\\python.exe env_check.py" },
+    { "wait": 9000 },
+    { "shot": "01-environment.png" },
+
+    { "command": ".venv\\Scripts\\python.exe make_poc.py" },
+    { "wait": 40000 },
+    { "shot": "02-build-checkpoints.png" },
+
+    { "command": ".venv\\Scripts\\python.exe show_diff.py" },
+    { "wait": 9000 },
+    { "shot": "03-single-field-diff.png" },
+
+    { "command": "dir ckpt" },
+    { "wait": 1200 },
+    { "command": "dir C:\\out" },
+    { "wait": 1200 },
+    { "shot": "04-artifacts-and-clean-state.png" },
+
+    { "command": ".venv\\Scripts\\python.exe victim.py ckpt/benign.pth" },
+    { "wait": 34000 },
+    { "shot": "05-negative-control.png" },
+
+    { "command": "dir C:\\out" },
+    { "wait": 1200 },
+    { "shot": "06-control-left-no-trace.png" },
+
+    { "command": ".venv\\Scripts\\python.exe victim.py ckpt/malicious.pth" },
+    { "wait": 34000 },
+    { "shot": "07-exploit-run.png" },
+
+    { "command": "dir C:\\out" },
+    { "wait": 1200 },
+    { "command": "type C:\\out\\pwned_by_robomimic_pool_class" },
+    { "wait": 1200 },
+    { "shot": "08-canary-landed.png" },
+
+    { "command": "cls" },
+    { "wait": 1000 },
+    { "command": "del C:\\out\\pwned_by_robomimic_pool_class" },
+    { "wait": 1000 },
+    { "command": ".venv\\Scripts\\python.exe victim_weights_only.py ckpt/malicious.pth" },
+    { "wait": 34000 },
+    { "command": "dir C:\\out -Name" },
+    { "wait": 1500 },
+    { "shot": "09-weights-only-still-fires.png" }
+  ]
+}

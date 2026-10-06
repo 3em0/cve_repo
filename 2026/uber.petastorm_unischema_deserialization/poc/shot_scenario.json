@@ -1,0 +1,53 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\uber-petastorm_rce_2026-10-05",
+  "windowWidth": 1400,
+  "windowHeight": 680,
+  "settleMs": 1200,
+  "steps": [
+    { "command": "docker run -it --name petastorm-poc-lab petastorm-poc:1 bash" },
+    { "wait": 6000 },
+
+    { "command": "python --version" },
+    { "command": "python -c \"import pyarrow; print('pyarrow', pyarrow.__version__)\"" },
+    { "command": "python -c \"import petastorm; print('petastorm', petastorm.__version__, petastorm.__file__)\"" },
+    { "shot": "01-environment.png" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 4000 },
+    { "shot": "02-build-datasets.png" },
+
+    { "command": "find dataset_evil -type f" },
+    { "shot": "03-dataset-contents.png" },
+
+    { "command": "python -c \"import petastorm.etl.legacy as m; print(m.__file__)\"" },
+    { "command": "sed -n '21,48p' /usr/local/lib/python3.10/dist-packages/petastorm/etl/legacy.py" },
+    { "shot": "04-vulnerable-code.png" },
+
+    { "command": "python -m petastorm.etl.metadata_util --dataset-url ./dataset_benign --schema" },
+    { "wait": 2500 },
+    { "shot": "05-benign-schema.png" },
+
+    { "command": "python read_dataset.py dataset_benign" },
+    { "wait": 3500 },
+    { "shot": "06-benign-read.png" },
+
+    { "command": "ls -l /tmp/petastorm-rce-proof.txt" },
+    { "shot": "07-proof-absent.png" },
+
+    { "command": "python -m petastorm.etl.metadata_util --dataset-url ./dataset_evil --schema" },
+    { "wait": 2500 },
+    { "shot": "08-evil-trigger.png" },
+
+    { "command": "cat /tmp/petastorm-rce-proof.txt" },
+    { "shot": "09-proof-file.png" },
+
+    { "command": "python read_dataset.py dataset_evil" },
+    { "wait": 3500 },
+    { "shot": "10-make-reader-trigger.png" },
+
+    { "command": "python -m petastorm.etl.metadata_util --dataset-url ./dataset_blocked --schema" },
+    { "wait": 2500 },
+    { "shot": "11-blocked-control.png" }
+  ]
+}

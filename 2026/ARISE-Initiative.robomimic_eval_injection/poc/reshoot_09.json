@@ -1,0 +1,18 @@
+{
+  "shell": "powershell",
+  "workingDir": "C:\\pocw",
+  "windowWidth": 1550,
+  "windowHeight": 920,
+  "settleMs": 2500,
+  "steps": [
+    { "command": "cls" },
+    { "wait": 2000 },
+    { "command": "del C:\\out\\pwned_by_robomimic_pool_class" },
+    { "wait": 2000 },
+    { "command": ".venv\\Scripts\\python.exe victim_weights_only.py ckpt/malicious.pth" },
+    { "wait": 40000 },
+    { "command": "dir C:\\out -Name" },
+    { "wait": 4000 },
+    { "shot": "09-weights-only-still-fires.png" }
+  ]
+}

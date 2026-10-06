@@ -1,0 +1,40 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\showlab-Show-o_llm-model-path-redirect_2026-10-06\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 860,
+  "settleMs": 1200,
+  "steps": [
+    { "command": "& 'C:\\Users\\Galaxyn\\showo2_repro_venv\\Scripts\\Activate.ps1'" },
+    { "wait": 1500 },
+
+    { "command": "python --version" },
+    { "command": "python -c \"import torch, transformers, diffusers; print('torch', torch.__version__, '| transformers', transformers.__version__, '| diffusers', diffusers.__version__)\"" },
+    { "wait": 6000 },
+    { "shot": "01-environment.png" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 15000 },
+    { "shot": "02-make-poc.png" },
+
+    { "command": "type work\\pkg_attacker\\config.json" },
+    { "shot": "03-first-hop-config.png" },
+
+    { "command": "Get-Content Show-o-45a5a2de01d1\\models\\modeling_showo.py | Select-Object -Skip 39 -First 7" },
+    { "shot": "04-vulnerable-code.png" },
+
+    { "command": "python run_repro.py pkg_attacker" },
+    { "wait": 12000 },
+    { "shot": "05-attacker-repo-requested.png" },
+
+    { "command": "type work\\hub_requests.log" },
+    { "shot": "06-request-log.png" },
+
+    { "command": "python run_repro.py pkg_default" },
+    { "wait": 12000 },
+    { "shot": "07-negative-official-repo.png" },
+
+    { "command": "exit" },
+    { "wait": 1500 }
+  ]
+}

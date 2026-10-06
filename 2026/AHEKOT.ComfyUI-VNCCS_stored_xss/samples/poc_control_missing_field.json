@@ -1,0 +1,82 @@
+{
+  "id": "cb50a96d-5d45-45f0-b60e-379bdac161f0",
+  "revision": 0,
+  "last_node_id": 405,
+  "last_link_id": 1040,
+  "nodes": [
+    {
+      "id": 405,
+      "type": "VNCCS_EmotionsGenerator",
+      "pos": [
+        2860,
+        -600
+      ],
+      "size": [
+        1630,
+        1240
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "pipe",
+          "type": "VNCCS_PIPE",
+          "link": null
+        },
+        {
+          "name": "emotion_data",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "sprites",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "name": "faces",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "vnccs",
+        "ver": "3.0.0",
+        "Node name for S&R": "VNCCS_EmotionsGenerator"
+      },
+      "widgets_values": [
+        "{}"
+      ]
+    }
+  ],
+  "links": [],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "workflowRendererVersion": "LG",
+    "groupNodes": {},
+    "ue_links": [],
+    "links_added_by_ue": [],
+    "ds": {
+      "scale": 0.6569900687547757,
+      "offset": [
+        -547.2918576953253,
+        1113.5343668976134
+      ]
+    },
+    "frontendVersion": "1.45.19",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}

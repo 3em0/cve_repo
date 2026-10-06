@@ -1,0 +1,35 @@
+[project]
+name = "vnccs"
+description = "VNCCS - Visual Novel Character Creation Suite"
+version = "3.1.2"
+license = {file = "LICENSE"} 
+
+dependencies = [
+    "torch",
+    "numpy",
+    "Pillow",
+    "opencv-python",
+    "llama-cpp-python>=0.3.16",
+    "einops",
+    "safetensors",
+    "huggingface-hub[torch]>=0.22",
+    "json_repair",
+    "aiohttp",
+    "timm",
+    "torchvision",
+    "transformers",
+    "kornia",
+    "pymatting",
+    "transparent-background",
+]
+
+[project.urls]
+Repository = "https://github.com/AHEKOT/ComfyUI_VNCCS"
+#  Used by Comfy Registry https://registry.comfy.org
+Documentation = "https://github.com/AHEKOT/ComfyUI_VNCCS/wiki"
+"Bug Tracker" = "https://github.com/AHEKOT/ComfyUI_VNCCS/issues"
+
+[tool.comfy]
+PublisherId = "vnccs"
+DisplayName = "VNCCS - Visual Novel Character Creation Suite"
+Icon = "https://github.com/AHEKOT/ComfyUI_VNCCS/raw/refs/heads/main/images/VNCCS_LOGO.png"

@@ -1,0 +1,35 @@
+﻿# SHA256SUMS -- robomimic pool_class eval() reproduction kit
+# Generated 2026-10-05 on Windows 11 (build 26200) / CPython 3.12.10 / torch 2.12.0+cpu
+
+# --- regeneration scripts (stable: these are the shipped PoC sources) ---
+b554880df2413d4d6f2ae29a7c7a01de80f0cce3ac3cbec724c6364df763350d  poc/env_check.py
+35d10e504d204d492a564452d7e76a0ee1c5611da44aef7f3403c4be36be2598  poc/make_poc.py
+00bd4cebb0ba8a60e3ebe8bdc1fdebdc83a17defde75517415b33d7b8d759aea  poc/reshoot_09.json
+5c3c8c855f7c6a4ddfe2a256d3125551c85dbf5d90c4f014ac8a32da6295111a  poc/run_repro.ps1
+8416b127e3662945df297e61315d381eeb8b8cb3831958afa3e4012531dcb5da  poc/shot_scenario.json
+4ba1b3f6688b64baa2a5563116c5b5d201afe98be9b9a0b5f7b0ac1f3b0e5933  poc/show_diff.py
+f22d4ab7a6e4e11f038fbbe2bd97e9bd7dceefccab7ce9259d76931918bfde76  poc/victim.py
+33939d1340b1ad3e1786bf1d6d813a407a7f1c190aef5507b922f5ecb80e4ba1  poc/victim_weights_only.py
+# note: poc/real_terminal_shot.ps1 is the unmodified driver shipped with the cve-report skill
+
+# --- captured evidence (stable) ---
+5ab3e5441088f8aed1d27a759c18f5d9c27554b46cd1a30a35deb7d0207d3359  screenshots/01-environment.png
+bf745f71db42da6d1f3a06b9cbe56c7f28e6660a0202e3ae2d3f0194b702c60a  screenshots/02-build-checkpoints.png
+3545982f7a3087562ec159496777b4e7fb169da4261338f11a44ffefc40f1c64  screenshots/03-single-field-diff.png
+9b4fdbf4c1e23fdc823a64b6dc76694de41bd19bbf6d686c9501598ede186c54  screenshots/04-artifacts-and-clean-state.png
+27f44808f03b1ebdcfc0f1502cc758d77b829f1d30fc91bbf5de865eaaa50f5b  screenshots/05-negative-control.png
+b95cf92c2eaba31cce3a327921479fcc35bde1ee2b88c6d1efca347890394284  screenshots/06-control-left-no-trace.png
+af616161bd38f71691d972a22d24f6ba7595cda78faca3df9ba922891cc8cbf5  screenshots/07-exploit-run.png
+0a34786c9a37b7532e96cfbd1c2e7acec0d4bcf9fd9543a9f3ba532df558e9a0  screenshots/08-canary-landed.png
+8ad05260da08d58de17e0177433a25a34edf6f261e5a5a3b7c9713995c4d9e88  screenshots/09-weights-only-still-fires.png
+
+# --- generated checkpoints (RUN-SPECIFIC, see note) ---
+# make_poc.py builds a freshly, randomly initialised BC/ResNet18 policy on every run,
+# so the .pth bytes differ between runs while the file SIZE is stable:
+#   benign.pth    49404650 bytes   pool_class = 'SpatialSoftmax'
+#   malicious.pth 49410507 bytes   pool_class = <payload>
+# The hashes below are for the exact artifacts the screenshots were captured against.
+# Verify a regenerated pair by size + by python show_diff.py (must report exactly 1
+# differing config leaf), not by these hashes.
+688538e15c5c69a370e1de0e3ccff3b4dceaf423d3cee638283d98889e99a283  ckpt/benign.pth (not shipped; 49404650 bytes)
+632cd2a4f97973cbd445e723a95bac91b14d7a93ebf678c6873bb639d28d3eb1  ckpt/malicious.pth (not shipped; 49410507 bytes)

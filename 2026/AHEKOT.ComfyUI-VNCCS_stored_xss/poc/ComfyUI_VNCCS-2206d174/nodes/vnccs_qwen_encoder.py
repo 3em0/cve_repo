@@ -1,0 +1,330 @@
+"""VNCCS QWEN Encoder node
+
+This node is a simplified variant of the QWEN image-to-conditioning encoder
+that accepts exactly three images and three per-image weights (0.0-1.0, step 0.01, quadratic mapping for fine control)
+to control each image's influence via weighted reference latents. Also includes use_ref flags to exclude latents from reference_latents while keeping VL influence.
+
+Class: VNCCS_QWEN_Encoder
+- INPUTS: clip, prompt, vae, image1/2/3, weight1..weight3, vl_size, latent_image_index, resize/control flags
+- OUTPUTS: positive, negative, latent
+
+This file relies on runtime objects provided by ComfyUI (clip, vae, comfy.utils, node_helpers).
+"""
+
+import types
+import sys
+try:
+    import node_helpers
+except Exception:
+    # minimal safe fallback for environments without ComfyUI
+    class _NodeHelpersFallback:
+        @staticmethod
+        def conditioning_set_values(conditioning, values, append=False):
+            # best-effort: if conditioning looks like a list of (tensor, dict) pairs, attach values
+            try:
+                new_conditioning = []
+                for cond in conditioning:
+                    if isinstance(cond, (list, tuple)) and len(cond) >= 2:
+                        cond_tensor = cond[0]
+                        cond_dict = dict(cond[1]) if isinstance(cond[1], dict) else {}
+                        if append:
+                            for k, v in values.items():
+                                if k in cond_dict and isinstance(cond_dict[k], list):
+                                    cond_dict[k].extend(v if isinstance(v, list) else [v])
+                                else:
+                                    cond_dict[k] = list(v) if isinstance(v, list) else [v]
+                        else:
+                            cond_dict.update(values)
+                        new_conditioning.append((cond_tensor, cond_dict))
+                    else:
+                        new_conditioning.append(cond)
+                return new_conditioning
+            except Exception:
+                return conditioning
+    node_helpers = _NodeHelpersFallback()
+
+try:
+    import comfy.utils
+except Exception:
+    # minimal comfy.utils fallback with common_upscale passthrough
+    class _ComfyUtilsFallback:
+        @staticmethod
+        def common_upscale(samples, width, height, method, crop):
+            # best-effort: return input unchanged
+            return samples
+    comfy = types.SimpleNamespace(utils=_ComfyUtilsFallback())
+
+import math
+try:
+    import torch
+except Exception:
+    torch = None
+try:
+    import numpy as np
+except Exception:
+    np = None
+try:
+    from PIL import Image
+except Exception:
+    Image = None
+
+
+ENCODER_BACKGROUND_RGB = {
+    "white": (1.0, 1.0, 1.0),
+    "green": (0.0, 1.0, 0.0),
+    "blue": (0.0, 0.0, 1.0),
+}
+
+
+def _encoder_background_rgb(background_color):
+    if isinstance(background_color, str):
+        value = background_color.strip()
+        lowered = value.lower()
+        if lowered in ENCODER_BACKGROUND_RGB:
+            return ENCODER_BACKGROUND_RGB[lowered]
+        if lowered.startswith("#") and len(lowered) == 7:
+            try:
+                return tuple(int(lowered[i:i + 2], 16) / 255.0 for i in (1, 3, 5))
+            except ValueError:
+                pass
+    return ENCODER_BACKGROUND_RGB["white"]
+
+
+class VNCCS_QWEN_Encoder:
+    upscale_methods = ["lanczos", "bicubic", "area"]
+    crop_methods = ["pad", "center", "disabled"]
+    target_sizes = [1024, 1344, 1536, 2048, 768, 512]
+    @classmethod
+    def INPUT_TYPES(cls):
+        tooltips = {
+            "clip": "Input CLIP model for text encoding.",
+            "prompt": "Positive prompt describing the desired output.",
+            "vae": "VAE model for encoding/decoding images.",
+            "latent_image_index": "Select which input image (1, 2, or 3) to use as the base latent for generation.",
+            "image1": "First reference image.",
+            "image2": "Second reference image.",
+            "image3": "Third reference image.",
+            "image1_name": "Name tag for the first image, used in the prompt construction (e.g. 'Picture 1').",
+            "image2_name": "Name tag for the second image.",
+            "image3_name": "Name tag for the third image.",
+            "target_size": "Target scale in square-pixel area. With crop disabled, aspect ratio is preserved and only total megapixels change.",
+            "upscale_method": "Method used for resizing images.",
+            "crop_method": "How to handle aspect ratio changes: 'center' crop, 'pad' with black bars, or 'disabled'.",
+            "weight1": "Influence strength of Image 1 reference latents.",
+            "weight2": "Influence strength of Image 2 reference latents.",
+            "weight3": "Influence strength of Image 3 reference latents.",
+            "vl_size": "Resolution for Vision-Language processing (Qwen). Lower values are faster but less detailed.",
+            "background_color": "Color used only to flatten transparent pixels before Qwen/VAE encoding.",
+            "instruction": "System instruction for the Qwen model describing how to interpret the images and prompt.",
+            "qwen_2511": "Enable special handling for Qwen 2511 model versions (strongly recommended).",
+        }
+        
+        return {
+            "required": 
+            {
+                "clip": ("CLIP", {"tooltip": tooltips["clip"]}),
+                "prompt": ("STRING", {"multiline": True, "dynamicPrompts": True, "tooltip": tooltips["prompt"]}),
+                "vae": ("VAE", {"tooltip": tooltips["vae"]}),
+            },
+            "optional": 
+            {
+                "latent_image_index": ("INT", {"default": 1, "min": 1, "max": 3, "step": 1, "tooltip": tooltips["latent_image_index"]}),
+                "image1": ("IMAGE", {"tooltip": tooltips["image1"]}),
+                "image2": ("IMAGE", {"tooltip": tooltips["image2"]}),
+                "image3": ("IMAGE", {"tooltip": tooltips["image3"]}),
+                "image1_name": ("STRING", {"default": "Picture 1", "tooltip": tooltips["image1_name"]}),
+                "image2_name": ("STRING", {"default": "Picture 2", "tooltip": tooltips["image2_name"]}),
+                "image3_name": ("STRING", {"default": "Picture 3", "tooltip": tooltips["image3_name"]}),
+                "target_size": (cls.target_sizes, {"default": 1024, "tooltip": tooltips["target_size"]}),
+                "upscale_method": (cls.upscale_methods, {"tooltip": tooltips["upscale_method"]}),
+                "crop_method": (cls.crop_methods, {"tooltip": tooltips["crop_method"]}),
+                "weight1": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 2.0, "step": 0.01, "tooltip": tooltips["weight1"]}),
+                "weight2": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 2.0, "step": 0.01, "tooltip": tooltips["weight2"]}),
+                "weight3": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 2.0, "step": 0.01, "tooltip": tooltips["weight3"]}),
+                "vl_size": ("INT", {"default": 384, "min": 256, "max": 1024, "step": 8, "tooltip": tooltips["vl_size"]}),
+                "instruction": ("STRING", {"multiline": True, "default": "Describe the key features of the input image (color, shape, size, texture, objects, background), then explain how the user's text instruction should alter or modify the image. Generate a new image that meets the user's requirements while maintaining consistency with the original input where appropriate.", "tooltip": tooltips["instruction"]}),
+                "qwen_2511": ("BOOLEAN", {"default": True, "tooltip": tooltips["qwen_2511"]}),
+                "background_color": ("STRING", {"default": "White", "tooltip": tooltips["background_color"]}),
+            }
+        }
+
+    RETURN_TYPES = ("CONDITIONING", "CONDITIONING", "LATENT")
+    RETURN_NAMES = ("positive", "negative", "latent")
+    FUNCTION = "encode"
+
+    CATEGORY = "VNCCS/encoding"
+
+    def _process_image(self, image: torch.Tensor, target_size: int, upscale_method: str, crop_method: str) -> torch.Tensor:
+        """Resize image to target_size^2 pixels while preserving aspect unless crop mode changes it."""
+        samples = image.movedim(-1, 1)
+        current_total = (samples.shape[3] * samples.shape[2])
+        total = int(target_size * target_size)
+        scale_by = math.sqrt(total / current_total)
+        
+        if crop_method == "pad":
+            crop = "center"
+            # pad image to upper size
+            scaled_width = round(samples.shape[3] * scale_by)
+            scaled_height = round(samples.shape[2] * scale_by)
+            canvas_width = math.ceil(samples.shape[3] * scale_by / 8.0) * 8
+            canvas_height = math.ceil(samples.shape[2] * scale_by / 8.0) * 8
+            
+            # pad image to canvas size
+            canvas = torch.zeros(
+                (samples.shape[0], samples.shape[1], canvas_height, canvas_width),
+                dtype=samples.dtype,
+                device=samples.device
+            )
+            resized_samples = comfy.utils.common_upscale(samples, scaled_width, scaled_height, upscale_method, crop)
+            resized_width = resized_samples.shape[3]
+            resized_height = resized_samples.shape[2]
+            
+            canvas[:, :, :resized_height, :resized_width] = resized_samples
+            s = canvas
+        else:
+            width = round(samples.shape[3] * scale_by / 8.0) * 8
+            height = round(samples.shape[2] * scale_by / 8.0) * 8
+            # Ensure even dimensions
+            width = max(8, width)
+            height = max(8, height)
+            crop = crop_method
+            s = comfy.utils.common_upscale(samples, width, height, upscale_method, crop)
+            
+        return s.movedim(1, -1)
+
+    def _prepare_encoder_image(self, image: torch.Tensor, background_color="White") -> torch.Tensor:
+        """Flatten alpha immediately before Qwen/VAE encoding; leave RGB tensors untouched."""
+        if image is None or not torch.is_tensor(image):
+            return image
+        if image.ndim == 3:
+            image = image.unsqueeze(0)
+        if image.ndim != 4:
+            return image
+        if not torch.is_floating_point(image):
+            image = image.float()
+        if image.numel() and image.detach().max() > 1.5:
+            image = image / 255.0
+        image = image.clamp(0.0, 1.0)
+        channels = int(image.shape[-1])
+        if channels == 1:
+            return image.repeat(1, 1, 1, 3)
+        if channels < 4:
+            return image
+
+        rgb = image[..., :3]
+        alpha = image[..., 3:4].clamp(0.0, 1.0)
+        if bool((alpha < 0.999).any().item()):
+            bg = torch.tensor(
+                _encoder_background_rgb(background_color),
+                dtype=rgb.dtype,
+                device=rgb.device,
+            ).view(1, 1, 1, 3)
+            rgb = rgb * alpha + bg * (1.0 - alpha)
+        return rgb.clamp(0.0, 1.0)
+
+    def encode(self, clip, prompt, vae=None, 
+               image1=None, image2=None, image3=None,
+               target_size=1024, 
+               upscale_method="lanczos",
+               crop_method="center",
+               instruction="",
+               image1_name="Picture 1", image2_name="Picture 2", image3_name="Picture 3",
+               weight1=1.0, weight2=1.0, weight3=1.0,
+               vl_size=384,
+               latent_image_index=1,
+               qwen_2511=True,
+               background_color="White",
+               ):
+        
+        ref_latents = []
+        input_images = [image1, image2, image3]
+        names = [image1_name, image2_name, image3_name]
+        
+        vl_images = []
+        template_prefix = "<|im_start|>system\n"
+        template_suffix = "<|im_end|>\n<|im_start|>user\n{}<|im_end|>\n<|im_start|>assistant\n"
+        
+        instruction_content = ""
+        if instruction == "":
+            instruction_content = "Describe the key features of the input image (color, shape, size, texture, objects, background), then explain how the user's text instruction should alter or modify the image. Generate a new image that meets the user's requirements while maintaining consistency with the original input where appropriate."
+        else:
+            # for handling mis use of instruction
+            if template_prefix in instruction:
+                # remove prefix from instruction
+                instruction = instruction.split(template_prefix)[1]
+            if template_suffix in instruction:
+                # remove suffix from instruction
+                instruction = instruction.split(template_suffix)[0]
+            if "{}" in instruction:
+                # remove {} from instruction
+                instruction = instruction.replace("{}", "")
+            instruction_content = instruction
+            
+        llama_template = template_prefix + instruction_content + template_suffix
+        image_prompt = ""
+
+        # Process each input image
+        for i, image in enumerate(input_images):
+            if image is not None:
+                image = self._prepare_encoder_image(image, background_color)
+                # 1. Processing for Reference Latents (VAE)
+                processed_ref = self._process_image(image, target_size, upscale_method, crop_method)
+                ref_latents.append(vae.encode(processed_ref[:, :, :, :3]))
+                
+                # 2. Processing for VL (Qwen) - resizing to vl_size and padding/cropping
+                processed_vl = self._process_image(image, vl_size, upscale_method, crop_method)
+                vl_images.append(processed_vl)
+                
+                # Add special tokens for this image
+                image_prompt += "{}: <|vision_start|><|image_pad|><|vision_end|>".format(names[i])
+                
+        tokens = clip.tokenize(image_prompt + prompt, images=vl_images, llama_template=llama_template)
+        conditioning = clip.encode_from_tokens_scheduled(tokens)
+
+        # If QWEN 2511 checkbox enabled, modify conditioning to include
+        # reference_latents_method = "index_timestep_zero" by default.
+        # Use node_helpers.conditioning_set_values to attach the value.
+        try:
+            if qwen_2511:
+                # prefer explicit method name; handle possible ux/uso variants
+                method = "index_timestep_zero"
+                conditioning = node_helpers.conditioning_set_values(conditioning, {"reference_latents_method": method})
+        except Exception as exc:
+            # best-effort: if node_helpers not available or fails, continue with unmodified conditioning
+            print(f"[VNCCS Qwen Encoder] Failed to apply reference latent conditioning metadata: {exc}")
+        
+        conditioning_full_ref = conditioning
+        if len(ref_latents) > 0:
+            # Apply weights to ref_latents
+            weights_list = [weight1, weight2, weight3]
+            ref_latents_weighted = [ (w ** 2) * latent for w, latent in zip(weights_list[:len(ref_latents)], ref_latents) ]
+            
+            # Filter out zero-weighted latents for full_ref
+            ref_latents_full = [latent for latent, w in zip(ref_latents_weighted, weights_list[:len(ref_latents)]) if w > 0]
+            conditioning_full_ref = node_helpers.conditioning_set_values(conditioning, {"reference_latents": ref_latents_full}, append=True)
+        
+        # Create negative conditioning by zeroing out the positive conditioning tensors
+        conditioning_negative = [(torch.zeros_like(cond[0]), cond[1]) for cond in conditioning_full_ref]
+        
+        # Return latent of selected image if available, otherwise return empty latent
+        if len(ref_latents) >= latent_image_index:
+            samples = ref_latents[latent_image_index - 1]
+        else:
+            samples = torch.zeros(1, 4, 128, 128)
+        latent_out = {"samples": samples}
+        
+        return (conditioning_full_ref, conditioning_negative, latent_out)
+
+
+# Registration mapping so Comfy finds the node
+NODE_CLASS_MAPPINGS = {
+    "VNCCS_QWEN_Encoder": VNCCS_QWEN_Encoder,
+}
+
+NODE_DISPLAY_NAME_MAPPINGS = {
+    "VNCCS_QWEN_Encoder": "VNCCS QWEN Encoder",
+}
+
+NODE_CATEGORY_MAPPINGS = {
+    "VNCCS_QWEN_Encoder": "VNCCS/encoding",
+}

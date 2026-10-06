@@ -1,0 +1,70 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\memoavatar-memo_shard_index_defeats_use_safetensors_2026-10-06\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 800,
+  "settleMs": 1500,
+  "steps": [
+    { "command": "docker --version" },
+    { "shot": "01-env-docker.png" },
+
+    { "command": "docker build -t memo-poc:151b0243 ." },
+    { "wait": 90000 },
+    { "shot": "02-build.png" },
+
+    { "command": "docker run -d --name memo-poc memo-poc:151b0243" },
+    { "wait": 4000 },
+
+    { "command": "docker exec memo-poc pip show torch accelerate" },
+    { "wait": 4000 },
+    { "shot": "03-env-torch-accelerate.png" },
+
+    { "command": "docker exec memo-poc pip show diffusers transformers" },
+    { "wait": 4000 },
+    { "shot": "04-env-diffusers-transformers.png" },
+
+    { "command": "docker exec memo-poc sed -n 140,155p /opt/memo/inference.py" },
+    { "wait": 3000 },
+    { "shot": "05-product-call.png" },
+
+    { "command": "docker exec memo-poc python make_poc.py" },
+    { "wait": 75000 },
+    { "shot": "06-make-poc.png" },
+
+    { "command": "docker exec memo-poc cat SHA256SUMS.txt" },
+    { "wait": 3000 },
+    { "shot": "07-sha256sums.png" },
+
+    { "command": "docker exec memo-poc head -n 12 out/memo_model_index_bin/reference_net/diffusion_pytorch_model.safetensors.index.json" },
+    { "wait": 3000 },
+    { "shot": "08-index-positive.png" },
+
+    { "command": "docker exec memo-poc grep -n second_stage.bin out/memo_model_index_bin/reference_net/diffusion_pytorch_model.safetensors.index.json" },
+    { "wait": 3000 },
+    { "shot": "09-index-grep.png" },
+
+    { "command": "docker exec memo-poc ls -l out/memo_model_index_bin/reference_net" },
+    { "wait": 3000 },
+    { "shot": "10-arm-files.png" },
+
+    { "command": "docker exec memo-poc python run_poc.py out/memo_model_index_bin" },
+    { "wait": 45000 },
+    { "shot": "11-positive-payload.png" },
+
+    { "command": "docker exec memo-poc cat out/RCE_MARKER_MEMO_SHARD_INDEX.txt" },
+    { "wait": 3000 },
+    { "shot": "12-marker.png" },
+
+    { "command": "docker exec memo-poc python run_poc.py out/memo_model_index_safe" },
+    { "wait": 45000 },
+    { "shot": "13-negative-clean.png" },
+
+    { "command": "docker exec memo-poc python run_poc.py out/memo_model_noindex" },
+    { "wait": 45000 },
+    { "shot": "14-noindex-clean.png" },
+
+    { "command": "docker exec memo-poc python run_poc.py out/memo_model_index_bin --guard" },
+    { "wait": 45000 },
+    { "shot": "15-guard-contrast.png" }
+  ]
+}

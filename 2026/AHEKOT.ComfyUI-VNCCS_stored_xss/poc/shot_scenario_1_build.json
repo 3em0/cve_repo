@@ -1,0 +1,20 @@
+{
+  "shell": "cmd",
+  "workingDir": "poc",
+  "windowWidth": 1400,
+  "windowHeight": 860,
+  "settleMs": 1200,
+  "steps": [
+    { "keys": "^-" },
+    { "keys": "^-" },
+    { "keys": "^-" },
+    { "command": "python --version" },
+    { "command": "python make_poc.py" },
+    { "wait": 1500 },
+    { "shot": "01-make-poc.png" },
+    { "command": "dir ..\\samples" },
+    { "shot": "02-samples.png" },
+    { "command": "type SHA256SUMS.txt" },
+    { "shot": "03-sha256.png" }
+  ]
+}

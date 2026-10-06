@@ -1,0 +1,21 @@
+{
+  "shell": "cmd",
+  "workingDir": "AHEKOT-ComfyUI_VNCCS_stored-xss_2026-10-05\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 860,
+  "settleMs": 1500,
+  "steps": [
+    { "command": "title VNCCS-XSS-DRIVE" },
+    { "command": "cls" },
+    { "keys": "^-" },
+    { "keys": "^-" },
+    { "keys": "^-" },
+    { "keys": "^-" },
+    { "command": "set PY=%TEMP%\\vnccs-xss-e2e-20261005\\venv\\Scripts\\python.exe" },
+    { "command": "%PY% verify_poc.py --sample ..\\samples\\poc_xss_positive.json --expect fire" },
+    { "wait": 20000 },
+    { "shot": "05-positive-fires.png" },
+    { "command": "%PY% verify_poc.py --sample ..\\samples\\poc_xss_positive.json --expect fire --browser-shot ..\\screenshots\\10-browser-positive.png" },
+    { "wait": 25000 }
+  ]
+}

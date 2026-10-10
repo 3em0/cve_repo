@@ -1,0 +1,10 @@
+{
+  "tokenizer_class": "MinionsPwnTokenizer",
+  "auto_map": {
+    "AutoTokenizer": [
+      "tokenization_minions_pwn.MinionsPwnTokenizer",
+      null
+    ]
+  },
+  "pad_token": "[PAD]"
+}

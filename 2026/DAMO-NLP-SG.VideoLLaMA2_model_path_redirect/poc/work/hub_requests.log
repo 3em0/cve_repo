@@ -1,0 +1,11 @@
+HEAD attacker/videollama2-base/resolve/main/tokenizer_config.json
+GET  attacker/videollama2-base/resolve/main/tokenizer_config.json
+HEAD attacker/videollama2-base/resolve/main/tokenizer.json
+GET  attacker/videollama2-base/resolve/main/tokenizer.json
+HEAD attacker/videollama2-base/resolve/main/added_tokens.json
+HEAD attacker/videollama2-base/resolve/main/special_tokens_map.json
+GET  attacker/videollama2-base/resolve/main/special_tokens_map.json
+HEAD attacker/videollama2-base/resolve/main/model.safetensors
+GET  attacker/videollama2-base/resolve/main/model.safetensors
+HEAD attacker/videollama2-base/resolve/main/generation_config.json
+GET  attacker/videollama2-base/resolve/main/generation_config.json

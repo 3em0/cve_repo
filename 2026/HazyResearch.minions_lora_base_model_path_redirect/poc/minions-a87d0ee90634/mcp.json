@@ -1,0 +1,18 @@
+{
+    "mcpServers": {
+        "filesystem": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-filesystem",
+                "/Users/avanikanarayan/Developer/Research/minions-development/minions"
+            ]
+        },
+	"calculator": {
+      		"command": "python",
+      		"args": [
+        		"./tests/mcp_server_example/calculator_mcp_server_example.py"
+      		]
+    	}
+    }
+}

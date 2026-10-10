@@ -1,0 +1,21 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\HazyResearch-minions_directed-model-load_2026-10-06\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 760,
+  "settleMs": 1200,
+  "initCommands": [
+    "& 'C:\\Users\\Galaxyn\\showo2_repro_venv\\Scripts\\Activate.ps1'"
+  ],
+  "steps": [
+    { "wait": 4000 },
+    { "command": "cls" },
+    { "command": "gc work\\adapter_attacker\\adapter_config.json -TotalCount 14" },
+    { "wait": 2500 },
+    { "shot": "05-adapter-config-head.png" },
+    { "command": "cls" },
+    { "command": "dir pwned_by_minions_adapter.txt" },
+    { "wait": 2500 },
+    { "shot": "10-canary-absent.png" }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "5f1a2b3c-0000-4000-8000-00000000e001",
+  "inserted_at": null,
+  "updated_at": null,
+  "name": "<img src=x onerror=\"document.body.insertAdjacentHTML('beforeend','<div id=argilla-xss-canary>ARGILLA-XSS-CANARY-8f3a21</div>')\">",
+  "status": "ready",
+  "guidelines": null,
+  "allow_extra_metadata": false,
+  "distribution": {
+    "strategy": "overlap",
+    "min_submitted": 1
+  },
+  "workspace_id": null,
+  "last_activity_at": null
+}

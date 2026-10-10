@@ -1,0 +1,26 @@
+{
+  "shell": "cmd",
+  "windowWidth": 1400,
+  "windowHeight": 680,
+  "settleMs": 1500,
+  "initCommands": ["cd /d \"%TEMP%\\poc-work\\argilla-5338519\""],
+  "steps": [
+    { "command": "python make_poc.py" },
+    { "wait": 1500 },
+    { "shot": "09-make-poc-samples.png" },
+    { "command": "type poc_positive.json" },
+    { "wait": 1200 },
+    { "shot": "10-poc-payload.png" },
+    { "command": ".venv\\Scripts\\activate" },
+    { "wait": 1000 },
+    { "command": "python poc_api.py --base-url http://localhost:6910" },
+    { "wait": 15000 },
+    { "shot": "11-api-create-and-persist.png" },
+    { "command": "python show_stored.py" },
+    { "wait": 8000 },
+    { "shot": "12-stored-record-verbatim.png" },
+    { "command": "type SHA256SUMS.txt" },
+    { "wait": 800 },
+    { "shot": "13-sample-hashes.png" }
+  ]
+}

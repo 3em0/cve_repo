@@ -1,0 +1,57 @@
+{
+  "guidelines": null,
+  "questions": [
+    {
+      "id": null,
+      "inserted_at": null,
+      "updated_at": null,
+      "name": "label",
+      "settings": {
+        "type": "label_selection",
+        "options": [
+          {
+            "value": "yes",
+            "text": "yes",
+            "description": null
+          },
+          {
+            "value": "no",
+            "text": "no",
+            "description": null
+          }
+        ],
+        "visible_options": null
+      },
+      "title": "label",
+      "description": null,
+      "required": true,
+      "dataset_id": null,
+      "type": "label_selection"
+    }
+  ],
+  "fields": [
+    {
+      "id": null,
+      "inserted_at": null,
+      "updated_at": null,
+      "name": "text",
+      "settings": {
+        "type": "text",
+        "use_markdown": false
+      },
+      "title": "text",
+      "required": true,
+      "description": null,
+      "dataset_id": null,
+      "type": "text"
+    }
+  ],
+  "vectors": [],
+  "metadata": [],
+  "allow_extra_metadata": false,
+  "distribution": {
+    "strategy": "overlap",
+    "min_submitted": 1
+  },
+  "mapping": null
+}

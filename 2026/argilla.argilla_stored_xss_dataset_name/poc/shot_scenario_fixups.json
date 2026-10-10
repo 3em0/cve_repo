@@ -1,0 +1,15 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\argilla-argilla_stored-xss_2026-10-06\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 680,
+  "settleMs": 1200,
+  "steps": [
+    { "command": "docker ps --filter name=argilla-poc-es" },
+    { "wait": 2500 },
+    { "shot": "08-docker-ps.png" },
+    { "command": ".venv\\Scripts\\python.exe check_names.py" },
+    { "wait": 6000 },
+    { "shot": "12-stored-names-both.png" }
+  ]
+}

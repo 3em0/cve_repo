@@ -1,0 +1,14 @@
+{
+  "shell": "cmd",
+  "workingDir": "E:\\Reproduce\\argilla-io-argilla_stored-xss_2026-10-06-2",
+  "windowWidth": 1400,
+  "windowHeight": 900,
+  "settleMs": 1200,
+  "steps": [
+    { "command": ".venv\\Scripts\\activate" },
+    { "command": "docker ps --filter name=argilla248" },
+    { "wait": 2000 },
+    { "shot": "04-containers-up.png" },
+    { "command": "exit" }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\DAMO-NLP-SG-VideoLLaMA2_directed-model-load_2026-10-06\\poc",
+  "windowWidth": 1560,
+  "windowHeight": 950,
+  "settleMs": 1500,
+  "steps": [
+    { "command": "& 'C:\\Users\\Galaxyn\\vllama2_repro_venv\\Scripts\\Activate.ps1'" },
+    { "wait": 1500 },
+
+    { "command": "cls" },
+    { "command": "Get-Content VideoLLaMA2-c0bb03abf6b8\\videollama2\\model\\__init__.py | Select-Object -Skip 137 -First 12" },
+    { "shot": "04-vulnerable-code.png" },
+
+    { "command": "cls" },
+    { "command": "python run_poc.py pkg_attacker" },
+    { "wait": 30000 },
+    { "shot": "05-attacker-arm-redirect.png" },
+
+    { "command": "cls" },
+    { "command": "Get-Content work\\console-pkg_attacker.log -TotalCount 14" },
+    { "shot": "05b-attacker-crux.png" },
+
+    { "command": "exit" },
+    { "wait": 1500 }
+  ]
+}

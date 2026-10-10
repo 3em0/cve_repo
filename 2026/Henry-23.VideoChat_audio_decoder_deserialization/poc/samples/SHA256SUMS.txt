@@ -1,0 +1,2 @@
+f7302ee26f0aba862e952b4a4a50c2c58a49e247523a160afa806119bda5c2f9  weights/ZhipuAI/glm-4-voice-decoder/config.yaml
+9eae53d5d3749816c2275938bd2c3da7ec05ecd41a2ed9cbe5e260ad9d5ae987  weights/ZhipuAI/glm-4-voice-decoder/config.benign.yaml

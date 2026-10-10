@@ -1,0 +1,43 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\DAMO-NLP-SG-VideoLLaMA2_directed-model-load_2026-10-06\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 880,
+  "settleMs": 1500,
+  "steps": [
+    { "command": "& 'C:\\Users\\Galaxyn\\vllama2_repro_venv\\Scripts\\Activate.ps1'" },
+    { "wait": 1500 },
+
+    { "command": "python --version" },
+    { "command": "python -c \"import torch, transformers, huggingface_hub, timm, numpy; print('torch', torch.__version__, '| transformers', transformers.__version__, '| hf_hub', huggingface_hub.__version__, '| timm', timm.__version__, '| numpy', numpy.__version__)\"" },
+    { "wait": 15000 },
+    { "shot": "01-environment.png" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 30000 },
+    { "shot": "02-make-poc.png" },
+
+    { "command": "type work\\pkg_attacker\\config.json" },
+    { "shot": "03-package-config.png" },
+
+    { "command": "Get-Content VideoLLaMA2-c0bb03abf6b8\\videollama2\\model\\__init__.py | Select-Object -Skip 137 -First 18" },
+    { "shot": "04-vulnerable-code.png" },
+
+    { "command": "python run_poc.py pkg_attacker" },
+    { "wait": 30000 },
+    { "shot": "05-attacker-arm-redirect.png" },
+
+    { "command": "type work\\hub_requests.log" },
+    { "shot": "06-request-log.png" },
+
+    { "command": "Get-Content work\\SHA256SUMS.txt" },
+    { "shot": "07-sample-hashes.png" },
+
+    { "command": "python run_poc.py pkg_victim" },
+    { "wait": 30000 },
+    { "shot": "08-victim-arm-control.png" },
+
+    { "command": "exit" },
+    { "wait": 1500 }
+  ]
+}

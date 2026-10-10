@@ -1,0 +1,15 @@
+{
+  "id": "5f1a2b3c-0000-4000-8000-00000000e002",
+  "inserted_at": null,
+  "updated_at": null,
+  "name": "demo-safe-dataset-name",
+  "status": "ready",
+  "guidelines": null,
+  "allow_extra_metadata": false,
+  "distribution": {
+    "strategy": "overlap",
+    "min_submitted": 1
+  },
+  "workspace_id": null,
+  "last_activity_at": null
+}

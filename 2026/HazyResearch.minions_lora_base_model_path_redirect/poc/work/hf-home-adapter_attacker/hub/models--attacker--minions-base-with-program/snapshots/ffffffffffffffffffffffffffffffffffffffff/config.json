@@ -1,0 +1,14 @@
+{
+  "model_type": "minions_pwn",
+  "auto_map": {
+    "AutoConfig": "configuration_minions_pwn.MinionsPwnConfig",
+    "AutoModelForCausalLM": "modeling_minions_pwn.MinionsPwnForCausalLM"
+  },
+  "architectures": [
+    "MinionsPwnForCausalLM"
+  ],
+  "hidden_size": 8,
+  "vocab_size": 32,
+  "num_hidden_layers": 1,
+  "tie_word_embeddings": false
+}

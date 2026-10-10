@@ -1,0 +1,23 @@
+{
+  "shell": "cmd",
+  "workingDir": "E:\\Reproduce\\argilla-io-argilla_stored-xss_2026-10-06-2",
+  "windowWidth": 1400,
+  "windowHeight": 900,
+  "settleMs": 1200,
+  "steps": [
+    { "command": "python --version" },
+    { "shot": "01-env-python.png" },
+    { "command": ".venv\\Scripts\\activate" },
+    { "shot": "02-venv-activated.png" },
+    { "command": "pip show argilla" },
+    { "wait": 800 },
+    { "shot": "03-sdk-version.png" },
+    { "command": "docker ps" },
+    { "wait": 1500 },
+    { "shot": "04-containers-up.png" },
+    { "command": "python poc\\make_poc.py" },
+    { "wait": 18000 },
+    { "shot": "05-make-poc-both-arms.png" },
+    { "command": "exit" }
+  ]
+}

@@ -1,0 +1,14 @@
+# Negative control - identical file except that the `flow:` position is a
+# plain mapping with no HyperPyYAML constructor. Loading must succeed without
+# writing the canary file.
+__set_seed1: !apply:random.seed [1986]
+
+sample_rate: 22050
+llm_input_size: 1024
+llm_output_size: 1024
+spk_embed_dim: 192
+
+flow:
+    marker: benign-plain-mapping
+
+hift: !new:builtins.dict

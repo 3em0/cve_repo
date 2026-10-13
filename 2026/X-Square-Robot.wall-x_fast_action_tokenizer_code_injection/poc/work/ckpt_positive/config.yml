@@ -1,0 +1,9 @@
+model_type: qwen2_5
+processor_path: Qwen/Qwen2.5-VL-3B-Instruct
+action_tokenizer_type: fast
+action_tokenizer_path: /data/x2robot/checkpoints/tokenizers/fast-tokenizer-ar32
+ar_dof_config:
+  left_arm: 6
+  left_gripper: 1
+  right_arm: 6
+  right_gripper: 1

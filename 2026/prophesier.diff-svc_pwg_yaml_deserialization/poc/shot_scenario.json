@@ -1,0 +1,125 @@
+{
+  "shell": "powershell",
+  "workingDir": "%TEMP%\\cve_report_tmp\\diffsvc-deser",
+  "windowWidth": 1900,
+  "windowHeight": 1000,
+  "settleMs": 1600,
+  "initCommands": [
+    "docker run --rm -it --name deser-lab diffsvc-deser-poc bash",
+    "PS1='\\w\\$ '"
+  ],
+  "steps": [
+    { "command": "clear" },
+    { "command": "python -V" },
+    { "wait": 3000 },
+    { "command": "python -c \"import torch, yaml; print(torch.__version__, yaml.__version__)\"" },
+    { "wait": 25000 },
+    { "command": "python -c \"import scipy, numpy, librosa; print(scipy.__version__, numpy.__version__, librosa.__version__)\"" },
+    { "wait": 25000 },
+    { "shot": "01-runtime.png" },
+
+    { "command": "clear" },
+    { "command": "cat PINNED_COMMIT.txt" },
+    { "wait": 1500 },
+    { "shot": "02-pinned-commit.png" },
+
+    { "command": "clear" },
+    { "command": "grep -n \"Loader=yaml.Loader\" repo/network/vocoders/pwg.py" },
+    { "command": "sed -n \"16,19p\" repo/network/vocoders/pwg.py" },
+    { "wait": 1500 },
+    { "shot": "03-sink-code.png" },
+
+    { "command": "clear" },
+    { "command": "grep -n yaml.safe_load repo/utils/hparams.py" },
+    { "command": "grep -rn \"Loader=yaml.Loader\" --include=*.py repo" },
+    { "wait": 2000 },
+    { "shot": "04-two-boundaries.png" },
+
+    { "command": "clear" },
+    { "command": "python make_poc.py" },
+    { "wait": 55000 },
+    { "shot": "05-make-poc.png" },
+
+    { "command": "clear" },
+    { "command": "cd repo" },
+    { "wait": 1200 },
+    { "command": "find checkpoints/deser_pos checkpoints/deser_neg checkpoints/deser_missing -type f" },
+    { "command": "find checkpoints -name \"*.py\"" },
+    { "wait": 1500 },
+    { "shot": "06-arm-layout.png" },
+
+    { "command": "clear" },
+    { "command": "cat checkpoints/deser_pos/vocoder_dir/config.yaml" },
+    { "wait": 1200 },
+    { "shot": "07-inner-config-tagged.png" },
+
+    { "command": "clear" },
+    { "command": "diff checkpoints/deser_pos/vocoder_dir/config.yaml checkpoints/deser_neg/vocoder_dir/config.yaml" },
+    { "wait": 1500 },
+    { "shot": "08-single-node-diff.png" },
+
+    { "command": "clear" },
+    { "command": "ls -la checkpoints/deser_pos/vocoder_dir" },
+    { "wait": 1200 },
+    { "shot": "09-marker-absent.png" },
+
+    { "command": "clear" },
+    { "command": "python run.py --config checkpoints/deser_pos/config.yaml > /tmp/pos.log 2>&1" },
+    { "wait": 45000 },
+    { "command": "tail -n 20 /tmp/pos.log" },
+    { "wait": 1500 },
+    { "shot": "10-positive-run.png" },
+
+    { "command": "clear" },
+    { "command": "ls -la checkpoints/deser_pos/vocoder_dir" },
+    { "wait": 1200 },
+    { "shot": "11-marker-present.png" },
+
+    { "command": "clear" },
+    { "command": "cat checkpoints/deser_pos/vocoder_dir/DESERIALIZED.txt" },
+    { "wait": 1200 },
+    { "shot": "12-marker-content.png" },
+
+    { "command": "clear" },
+    { "command": "python run.py --config checkpoints/deser_neg/config.yaml > /tmp/neg.log 2>&1" },
+    { "wait": 40000 },
+    { "command": "tail -n 16 /tmp/neg.log" },
+    { "wait": 1500 },
+    { "shot": "13-negative-run.png" },
+
+    { "command": "clear" },
+    { "command": "ls -la checkpoints/deser_neg/vocoder_dir" },
+    { "wait": 1200 },
+    { "shot": "14-negative-no-effect.png" },
+
+    { "command": "clear" },
+    { "command": "python run.py --config checkpoints/deser_missing/config.yaml > /tmp/miss.log 2>&1" },
+    { "wait": 40000 },
+    { "command": "grep -n \"work/repo\" /tmp/miss.log" },
+    { "command": "tail -n 2 /tmp/miss.log" },
+    { "wait": 1500 },
+    { "shot": "15-missing-file-control.png" },
+
+    { "command": "clear" },
+    { "command": "python run.py --config checkpoints/outer_tag/config.yaml > /tmp/outer.log 2>&1" },
+    { "wait": 40000 },
+    { "command": "grep -n \"work/repo\" /tmp/outer.log" },
+    { "command": "grep -o \"python/object/apply:[a-z.]*\" /tmp/outer.log" },
+    { "command": "tail -n 1 /tmp/outer.log" },
+    { "wait": 2000 },
+    { "shot": "16-outer-boundary-refused.png" },
+
+    { "command": "clear" },
+    { "command": "ls checkpoints/outer_tag" },
+    { "wait": 1200 },
+    { "shot": "17-outer-no-effect.png" },
+
+    { "command": "clear" },
+    { "command": "history 30" },
+    { "wait": 1500 },
+    { "shot": "18-command-history.png" },
+
+    { "command": "exit" },
+    { "wait": 3000 }
+  ]
+}

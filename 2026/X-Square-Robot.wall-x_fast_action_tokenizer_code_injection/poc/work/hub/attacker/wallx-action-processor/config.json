@@ -1,0 +1,4 @@
+{
+  "processor_class": "WallXActionProcessor",
+  "action_horizon_ar": 32
+}

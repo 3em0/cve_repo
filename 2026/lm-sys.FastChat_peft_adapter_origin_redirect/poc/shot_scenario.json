@@ -1,0 +1,60 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\lm-sys-FastChat_base-model-redirect_2026-10-13\\poc",
+  "initCommands": [".\\.venv\\Scripts\\Activate.ps1"],
+  "windowWidth": 1400,
+  "windowHeight": 860,
+  "settleMs": 1200,
+  "steps": [
+    { "command": "python --version" },
+    { "command": "python -c \"import torch, transformers, peft; print('torch', torch.__version__, '| transformers', transformers.__version__, '| peft', peft.__version__)\"" },
+    { "wait": 15000 },
+    { "shot": "01-environment.png" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 45000 },
+    { "shot": "02-make-poc.png" },
+
+    { "command": "Get-Content work\\adapter_attack_peft\\adapter_config.json -TotalCount 6" },
+    { "shot": "03-adapter-config-attack.png" },
+
+    { "command": "Select-String -Path work\\adapter_*_peft\\adapter_config.json -Pattern base_model_name_or_path" },
+    { "shot": "04-adapter-config-diff.png" },
+
+    { "command": "Get-Content FastChat-587d5cf\\fastchat\\model\\model_adapter.py | Select-Object -Skip 642 -First 7" },
+    { "command": "Get-Content FastChat-587d5cf\\fastchat\\model\\model_adapter.py | Select-Object -Skip 679 -First 7" },
+    { "shot": "05-vulnerable-code.png" },
+
+    { "command": "Get-Content FastChat-587d5cf\\fastchat\\model\\model_adapter.py | Select-Object -Skip 104 -First 12" },
+    { "shot": "06-trust-remote-code-loader.png" },
+
+    { "command": "python run_repro.py adapter_attack_peft" },
+    { "wait": 60000 },
+    { "shot": "07-cli-attack.png" },
+
+    { "command": "Get-Content work\\hub_requests_adapter_attack_peft.log" },
+    { "shot": "08-hub-requests-attack.png" },
+
+    { "command": "python check_identity.py" },
+    { "wait": 60000 },
+    { "shot": "09-identity-oracle.png" },
+
+    { "command": "python run_repro.py adapter_benign_peft" },
+    { "wait": 60000 },
+    { "shot": "10-negative-control.png" },
+
+    { "command": "Get-Content work\\hub_requests_adapter_benign_peft.log" },
+    { "shot": "11-hub-requests-control.png" },
+
+    { "command": "python serve_cli_locally.py work\\adapter_attack_peft" },
+    { "wait": 60000 },
+    { "command": "Hello" },
+    { "wait": 25000 },
+    { "shot": "12-interactive-cli.png" },
+    { "command": "!!exit" },
+    { "wait": 3000 },
+
+    { "command": "exit" },
+    { "wait": 1500 }
+  ]
+}

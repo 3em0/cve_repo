@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "truncation": null,
+  "padding": null,
+  "added_tokens": [],
+  "normalizer": null,
+  "pre_tokenizer": {
+    "type": "Whitespace"
+  },
+  "post_processor": null,
+  "decoder": null,
+  "model": {
+    "type": "WordLevel",
+    "vocab": {
+      "<unk>": 0,
+      "<pad>": 1,
+      "<|action_token_0|>": 2,
+      "<|action_token_1|>": 3,
+      "<|action_token_2|>": 4,
+      "<|action_token_3|>": 5,
+      "hello": 6,
+      "world": 7
+    },
+    "unk_token": "<unk>"
+  }
+}

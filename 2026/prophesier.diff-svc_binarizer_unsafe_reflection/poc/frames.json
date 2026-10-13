@@ -1,0 +1,147 @@
+{
+  "workDir": "%TEMP%\\poc-work\\diff-svc-236de77-cve-report",
+  "windowWidth": 1400,
+  "windowHeight": 760,
+  "settleMs": 1200,
+  "modeCon": "mode con: cols=168 lines=58",
+  "frames": [
+    {
+      "dir": "poc",
+      "steps": [
+        { "command": "python --version" },
+        { "command": "$py = \"$env:TEMP\\poc-work\\venv-diffsvc\\Scripts\\python.exe\"" },
+        { "command": "& $py --version" },
+        { "enter": 5 },
+        { "shot": "01-python-env.png" }
+      ]
+    },
+    {
+      "dir": "poc",
+      "steps": [
+        { "command": "type source\\diff-svc-236de77\\COMMIT.txt" },
+        { "enter": 5 },
+        { "shot": "02-pinned-commit.png" }
+      ]
+    },
+    {
+      "dir": "poc",
+      "steps": [
+        { "command": "python make_poc.py" },
+        { "wait": 2000 },
+        { "enter": 6 },
+        { "shot": "03-make-poc-packages.png" }
+      ]
+    },
+    {
+      "dir": "poc",
+      "steps": [
+        { "command": "dir model_pkg_positive" },
+        { "enter": 5 },
+        { "shot": "04-positive-package-data-only.png" }
+      ]
+    },
+    {
+      "dir": "work",
+      "steps": [
+        { "command": "$py = \"$env:TEMP\\poc-work\\venv-diffsvc\\Scripts\\python.exe\"" },
+        { "command": "$env:PYTHONPATH = \".\"" },
+        { "command": "type preprocessing\\binarize.py" },
+        { "enter": 6 },
+        { "shot": "05-vulnerable-code.png" }
+      ]
+    },
+    {
+      "dir": "work",
+      "steps": [
+        { "command": "$py = \"$env:TEMP\\poc-work\\venv-diffsvc\\Scripts\\python.exe\"" },
+        { "command": "$env:PYTHONPATH = \".\"" },
+        { "command": "& $py preprocessing\\binarize.py --config model_pkg_positive\\config.yaml *> positive_run.log" },
+        { "wait": 16000 },
+        { "command": "Get-Content positive_run.log -Tail 14" },
+        { "enter": 6 },
+        { "shot": "06-positive-pwg-class.png" }
+      ]
+    },
+    {
+      "dir": "work",
+      "steps": [
+        { "command": "$py = \"$env:TEMP\\poc-work\\venv-diffsvc\\Scripts\\python.exe\"" },
+        { "command": "$env:PYTHONPATH = \".\"" },
+        { "command": "& $py preprocessing\\binarize.py --config model_pkg_negative\\config.yaml *> negative_run.log" },
+        { "wait": 18000 },
+        { "command": "Get-Content negative_run.log -Tail 24" },
+        { "enter": 6 },
+        { "shot": "07-negative-official-class.png" }
+      ]
+    },
+    {
+      "dir": "work",
+      "steps": [
+        { "command": "$py = \"$env:TEMP\\poc-work\\venv-diffsvc\\Scripts\\python.exe\"" },
+        { "command": "$env:PYTHONPATH = \".\"" },
+        { "command": "& $py preprocessing\\binarize.py --config model_pkg_arbitrary\\config.yaml *> arbitrary_run.log" },
+        { "wait": 11000 },
+        { "command": "Get-Content arbitrary_run.log -Tail 12" },
+        { "enter": 6 },
+        { "shot": "08-arbitrary-stdlib-class.png" }
+      ]
+    },
+    {
+      "dir": "work",
+      "steps": [
+        { "command": "$py = \"$env:TEMP\\poc-work\\venv-diffsvc\\Scripts\\python.exe\"" },
+        { "command": "$env:PYTHONPATH = \".\"" },
+        { "command": "Remove-Item $env:TEMP\\diffsvc_impact_out -Recurse -Force -ErrorAction SilentlyContinue" },
+        { "command": "mkdir $env:TEMP\\diffsvc_impact_out" },
+        { "command": "$env:TEMP = \"$env:TEMP\\diffsvc_impact_out\"" },
+        { "command": "dir $env:TEMP" },
+        { "enter": 5 },
+        { "shot": "09-impact-target-empty.png" }
+      ]
+    },
+    {
+      "dir": "work",
+      "steps": [
+        { "command": "$py = \"$env:TEMP\\poc-work\\venv-diffsvc\\Scripts\\python.exe\"" },
+        { "command": "$env:PYTHONPATH = \".\"" },
+        { "command": "$env:TEMP = \"$env:TEMP\\diffsvc_impact_out\"" },
+        { "command": "& $py preprocessing\\binarize.py --config model_pkg_impact\\config.yaml *> impact_run.log" },
+        { "wait": 11000 },
+        { "command": "Get-Content impact_run.log -Tail 14" },
+        { "enter": 6 },
+        { "shot": "10-impact-class-selected.png" }
+      ]
+    },
+    {
+      "dir": "work",
+      "steps": [
+        { "command": "$env:TEMP = \"$env:TEMP\\diffsvc_impact_out\"" },
+        { "command": "dir $env:TEMP" },
+        { "enter": 5 },
+        { "shot": "11-impact-file-created.png" }
+      ]
+    },
+    {
+      "dir": "work",
+      "steps": [
+        { "command": "$py = \"$env:TEMP\\poc-work\\venv-diffsvc\\Scripts\\python.exe\"" },
+        { "command": "$env:PYTHONPATH = \".\"" },
+        { "command": "Remove-Item $env:TEMP\\diffsvc_negative_out -Recurse -Force -ErrorAction SilentlyContinue" },
+        { "command": "mkdir $env:TEMP\\diffsvc_negative_out" },
+        { "command": "$env:TEMP = \"$env:TEMP\\diffsvc_negative_out\"" },
+        { "command": "& $py preprocessing\\binarize.py --config model_pkg_negative\\config.yaml *> negative_run2.log" },
+        { "wait": 18000 },
+        { "enter": 3 }
+      ]
+    },
+    {
+      "dir": "work",
+      "steps": [
+        { "command": "$env:TEMP = \"$env:TEMP\\diffsvc_negative_out\"" },
+        { "command": "dir $env:TEMP" },
+        { "enter": 5 },
+        { "shot": "12-negative-no-file-effect.png" }
+      ]
+    }
+  ]
+}

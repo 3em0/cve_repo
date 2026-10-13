@@ -1,0 +1,140 @@
+{
+  "shell": "powershell",
+  "workingDir": "%TEMP%\\poc-work\\diff-svc-236de77",
+  "windowWidth": 1900,
+  "windowHeight": 1000,
+  "settleMs": 1600,
+  "initCommands": [
+    "docker run --rm -it --name diffsvc-lab diffsvc-poc bash",
+    "PS1='\\w\\$ '"
+  ],
+  "steps": [
+    { "command": "clear" },
+    { "command": "python -V" },
+    { "wait": 3000 },
+    { "command": "python -c \"import torch, yaml; print(torch.__version__, yaml.__version__)\"" },
+    { "wait": 25000 },
+    { "command": "python -c \"import scipy, numpy, librosa; print(scipy.__version__, numpy.__version__, librosa.__version__)\"" },
+    { "wait": 25000 },
+    { "shot": "01-runtime.png" },
+
+    { "command": "clear" },
+    { "command": "cat PINNED_COMMIT.txt" },
+    { "wait": 1500 },
+    { "shot": "02-pinned-commit.png" },
+
+    { "command": "clear" },
+    { "command": "grep -n \"def get_vocoder_cls\" repo/network/vocoders/base_vocoder.py" },
+    { "command": "grep -n \"getattr(importlib\" repo/network/vocoders/base_vocoder.py" },
+    { "command": "sed -n \"11,19p\" repo/network/vocoders/base_vocoder.py" },
+    { "wait": 1500 },
+    { "shot": "03-vulnerable-code.png" },
+
+    { "command": "clear" },
+    { "command": "grep -n \"^vocoder\" repo/training/config.yaml" },
+    { "wait": 1200 },
+    { "shot": "04-shipped-config-dotted-name.png" },
+
+    { "command": "clear" },
+    { "command": "python make_poc.py" },
+    { "wait": 55000 },
+    { "shot": "05-make-poc.png" },
+
+    { "command": "clear" },
+    { "command": "cd /work/repo" },
+    { "wait": 1200 },
+    { "command": "cd checkpoints/evil_pwg" },
+    { "wait": 1200 },
+    { "command": "sha256sum config.yaml" },
+    { "command": "sha256sum vocoder_dir/config.yaml" },
+    { "wait": 1500 },
+    { "shot": "06-sha256sums.png" },
+    { "command": "cd /work/repo" },
+    { "wait": 1200 },
+
+    { "command": "clear" },
+    { "command": "find checkpoints/evil_pwg -type f" },
+    { "wait": 1200 },
+    { "shot": "07-package-has-no-code.png" },
+
+    { "command": "clear" },
+    { "command": "grep -rn \"^vocoder:\" checkpoints/evil_*/config.yaml" },
+    { "wait": 1500 },
+    { "shot": "08-four-variants-one-field.png" },
+
+    { "command": "clear" },
+    { "command": "grep -nE \"^(task_cls|vocoder|vocoder_ckpt):\" checkpoints/evil_pwg/config.yaml" },
+    { "wait": 1200 },
+    { "shot": "09-manifest-fields.png" },
+
+    { "command": "clear" },
+    { "command": "cat checkpoints/evil_pwg/vocoder_dir/config.yaml" },
+    { "wait": 1200 },
+    { "shot": "10-vocoder-dir-config.png" },
+
+    { "command": "clear" },
+    { "command": "ls -la checkpoints/evil_pwg/vocoder_dir" },
+    { "wait": 1200 },
+    { "shot": "11-marker-absent.png" },
+
+    { "command": "clear" },
+    { "command": "python run.py --config checkpoints/evil_pwg/config.yaml > /tmp/pwg.log 2>&1" },
+    { "wait": 45000 },
+    { "command": "tail -n 20 /tmp/pwg.log" },
+    { "wait": 1500 },
+    { "shot": "12-positive-pwg-run.png" },
+
+    { "command": "clear" },
+    { "command": "ls -la checkpoints/evil_pwg/vocoder_dir" },
+    { "wait": 1200 },
+    { "shot": "13-marker-present.png" },
+
+    { "command": "clear" },
+    { "command": "cat checkpoints/evil_pwg/vocoder_dir/DISPATCH_EFFECT.txt" },
+    { "wait": 1200 },
+    { "shot": "14-marker-content.png" },
+
+    { "command": "clear" },
+    { "command": "python run.py --config checkpoints/evil_hifigan/config.yaml > /tmp/hifi.log 2>&1" },
+    { "wait": 40000 },
+    { "command": "grep -n \"work/repo\" /tmp/hifi.log" },
+    { "command": "grep -o \"python/object/apply:[a-z.]*\" /tmp/hifi.log" },
+    { "command": "tail -n 1 /tmp/hifi.log" },
+    { "wait": 1500 },
+    { "shot": "15-negative-safe-loader.png" },
+
+    { "command": "clear" },
+    { "command": "ls -la checkpoints/evil_hifigan/vocoder_dir" },
+    { "wait": 1200 },
+    { "shot": "16-negative-no-effect.png" },
+
+    { "command": "clear" },
+    { "command": "python run.py --config checkpoints/evil_arbitrary/config.yaml > /tmp/arb.log 2>&1" },
+    { "wait": 40000 },
+    { "command": "tail -n 10 /tmp/arb.log" },
+    { "wait": 1500 },
+    { "shot": "17-arbitrary-class-run.png" },
+
+    { "command": "clear" },
+    { "command": "python run.py --config checkpoints/evil_missing_attr/config.yaml > /tmp/anchor.log 2>&1" },
+    { "wait": 40000 },
+    { "command": "tail -n 11 /tmp/anchor.log" },
+    { "wait": 1500 },
+    { "shot": "18-resolution-site-anchor.png" },
+
+    { "command": "clear" },
+    { "command": "grep -rn \"JSONDecodeError\" --include=*.py ." },
+    { "wait": 3000 },
+    { "command": "grep -rn \"JSONDecodeError\" checkpoints/evil_arbitrary/config.yaml" },
+    { "wait": 1500 },
+    { "shot": "19-string-provenance.png" },
+
+    { "command": "clear" },
+    { "command": "history 30" },
+    { "wait": 1500 },
+    { "shot": "20-command-history.png" },
+
+    { "command": "exit" },
+    { "wait": 3000 }
+  ]
+}

@@ -1,0 +1,17 @@
+2fb14b6cea37b16a3ca2fbeb120cb3389ed4d8d18eb53d280bb75877f5c7f044  evil_train_dir/cartpole_repro/checkpoint_p0/checkpoint_000000000_0.pth
+f13d0bf681a5534c6352c1ee9d1975bf11b26bd0c8f7e890d6f7e1df979322ef  evil_train_dir/cartpole_repro/checkpoint_p0/checkpoint_000000033_2112.pth
+1d18a369343474b3ebc57d34c9bc83a25fe030802b72263bf57711dce3739281  evil_train_dir/cartpole_repro/config.json
+2f8955d7118cb5f3632064053cf1dfff1c5e1d535362115b0800505c448858b6  evil_train_dir/cartpole_repro/sf_log.txt
+2fb14b6cea37b16a3ca2fbeb120cb3389ed4d8d18eb53d280bb75877f5c7f044  benign_train_dir/cartpole_repro/checkpoint_p0/checkpoint_000000000_0.pth
+f13d0bf681a5534c6352c1ee9d1975bf11b26bd0c8f7e890d6f7e1df979322ef  benign_train_dir/cartpole_repro/checkpoint_p0/checkpoint_000000033_2112.pth
+a6164dfad2364935412bea413d6886c6a49fa2a377db49e25cb9feada586cbf9  benign_train_dir/cartpole_repro/config.json
+2f8955d7118cb5f3632064053cf1dfff1c5e1d535362115b0800505c448858b6  benign_train_dir/cartpole_repro/sf_log.txt
+0af27ca28c6f67725e1ce4e763f690e762fe04369878a379d52d69783b3d0129  pinned source: sf-src/sample_factory/huggingface/huggingface_utils.py (146 lines)
+
+# 说明:
+# - 两个包的 checkpoint 逐字节相同(2 个哈希一致),sf_log.txt 也相同;唯一不同的是 config.json,
+#   而两个 config.json 之间也只有 video_name 一个键不同(见 07-config-diff.png)。
+# - 模型包只有 config.json / checkpoint_p0/ / sf_log.txt / .summary/,没有 .py、shell 脚本或插件。
+# - 路径以 models/ 为根;config.json 的哈希会随 $HOME 路径变化(里面有 train_dir/command_line 字段),
+#   重新生成时以 05-make-poc.png 里打印的 checkpoint 哈希为准。
+# - 本地 .summary/ 内含 tensorboard events 文件,文件名带主机名,故未列入本清单、也不随交付分发。

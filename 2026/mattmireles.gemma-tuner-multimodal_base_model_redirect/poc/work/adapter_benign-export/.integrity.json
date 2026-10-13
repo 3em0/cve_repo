@@ -1,0 +1,28 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "config.json": {
+      "hash": "e418405a8e658fa3ed7a4e37908da992598b9072e9a2d11ccb83ff6c98177189",
+      "size": 1898
+    },
+    "generation_config.json": {
+      "hash": "9cae2b9e5c4c4fd0e90f67de23e3713712bc5ec1ef1114d250ca458d574a2b3b",
+      "size": 226
+    },
+    "model.safetensors": {
+      "hash": "93137ee9d896e796cba86cd62255537fab18ee137640c61998120479046e0e80",
+      "size": 41712
+    }
+  },
+  "metadata": {
+    "device": "cpu",
+    "dtype": "torch.float32",
+    "is_lora_adapter": true,
+    "manifest_created": "2026-10-12T04:37:28.592398+00:00",
+    "source": "work\\adapter_benign"
+  },
+  "root": "E:\\Reproduce\\mattmireles-gemma-tuner-multimodal_base-model-redirect_2026-10-12\\poc\\work\\adapter_benign-export",
+  "total_bytes": 43836,
+  "total_files": 3,
+  "version": "1.0"
+}

@@ -1,0 +1,66 @@
+{
+  "shell": "powershell",
+  "workingDir": "%TEMP%\\poc-work\\sakana-nested-name-or-path",
+  "windowWidth": 1400,
+  "windowHeight": 680,
+  "settleMs": 1500,
+  "steps": [
+    { "command": "docker build -t sakana-nested-name-or-path ." },
+    { "wait": 20000 },
+    { "shot": "01-image-build.png" },
+
+    { "command": "docker run -it --rm -v ${PWD}:/work sakana-nested-name-or-path bash" },
+    { "wait": 5000 },
+    { "shot": "02-container-shell.png" },
+
+    { "command": "python env_versions.py" },
+    { "wait": 6000 },
+    { "shot": "03-env-versions.png" },
+
+    { "command": "ls" },
+    { "shot": "04-kit-files.png" },
+
+    { "command": "grep -n -B2 -A6 \"model_path = text_config\" evolutionary-model-merge-09aff543/evomerge/modules/heron/video_blip/configuration_video_blip.py" },
+    { "shot": "05-vulnerable-code.png" },
+
+    { "command": "cat payload/configuration_poc_stablelm.py" },
+    { "shot": "06-payload-source.png" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 30000 },
+    { "shot": "07-make-poc.png" },
+
+    { "command": "ls work/attacker/model-A-evil" },
+    { "shot": "08-model-a-has-no-python.png" },
+
+    { "command": "diff -u work/control/model-A-control/config.json work/attacker/model-A-evil/config.json" },
+    { "shot": "09-only-one-field-differs.png" },
+
+    { "command": "python check_marker.py" },
+    { "shot": "10-marker-absent-before.png" },
+
+    { "command": "python victim_load.py work/control/model-A-control" },
+    { "wait": 12000 },
+    { "shot": "11-control-load.png" },
+
+    { "command": "python check_marker.py" },
+    { "shot": "12-control-no-marker.png" },
+
+    { "command": "python victim_load.py work/attacker/model-A-evil" },
+    { "wait": 20000 },
+    { "shot": "13-attack-payload-runs.png" },
+
+    { "command": "python check_marker.py" },
+    { "shot": "14-marker-exists.png" },
+
+    { "command": "python victim_config_only.py work/hub/model-A-hub" },
+    { "wait": 20000 },
+    { "shot": "15-hub-repo-id.png" },
+
+    { "command": "rm -f /tmp/sakana_nested_name_or_path_marker" },
+    { "command": "python check_marker.py" },
+    { "shot": "16-cleanup.png" },
+
+    { "command": "exit" }
+  ]
+}

@@ -1,0 +1,15 @@
+HEAD /mbe2e-control/fastchat-base/resolve/main/tokenizer_config.json
+GET  /mbe2e-control/fastchat-base/resolve/main/tokenizer_config.json
+HEAD /mbe2e-control/fastchat-base/resolve/main/tokenizer.json
+GET  /mbe2e-control/fastchat-base/resolve/main/tokenizer.json
+HEAD /mbe2e-control/fastchat-base/resolve/main/added_tokens.json
+HEAD /mbe2e-control/fastchat-base/resolve/main/special_tokens_map.json
+GET  /mbe2e-control/fastchat-base/resolve/main/special_tokens_map.json
+HEAD /mbe2e-control/fastchat-base/resolve/main/config.json
+GET  /mbe2e-control/fastchat-base/resolve/main/config.json
+HEAD /mbe2e-control/fastchat-base/resolve/main/adapter_config.json
+HEAD /mbe2e-control/fastchat-base/resolve/main/adapter_config.json
+HEAD /mbe2e-control/fastchat-base/resolve/main/model.safetensors
+GET  /mbe2e-control/fastchat-base/resolve/main/model.safetensors
+HEAD /mbe2e-control/fastchat-base/resolve/main/generation_config.json
+GET  /mbe2e-control/fastchat-base/resolve/main/generation_config.json

@@ -1,0 +1,5 @@
+{
+  "action_tokenizer": "fast",
+  "action_horizon_ar": 32,
+  "note": "data-only repository: no processing/modeling Python here"
+}

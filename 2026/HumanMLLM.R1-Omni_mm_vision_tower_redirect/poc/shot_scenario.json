@@ -1,0 +1,48 @@
+{
+  "shell": "powershell",
+  "windowTitle": "R1OMNI-POC-SHOT",
+  "windowWidth": 1520,
+  "windowHeight": 915,
+  "settleMs": 1500,
+  "typing": true,
+  "initCommands": ["wsl -d kali-linux"],
+  "steps": [
+    { "command": "source ~/r1omni_repro_venv/bin/activate" },
+    { "wait": 2500 },
+    { "command": "cd ~/r1omni" },
+    { "command": "python --version" },
+    { "command": "python env_info.py" },
+    { "wait": 6000 },
+    { "shot": "01-environment.png" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 16000 },
+    { "shot": "02-make-poc.png" },
+
+    { "command": "grep mm_vision_tower /model/config.json /model-negative/config.json" },
+    { "shot": "03-config-field.png" },
+
+    { "command": "grep -n -e AutoConfig -e load_model R1-Omni-17cafca/humanomni/model/__init__.py" },
+    { "shot": "04-consumer-chain.png" },
+
+    { "command": "grep -n siglip R1-Omni-17cafca/humanomni/model/encoder.py" },
+    { "shot": "05-vuln-selection.png" },
+
+    { "command": "sed -n '106,117p' R1-Omni-17cafca/humanomni/model/encoder.py" },
+    { "shot": "06-vuln-load-model.png" },
+
+    { "command": "ls -l /external/siglip-positive-canary /model/siglip-vision" },
+    { "shot": "07-second-model-dirs.png" },
+
+    { "command": "python run_repro.py positive" },
+    { "wait": 16000 },
+    { "shot": "08-positive-external-loaded.png" },
+
+    { "command": "python run_repro.py negative" },
+    { "wait": 16000 },
+    { "shot": "09-negative-control.png" },
+
+    { "command": "sha256sum -c work/SHA256SUMS.txt" },
+    { "shot": "10-hashes.png" }
+  ]
+}

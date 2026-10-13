@@ -1,0 +1,6 @@
+# Keep the build context to exactly the files the image needs.
+*
+!Dockerfile
+!make_poc.py
+!PINNED_COMMIT.txt
+!diff-svc-236de77.tar.gz

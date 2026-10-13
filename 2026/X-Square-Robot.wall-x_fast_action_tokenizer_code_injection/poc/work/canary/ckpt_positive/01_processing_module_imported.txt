@@ -1,0 +1,2 @@
+module-level code of processing_wallx_action.py executed during import
+imported because the checkpoint's processor field named attacker/wallx-action-processor

@@ -1,0 +1,17 @@
+2026-10-12 12:37:27,463 INFO gemma_tuner.utils.device: Using CPU device
+2026-10-12 12:37:27,464 INFO gemma_tuner.scripts.export: Detected LoRA adapter directory: work\adapter_benign
+2026-10-12 12:37:27,464 INFO gemma_tuner.scripts.export: Reading base model path from adapter_config.json
+2026-10-12 12:37:27,465 INFO gemma_tuner.scripts.export: Loading base model: mbe2e-control/tiny-random-gemma3-base-025
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+2026-10-12 12:37:28,379 INFO gemma_tuner.models.gemma.base_model_loader: Loaded multimodal base model mbe2e-control/tiny-random-gemma3-base-025 via AutoModelForMultimodalLM
+2026-10-12 12:37:28,380 INFO gemma_tuner.scripts.export: Loading LoRA adapter weights from: work\adapter_benign
+2026-10-12 12:37:28,412 INFO gemma_tuner.scripts.export: Merging LoRA weights into base model...
+2026-10-12 12:37:28,420 INFO gemma_tuner.scripts.export: Saving exported model to: work\adapter_benign-export
+2026-10-12 12:37:28,572 WARNING gemma_tuner.scripts.export: Could not save processor to export dir (non-fatal): string indices must be integers, not 'str'
+2026-10-12 12:37:28,572 INFO gemma_tuner.scripts.export: Export complete.
+2026-10-12 12:37:28,572 INFO gemma_tuner.scripts.export:   Source : work\adapter_benign
+2026-10-12 12:37:28,572 INFO gemma_tuner.scripts.export:   Output : work\adapter_benign-export
+2026-10-12 12:37:28,572 INFO gemma_tuner.scripts.export:   Device : cpu
+2026-10-12 12:37:28,573 INFO gemma_tuner.scripts.export:   Dtype  : torch.float32
+2026-10-12 12:37:28,573 INFO gemma_tuner.scripts.export:   Params : 8,728
+2026-10-12 12:37:28,595 INFO gemma_tuner.utils.integrity: Created integrity manifest: E:\Reproduce\mattmireles-gemma-tuner-multimodal_base-model-redirect_2026-10-12\poc\work\adapter_benign-export\.integrity.json (3 files, 43836 bytes)

@@ -1,0 +1,8 @@
+{
+  "processor_class": "WallXActionProcessor",
+  "auto_map": {
+    "AutoProcessor": "attacker/wallx-action-processor--processing_wallx_action.WallXActionProcessor"
+  },
+  "action_horizon_ar": 32,
+  "action_dim": 14
+}

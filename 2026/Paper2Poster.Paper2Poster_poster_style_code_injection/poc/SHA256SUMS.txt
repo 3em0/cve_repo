@@ -1,0 +1,34 @@
+# SHA256SUMS - Paper2Poster per-poster style value -> generated code injection
+# pinned revision: Paper2Poster/Paper2Poster @ 623d042f283acee782b2644d6abd63f75eccfa1f
+# every one of the 1007 files under Paper2Poster-623d042/ was verified byte-identical to
+# that commit (git blob SHA-1 comparison against the pinned tree, 0 mismatches)
+
+## kit
+02a25e96ae1cfb4ad5a3d4c2c65e6fe1350d4c970b2d4a2aa2b71ddabc7e2e40  poc/make_poc.py
+8eeb449e4f52cc4d18481d7ee9c87f32e25980080a2d2a2ef740ad322885e43b  poc/run_repro.py
+6484220da5d9c89e1e2c38be737aa6dda67b7feb8c894812b04797ad2529b2ce  poc/run_case_a.sh
+03d2b455f8ca68ad7e3c6debb07d18dc95905b92a23906570406acd9a96102b0  poc/run_case_b.sh
+d737ab1cf5181b1aee5763eece37198553d87330e2d69e134b60ca617019fec5  poc/run_case_c.sh
+6c83a5219bd81a6440665026883b5653cd09c0f9993aa392e90b866e9e1e27e7  poc/setup_wsl.sh
+9b5d465a836b8c04641fd8a654dcfcebb224581aab639ef7d75d6ef754b58538  poc/shot_scenario.json
+e15c56d61c2ccaaf287bda62af4558a8b51e72892b3b780549b4649543833255  poc/real_terminal_shot.ps1
+7a8b6cf19e6bc30b4a5861d796cf16e8dd7e02eb115e82f5eef6e0608fe4b7b2  poc/REVISION
+
+## sink path inside poc/Paper2Poster-623d042/
+32c13a868a31087835733169463684661a3ad370e9755e49d349dc379e720ed9  poc/Paper2Poster-623d042/PosterAgent/gen_pptx_code.py
+0aced858c580f2e71e4ec35d6ea93b19ff8199bcd20761ea7adfdb924c70bfdb  poc/Paper2Poster-623d042/PosterAgent/new_pipeline.py
+38bfd1c9769c4b82a2057ce8db367189e14cde455782f1dc9d74c0c971d13d3f  poc/Paper2Poster-623d042/utils/config_utils.py
+34b8d43b9a8afe8006c67763c6e0a572fd292d56f8ebdfda45c846d6274900d6  poc/Paper2Poster-623d042/utils/theme_utils.py
+8c4e8a2bdb26c064771138c3c9b599e031e119fab75428d419ff4fe808b74cb6  poc/Paper2Poster-623d042/utils/wei_utils.py
+cabddc37464b05a0a0c42ec88e35c41699231aa8f415e1228c1f1734874cb9c8  poc/Paper2Poster-623d042/utils/pptx_utils.py
+2fadd7ae8f019edc929846bb05f8be641a2aff72fc7c1608a447a8e3e673c7e4  poc/Paper2Poster-623d042/config/poster.yaml
+51d518326ac5d780e2d225a130bafb0e06d07011388fa18a81e56a13c947d91f  poc/Paper2Poster-623d042/README.md
+ba046a100d8f0d0ca433876b9f2b5f22e5a3e2d8df961660449a127d6915b0d4  poc/Paper2Poster-623d042/skills/SKILL.md
+023912879aa1e86bb6d5fb49d96029be1a47eddebe7e05852b5f253950b1e464  poc/Paper2Poster-623d042/demo/app.py
+50ec7c0d13fe27fb5986d2de6e86232bd42977be76c5af7cfe13ee76ba514028  poc/Paper2Poster-623d042/demo/pipeline.py
+
+## generated at run time (printed by make_poc.py when the carrier is built)
+# paper-workspace/paper.pdf    248de10b6bfd62f20f4ad2690a238eb3b4f1e554f9adbf784d6ade25ce34a1f6
+# paper-workspace/poster.yaml  evil carrier embeds the marker path, so it differs per run
+# work-benign/paper-workspace/poster.yaml (control)
+#   1a72624964d8f7f3dcba9703d743f4a4ed7bc7845626d7dc10fd66d830eb897b

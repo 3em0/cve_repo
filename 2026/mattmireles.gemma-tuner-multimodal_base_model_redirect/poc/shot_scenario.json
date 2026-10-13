@@ -1,0 +1,52 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\mattmireles-gemma-tuner-multimodal_base-model-redirect_2026-10-12\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 940,
+  "settleMs": 1200,
+  "steps": [
+    { "command": "python --version" },
+    { "command": "python -c \"import torch, transformers, peft; print('torch', torch.__version__, '| transformers', transformers.__version__, '| peft', peft.__version__)\"" },
+    { "wait": 18000 },
+    { "shot": "01-environment.png" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 45000 },
+    { "shot": "02-make-poc.png" },
+
+    { "command": "Get-Content work\\adapter_attack\\adapter_config.json -TotalCount 6" },
+    { "shot": "03-adapter-config-attack.png" },
+
+    { "command": "Select-String -Path work\\adapter_*\\adapter_config.json -Pattern base_model_name_or_path" },
+    { "shot": "04-adapter-config-diff.png" },
+
+    { "command": "Get-Content gemma-tuner-multimodal-ebdcd76d\\gemma_tuner\\scripts\\export.py | Select-Object -Skip 75 -First 21" },
+    { "shot": "05-export-py-vulnerable.png" },
+
+    { "command": "Get-Content gemma-tuner-multimodal-ebdcd76d\\gemma_tuner\\models\\gemma\\base_model_loader.py | Select-Object -Skip 102 -First 13" },
+    { "shot": "06-base-model-loader.png" },
+
+    { "command": "python run_repro.py adapter_attack" },
+    { "wait": 45000 },
+    { "shot": "07-redirect-confirmed.png" },
+
+    { "command": "Select-String -Path work\\run_adapter_attack.log -Pattern 'Loading base model|Loaded multimodal base model|Export complete'" },
+    { "shot": "08-product-log-redirect.png" },
+
+    { "command": "Get-Content work\\hub_requests.log -TotalCount 12" },
+    { "shot": "09-attacker-repo-requests.png" },
+
+    { "command": "dir work\\adapter_attack-export" },
+    { "shot": "10-exported-artifact.png" },
+
+    { "command": "type work\\adapter_attack-export\\.integrity.json" },
+    { "shot": "11-integrity-manifest.png" },
+
+    { "command": "python run_repro.py adapter_benign" },
+    { "wait": 45000 },
+    { "shot": "12-negative-control.png" },
+
+    { "command": "exit" },
+    { "wait": 1500 }
+  ]
+}

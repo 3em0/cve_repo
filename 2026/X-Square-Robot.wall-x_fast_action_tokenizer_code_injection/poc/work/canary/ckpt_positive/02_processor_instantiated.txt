@@ -1,0 +1,2 @@
+AutoProcessor.from_pretrained() instantiated the class from the
+second repository - the loader had already executed this module

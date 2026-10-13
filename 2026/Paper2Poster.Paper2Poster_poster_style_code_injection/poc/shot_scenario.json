@@ -1,0 +1,50 @@
+{
+  "shell": "powershell",
+  "workingDir": "%TEMP%\\poc-work",
+  "initCommands": [
+    "wsl -d kali-linux"
+  ],
+  "windowWidth": 1400,
+  "windowHeight": 680,
+  "settleMs": 2500,
+  "typing": true,
+  "steps": [
+    { "command": "cd ~/p2p-repro" },
+    { "command": "ls" },
+    { "shot": "01-workspace.png" },
+
+    { "command": "source venv/bin/activate" },
+    { "command": "python --version" },
+    { "command": "python -c \"import yaml, pptx; print(yaml.__version__, pptx.__version__)\"" },
+    { "command": "head -2 Paper2Poster-623d042/REVISION" },
+    { "shot": "02-environment.png" },
+
+    { "command": "cat kit/run_case_a.sh" },
+    { "shot": "03-case-a-script.png" },
+
+    { "command": "bash kit/run_case_a.sh" },
+    { "wait": 8000 },
+    { "command": "cat work-evil/paper-workspace/poster.yaml" },
+    { "shot": "04-carrier.png" },
+
+    { "command": "sed -n '117,133p' Paper2Poster-623d042/PosterAgent/gen_pptx_code.py" },
+    { "shot": "05-vulnerable-source.png" },
+
+    { "command": "grep -n 'fill_textframe(section_title_1' run-cwd-A/generated_program.py" },
+    { "shot": "06-injected-line.png" },
+
+    { "command": "cat markers/rce_cwd.txt" },
+    { "shot": "07-marker-proof.png" },
+
+    { "command": "bash kit/run_case_b.sh" },
+    { "wait": 8000 },
+    { "shot": "08-boundary-repo-root.png" },
+
+    { "command": "bash kit/run_case_c.sh" },
+    { "wait": 8000 },
+    { "shot": "09-negative-control.png" },
+
+    { "command": "ls -l run-cwd-A/tmp/poster.pptx markers/" },
+    { "shot": "10-artifacts.png" }
+  ]
+}

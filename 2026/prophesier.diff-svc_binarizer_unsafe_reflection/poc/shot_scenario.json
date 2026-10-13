@@ -1,0 +1,64 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\prophesier-diff-svc_unsafe-reflection_2026-10-13\\poc",
+  "initCommands": [
+    "Remove-Item $env:TEMP\\diffsvc_impact_out -Recurse -Force -ErrorAction SilentlyContinue",
+    "mode con: cols=168 lines=58"
+  ],
+  "windowWidth": 1400,
+  "windowHeight": 760,
+  "settleMs": 1500,
+  "typing": false,
+  "steps": [
+    { "command": "python --version" },
+    { "command": "$py = \"$env:TEMP\\poc-work\\venv-diffsvc\\Scripts\\python.exe\"" },
+    { "command": "& $py --version" },
+    { "shot": "01-python-env.png" },
+
+    { "command": "type source\\diff-svc-236de77\\COMMIT.txt" },
+    { "shot": "02-pinned-commit.png" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 3000 },
+    { "shot": "03-make-poc-packages.png" },
+
+    { "command": "dir model_pkg_positive" },
+    { "shot": "04-positive-package-data-only.png" },
+
+    { "command": "cd $env:TEMP\\poc-work\\diff-svc-236de77-cve-report" },
+    { "command": "$env:PYTHONPATH = \".\"" },
+    { "command": "type preprocessing\\binarize.py" },
+    { "shot": "05-vulnerable-code.png" },
+
+    { "command": "& $py preprocessing\\binarize.py --config model_pkg_positive\\config.yaml" },
+    { "wait": 90000 },
+    { "shot": "06-positive-pwg-class.png" },
+
+    { "command": "& $py preprocessing\\binarize.py --config model_pkg_negative\\config.yaml" },
+    { "wait": 90000 },
+    { "shot": "07-negative-official-class.png" },
+
+    { "command": "& $py preprocessing\\binarize.py --config model_pkg_arbitrary\\config.yaml" },
+    { "wait": 30000 },
+    { "shot": "08-arbitrary-stdlib-class.png" },
+
+    { "command": "mkdir $env:TEMP\\diffsvc_impact_out" },
+    { "command": "$env:TEMP = \"$env:TEMP\\diffsvc_impact_out\"" },
+    { "command": "dir $env:TEMP" },
+    { "shot": "09-impact-target-empty.png" },
+
+    { "command": "& $py preprocessing\\binarize.py --config model_pkg_impact\\config.yaml" },
+    { "wait": 40000 },
+    { "shot": "10-impact-class-selected.png" },
+
+    { "command": "dir $env:TEMP" },
+    { "wait": 3000 },
+    { "shot": "11-impact-file-created.png" },
+
+    { "command": "& $py preprocessing\\binarize.py --config model_pkg_negative\\config.yaml" },
+    { "wait": 90000 },
+    { "command": "dir $env:TEMP" },
+    { "wait": 3000 },
+    { "shot": "12-negative-no-file-effect.png" }
+  ]
+}

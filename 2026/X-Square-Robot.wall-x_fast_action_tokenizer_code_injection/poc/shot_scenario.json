@@ -1,0 +1,61 @@
+{
+  "shell": "powershell",
+  "windowTitle": "wallx-cve-repro",
+  "inputMode": "console",
+  "workingDir": "E:\\Reproduce\\X-Square-Robot-wall-x_directed-model-load_2026-10-13\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 900,
+  "settleMs": 2500,
+  "steps": [
+    { "command": "& \"$env:TEMP\\poc-work\\wall-x-c0f5d67\\.venv\\Scripts\\Activate.ps1\"" },
+    { "wait": 2500 },
+
+    { "command": "Clear-Host" },
+    { "command": "python --version" },
+    { "command": "python -c \"import torch, transformers; print('torch', torch.__version__, '| transformers', transformers.__version__)\"" },
+    { "wait": 8000 },
+    { "shot": "01-environment.png" },
+
+    { "command": "Clear-Host" },
+    { "command": "python make_poc.py" },
+    { "wait": 1500 },
+    { "shot": "02-make-poc.png" },
+
+    { "command": "Clear-Host" },
+    { "command": "Get-Content work\\ckpt_positive\\config.yml" },
+    { "shot": "03-checkpoint-config-yml.png" },
+
+    { "command": "Clear-Host" },
+    { "command": "Get-Content work\\ckpt_positive\\preprocessor_config.json" },
+    { "shot": "04-processor-field.png" },
+
+    { "command": "Clear-Host" },
+    { "command": "findstr /n /c:\"action_tokenizer_path\" wall-x-c0f5d67\\wall_x\\_vendor\\harrix\\utils\\train_config.py" },
+    { "shot": "05-source-fallback-rewrite.png" },
+
+    { "command": "Clear-Host" },
+    { "command": "findstr /n /c:\"trust_remote_code=True\" wall-x-c0f5d67\\wall_x\\model\\qact\\tokenizer_mixin.py" },
+    { "shot": "06-source-sink.png" },
+
+    { "command": "Clear-Host" },
+    { "command": "Get-Content work\\hub\\attacker\\wallx-action-processor\\processing_wallx_action.py -TotalCount 33" },
+    { "shot": "07-second-repo-program.png" },
+
+    { "command": "Clear-Host" },
+    { "command": "python run_repro.py ckpt_positive" },
+    { "wait": 45000 },
+    { "shot": "08-positive-executed.png" },
+
+    { "command": "Clear-Host" },
+    { "command": "dir work\\canary\\ckpt_positive" },
+    { "shot": "09-canary-on-disk.png" },
+
+    { "command": "Clear-Host" },
+    { "command": "python run_repro.py ckpt_negative" },
+    { "wait": 45000 },
+    { "shot": "10-negative-control.png" },
+
+    { "command": "exit" },
+    { "wait": 1500 }
+  ]
+}

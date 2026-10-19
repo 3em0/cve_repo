@@ -1,0 +1,6 @@
+{
+  "tokenizer_class": "PreTrainedTokenizerFast",
+  "bos_token": "<|bos|>",
+  "eos_token": "<|eos|>",
+  "add_bos_token": false
+}

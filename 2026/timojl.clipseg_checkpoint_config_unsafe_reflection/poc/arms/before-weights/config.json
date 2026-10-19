@@ -1,0 +1,5 @@
+{
+  "model": "logging.FileHandler",
+  "filename": "__WORKDIR__/out/clipseg_reflective_sink_marker",
+  "delay": false
+}

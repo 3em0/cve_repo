@@ -1,0 +1,1 @@
+class_path: torch._inductor.debug.save_args_for_compile_fx_inner

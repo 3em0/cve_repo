@@ -1,0 +1,73 @@
+{
+  "shell": "powershell",
+  "windowWidth": 1400,
+  "windowHeight": 760,
+  "settleMs": 1500,
+  "typing": false,
+  "steps": [
+    { "command": "python --version" },
+    { "command": "python -c \"import torch; print('torch', torch.__version__)\"" },
+    { "wait": 9000 },
+    { "shot": "01-python-env.png" },
+
+    { "command": "cd poc" },
+    { "command": "type source\\clipseg-77c4e2d\\COMMIT.txt" },
+    { "shot": "02-pinned-commit.png" },
+
+    { "command": "python show_vuln_code.py reflect" },
+    { "wait": 3000 },
+    { "shot": "03-vulnerable-code-general-utils.png" },
+
+    { "command": "python show_vuln_code.py callers" },
+    { "wait": 3000 },
+    { "shot": "04-vulnerable-code-score-callsite.png" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 8000 },
+    { "shot": "05-make-poc-arms.png" },
+
+    { "command": "$src = \"$PWD\\source\\clipseg-77c4e2d\"" },
+    { "command": "cd $env:TEMP\\poc-work\\clipseg-77c4e2d\\positive" },
+    { "command": "type logs\\rd64-uni\\config.json" },
+    { "command": "dir logs\\rd64-uni" },
+    { "shot": "06-positive-package-data-only.png" },
+
+    { "command": "python $src\\score.py phrasecut.yaml 0 0" },
+    { "wait": 15000 },
+    { "shot": "07-positive-cli-run.png" },
+
+    { "command": "dir out" },
+    { "shot": "08-positive-marker-created.png" },
+
+    { "command": "cd ..\\negative" },
+    { "command": "python $src\\score.py phrasecut.yaml 0 0" },
+    { "wait": 15000 },
+    { "shot": "09-negative-cli-run.png" },
+
+    { "command": "dir out" },
+    { "shot": "10-negative-out-empty.png" },
+
+    { "command": "cd ..\\impact" },
+    { "command": "type logs\\rd64-uni\\config.json" },
+    { "command": "dir out" },
+    { "shot": "11-impact-config-and-target-before.png" },
+
+    { "command": "python $src\\score.py phrasecut.yaml 0 0" },
+    { "wait": 15000 },
+    { "shot": "12-impact-cli-run.png" },
+
+    { "command": "dir out" },
+    { "shot": "13-impact-target-truncated.png" },
+
+    { "command": "cd ..\\before-weights" },
+    { "command": "dir logs\\rd64-uni" },
+    { "shot": "14-before-weights-corrupt-file.png" },
+
+    { "command": "python $src\\score.py phrasecut.yaml 0 0" },
+    { "wait": 15000 },
+    { "shot": "15-before-weights-cli-run.png" },
+
+    { "command": "dir out" },
+    { "shot": "16-before-weights-marker-created.png" }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\NPC-Worldwide-npcpy_directed-model-load_2026-10-12\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 900,
+  "settleMs": 1400,
+  "steps": [
+    { "command": "Get-Content work\\adapter_positive\\adapter_config.json -TotalCount 4" },
+    { "shot": "03-adapter-config-field.png" },
+
+    { "command": "findstr /n /c:\"base_model_id = adapter_config.get\" npcpy-53ccf006\\npcpy\\gen\\response.py" },
+    { "shot": "04-source-field-read.png" },
+
+    { "command": "findstr /n /c:\"trust_remote_code=True\" npcpy-53ccf006\\npcpy\\gen\\response.py" },
+    { "shot": "05-source-trust-remote-code.png" },
+
+    { "command": "exit" },
+    { "wait": 1500 }
+  ]
+}

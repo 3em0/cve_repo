@@ -1,0 +1,1 @@
+class_path: torch._inductor.runtime.cache_dir_utils.cache_dir

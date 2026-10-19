@@ -1,0 +1,65 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\octo-models-octo_rce_2026-10-18\\poc",
+  "initCommands": ["wsl"],
+  "windowWidth": 1400,
+  "windowHeight": 880,
+  "settleMs": 1600,
+  "steps": [
+    { "wait": 3500 },
+    { "command": "cd ~/octo-poc" },
+    { "command": "source venv/bin/activate" },
+    { "command": "cd poc" },
+
+    { "command": "python -V" },
+    { "wait": 1200 },
+    { "shot": "01-env-python.png" },
+
+    { "command": "python env_check.py" },
+    { "wait": 7000 },
+    { "shot": "02-env-stack.png" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 22000 },
+    { "shot": "03-make-poc.png" },
+
+    { "command": "sed -n '59,67p' ../octo-241fb35/octo/utils/spec.py" },
+    { "wait": 1500 },
+    { "shot": "04-spec-instantiate.png" },
+
+    { "command": "sed -n '403,412p' ../octo-241fb35/octo/model/octo_module.py" },
+    { "wait": 1500 },
+    { "shot": "05-head-instantiate.png" },
+
+    { "command": "find checkpoints/octo-checkpoint-positive" },
+    { "wait": 1500 },
+    { "shot": "06-checkpoint-layout.png" },
+
+    { "command": "grep -o '\"delay\": [a-z]*' checkpoints/octo-checkpoint-positive/config.json checkpoints/octo-checkpoint-negative/config.json" },
+    { "wait": 1500 },
+    { "shot": "07-delay-diff.png" },
+
+    { "command": "ls -la /out" },
+    { "wait": 1500 },
+    { "shot": "08-sink-absent.png" },
+
+    { "command": "python run_load.py checkpoints/octo-checkpoint-positive" },
+    { "wait": 16000 },
+    { "shot": "09-positive-trigger.png" },
+
+    { "command": "ls -la /out" },
+    { "wait": 1500 },
+    { "shot": "10-sink-created.png" },
+
+    { "command": "rm /out/octo_modulespec_sink_marker" },
+    { "wait": 1200 },
+
+    { "command": "python run_load.py checkpoints/octo-checkpoint-negative" },
+    { "wait": 16000 },
+    { "shot": "11-negative-control.png" },
+
+    { "command": "ls -la /out" },
+    { "wait": 1500 },
+    { "shot": "12-negative-no-sink.png" }
+  ]
+}

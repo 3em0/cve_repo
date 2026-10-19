@@ -1,0 +1,87 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\HIT-SCIR-ltp_unsafe-reflection_2026-10-14\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 880,
+  "windowX": 60,
+  "windowY": 20,
+  "settleMs": 1800,
+  "preRunSettleSeconds": 90,
+  "steps": [
+    { "command": "docker build -t ltp-poc:released ." },
+    { "wait": 10000 },
+    { "command": "docker build -t ltp-poc:pinned -f Dockerfile.pinned ." },
+    { "wait": 10000 },
+    { "command": "docker images ltp-poc" },
+    { "wait": 2500 },
+    { "shot": "01-build-images.png" },
+
+    { "command": "docker run --rm -it ltp-poc:released bash" },
+    { "wait": 6000 },
+    { "command": "python -V" },
+    { "command": "pip show ltp" },
+    { "command": "pip show ltp_core" },
+    { "wait": 2500 },
+    { "shot": "02-released-stack.png" },
+
+    { "command": "cat /usr/local/lib/python3.12/site-packages/ltp_core/models/utils/__init__.py" },
+    { "command": "sed -n '6,24p' /usr/local/lib/python3.12/site-packages/ltp_core/models/utils/instantiate.py" },
+    { "wait": 2500 },
+    { "shot": "03-find-callable.png" },
+
+    { "command": "sed -n '27,38p' /usr/local/lib/python3.12/site-packages/ltp_core/models/utils/instantiate.py" },
+    { "wait": 2500 },
+    { "shot": "04-instantiate.png" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 3000 },
+    { "shot": "05-make-poc.png" },
+
+    { "command": "cat model_positive/config.json" },
+    { "command": "cat model_negative/config.json" },
+    { "wait": 2500 },
+    { "shot": "06-model-configs.png" },
+
+    { "command": "ls -la /out" },
+    { "wait": 2500 },
+    { "shot": "07-marker-absent.png" },
+
+    { "command": "python run_poc.py model_positive" },
+    { "wait": 20000 },
+    { "shot": "08-positive-effect.png" },
+
+    { "command": "ls -la /out" },
+    { "wait": 2500 },
+    { "shot": "09-marker-on-disk.png" },
+
+    { "command": "exit" },
+    { "wait": 4000 },
+    { "command": "docker run --rm -it ltp-poc:released bash" },
+    { "wait": 6000 },
+    { "command": "python make_poc.py" },
+    { "wait": 3000 },
+    { "command": "python run_poc.py model_negative" },
+    { "wait": 20000 },
+    { "command": "ls -la /out" },
+    { "wait": 2500 },
+    { "shot": "10-negative-control.png" },
+
+    { "command": "exit" },
+    { "wait": 4000 },
+    { "command": "docker run --rm -it ltp-poc:pinned bash" },
+    { "wait": 6000 },
+    { "command": "wc -c /usr/local/lib/python3.12/site-packages/ltp_core/models/utils/__init__.py" },
+    { "command": "cat /usr/local/lib/python3.12/site-packages/ltp_core/models/utils/__init__.py" },
+    { "wait": 2500 },
+    { "shot": "11-pinned-reexport.png" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 3000 },
+    { "command": "python run_poc.py model_positive" },
+    { "wait": 20000 },
+    { "command": "ls -la /out" },
+    { "wait": 2500 },
+    { "shot": "12-pinned-not-reachable.png" },
+    { "command": "exit" }
+  ]
+}

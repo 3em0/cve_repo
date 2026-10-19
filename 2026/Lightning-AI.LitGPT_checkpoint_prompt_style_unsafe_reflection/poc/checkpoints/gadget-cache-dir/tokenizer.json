@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "truncation": null,
+  "padding": null,
+  "added_tokens": [],
+  "normalizer": null,
+  "pre_tokenizer": {
+    "type": "Whitespace"
+  },
+  "post_processor": null,
+  "decoder": null,
+  "model": {
+    "type": "WordLevel",
+    "vocab": {
+      "<|unk|>": 0,
+      "<|bos|>": 1,
+      "<|eos|>": 2,
+      "the": 3,
+      "cat": 4,
+      "sat": 5,
+      "on": 6,
+      "mat": 7,
+      "llamas": 8,
+      "eat": 9,
+      "food": 10,
+      "what": 11,
+      "do": 12
+    },
+    "unk_token": "<|unk|>"
+  }
+}

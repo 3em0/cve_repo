@@ -1,0 +1,39 @@
+# Boundary-case environment — the PINNED GIT COMMIT 1f042d48, built from source.
+#
+# This exists to document reachability honestly: since commit 58995052
+# ("ruff", 2023-06-27) the file
+#   python/core/ltp_core/models/utils/__init__.py
+# is EMPTY in git, so `from ltp_core.models.utils import instantiate` resolves to
+# the *module* rather than the function and the neural path dies with
+#   TypeError: 'module' object is not callable
+# before find_callable() ever runs. A source build of the pinned commit is
+# therefore NOT exploitable through ltp.LTP(model_dir), even though the unsafe
+# instantiate() implementation is identical.
+#
+# PyPI only carries ltp 4.2.14; the pinned commit is the unreleased 4.2.15 bump,
+# so the audited code has to be installed from the pinned source tree.
+FROM python:3.12-slim
+
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PYTHONUNBUFFERED=1
+
+RUN pip install --index-url https://download.pytorch.org/whl/cpu torch
+
+RUN pip install ltp_extension==0.1.13 transformers huggingface_hub
+
+ADD https://codeload.github.com/HIT-SCIR/ltp/tar.gz/1f042d48b0a785ff7875b2e63c1439ef8c78995c /tmp/ltp.tar.gz
+RUN mkdir -p /src \
+ && tar xzf /tmp/ltp.tar.gz -C /src --strip-components=1 \
+ && rm /tmp/ltp.tar.gz \
+ && pip install --no-deps /src/python/core /src/python/interface
+
+RUN useradd -m -u 1000 poc \
+ && mkdir -p /out /work \
+ && chown -R poc:poc /out /work
+
+COPY --chown=poc:poc . /work
+WORKDIR /work
+USER poc
+
+CMD ["bash"]

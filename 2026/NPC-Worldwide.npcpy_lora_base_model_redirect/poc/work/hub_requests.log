@@ -1,0 +1,17 @@
+HEAD trusted/base-without-program/resolve/main/tokenizer_config.json
+GET  trusted/base-without-program/resolve/main/tokenizer_config.json
+HEAD trusted/base-without-program/resolve/main/vocab.json
+HEAD trusted/base-without-program/resolve/main/merges.txt
+HEAD trusted/base-without-program/resolve/main/tokenizer.json
+GET  trusted/base-without-program/resolve/main/tokenizer.json
+HEAD trusted/base-without-program/resolve/main/added_tokens.json
+HEAD trusted/base-without-program/resolve/main/special_tokens_map.json
+HEAD trusted/base-without-program/resolve/main/chat_template.jinja
+HEAD trusted/base-without-program/resolve/main/config.json
+GET  trusted/base-without-program/resolve/main/config.json
+HEAD trusted/base-without-program/resolve/main/adapter_config.json
+HEAD trusted/base-without-program/resolve/main/adapter_config.json
+HEAD trusted/base-without-program/resolve/main/model.safetensors
+GET  trusted/base-without-program/resolve/main/model.safetensors
+HEAD trusted/base-without-program/resolve/main/generation_config.json
+GET  trusted/base-without-program/resolve/main/generation_config.json

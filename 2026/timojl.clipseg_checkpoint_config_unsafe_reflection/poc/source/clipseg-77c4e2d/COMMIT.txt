@@ -1,0 +1,5 @@
+﻿commit 77c4e2dc853880df46413d4a870a725e961f2f73
+author-date Fri Jan 5 11:35:59 2024 +0100
+subject added __init__ to root folder
+repository https://github.com/timojl/clipseg
+refs: master (default branch; this commit is the branch tip)

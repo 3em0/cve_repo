@@ -1,0 +1,3 @@
+the base-model repository named in adapter_config.json ran this code:
+  repository: attacker/base-with-complete-modeling-program
+  module    : modeling_npcpy_pwn.py

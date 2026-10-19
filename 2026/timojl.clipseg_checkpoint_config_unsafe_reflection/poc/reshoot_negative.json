@@ -1,0 +1,13 @@
+{
+  "shell": "powershell",
+  "windowWidth": 1400,
+  "windowHeight": 760,
+  "settleMs": 1500,
+  "typing": false,
+  "steps": [
+    { "command": "cd $env:TEMP\\poc-work\\clipseg-77c4e2d\\negative" },
+    { "command": "cmd /c dir out" },
+    { "wait": 1500 },
+    { "shot": "10-negative-out-empty.png" }
+  ]
+}

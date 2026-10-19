@@ -1,0 +1,9 @@
+{
+  "tokenizer_class": "GPT2TokenizerFast",
+  "unk_token": "<unk>",
+  "pad_token": "<pad>",
+  "bos_token": "<bos>",
+  "eos_token": "<eos>",
+  "model_max_length": 128,
+  "chat_template": "{% for message in messages %}{{ message['role'] }}: {{ message['content'] }}\n{% endfor %}{% if add_generation_prompt %}assistant:{% endif %}"
+}

@@ -1,0 +1,17 @@
+Repository : https://github.com/hpcaitech/ColossalAI
+Commit     : 4f9953be335ef371b3848719ddafe596c01ecd37
+Commit date: 2026-04-09 (committer date, +08:00)
+Subject    : Update README.md (#6412)
+
+Vulnerable component (pinned commit line numbers):
+  colossalai/utils/safetensors.py:35-38   _tensor_to_object()
+  colossalai/utils/safetensors.py:96-100  _unflatten_optim_state_dict()  key -> object routing
+  colossalai/utils/safetensors.py:200-205 load_flat()
+
+Re-checked against main HEAD 71c8abeb13d7d8f032e71233353623a1ff790ea5
+(2026-10-11, Merge pull request #6462): the sink is unchanged; only the
+TensorNVMe import guard around it differs, so line numbers shift by +10
+(_tensor_to_object 45-48, routing 110, load_flat 212-217).
+
+Source tarball in this directory (colossalai-4f9953b.tar.gz) was produced with
+  git archive --format=tar.gz --prefix=ColossalAI-4f9953b/ 4f9953be335e...

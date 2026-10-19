@@ -1,0 +1,47 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce",
+  "initCommands": ["wsl"],
+  "windowWidth": 1400,
+  "windowHeight": 900,
+  "settleMs": 1200,
+  "steps": [
+    { "command": "cd ~/poc-work/Xilinx-finn-rce" },
+    { "command": "ls -l artifacts/evil" },
+    { "wait": 1500 },
+    { "shot": "01-model-package.png" },
+
+    { "command": "source ~/work/fv311/bin/activate" },
+    { "command": "export FINN_ROOT=$HOME/work/finn-src" },
+    { "command": "export FINN_BUILD_DIR=$HOME/work/finn_build_dir" },
+    { "command": "python check_env.py" },
+    { "wait": 2000 },
+    { "shot": "02-env-and-sink-line.png" },
+
+    { "command": "python show_meta.py artifacts/evil" },
+    { "wait": 2000 },
+    { "shot": "03-evil-metadata.png" },
+
+    { "command": "rm -f /tmp/finn_eval_canary.txt" },
+    { "command": "python -m finn.builder.build_dataflow artifacts/evil" },
+    { "wait": 8000 },
+    { "shot": "04-evil-run.png" },
+
+    { "command": "cat /tmp/finn_eval_canary.txt" },
+    { "wait": 1500 },
+    { "shot": "05-canary-landed.png" },
+
+    { "command": "python show_meta.py artifacts/benign" },
+    { "wait": 2000 },
+    { "shot": "06-benign-metadata.png" },
+
+    { "command": "rm -f /tmp/finn_eval_canary.txt" },
+    { "command": "python -m finn.builder.build_dataflow artifacts/benign" },
+    { "wait": 8000 },
+    { "shot": "07-benign-run.png" },
+
+    { "command": "cat /tmp/finn_eval_canary.txt" },
+    { "wait": 1500 },
+    { "shot": "08-no-canary.png" }
+  ]
+}

@@ -1,0 +1,48 @@
+HIT-SCIR/ltp — reproduction provenance
+=====================================
+
+Repository   : https://github.com/HIT-SCIR/ltp
+Pinned commit: 1f042d48b0a785ff7875b2e63c1439ef8c78995c
+               "Bump version from 4.2.14 to 4.2.15" (2026-03-11)
+
+Two stacks are built from this kit, because they behave differently:
+
+  (A) RELEASED stack      -> image `ltp-poc:released`  (Dockerfile)
+      pip install ltp==4.2.14 ltp_core==0.1.4 ltp_extension==0.1.13
+      This is what `pip install ltp` resolves to today. ltp_core 0.1.4 was
+      uploaded to PyPI on 2023-01-04 and still contains the re-export in
+      ltp_core/models/utils/__init__.py, so ltp/nerual.py really reaches the
+      unsafe instantiate() function.  ==> VULNERABLE, exploited by run_poc.py.
+
+  (B) PINNED SOURCE stack -> image `ltp-poc:pinned`    (Dockerfile.pinned)
+      Built from https://codeload.github.com/HIT-SCIR/ltp/tar.gz/1f042d48...
+      At this commit the file ltp_core/models/utils/__init__.py is EMPTY
+      (it was emptied by commit 58995052 "ruff", 2023-06-27), so
+      `from ltp_core.models.utils import instantiate` binds the *module*
+      instead of the function and the neural path dies with
+        TypeError: 'module' object is not callable
+      before find_callable() is ever entered.  ==> NOT REACHABLE through
+      ltp.LTP(model_dir); recorded as an honest boundary, not as a mitigation.
+
+SHA-256 of the audited files at the pinned commit
+-------------------------------------------------
+ecd9e4e5e1bb17c485faca03e22c53ad8944a4a606421e4cb186364134b2b066  python/core/ltp_core/models/utils/instantiate.py
+49db620866a1ea7a57de1b12dd880075d9b8458c53092dc1869811e7f93658aa  python/interface/ltp/nerual.py
+1aec6a1e0d7399537938a76aec0eaa65b82bde22d2c17f6a50d570d447cd4c97  python/interface/ltp/interface.py
+8bbb27de... -> e69de29b (empty)  python/core/ltp_core/models/utils/__init__.py
+                                 emptied by 58995052960a9b20ba331e9400c896949bdb480d
+
+Reachability chain (stack A)
+----------------------------
+python/interface/ltp/interface.py   LTP(model_dir)  ->  config.json (json.load)  -> config["nerual"]
+python/interface/ltp/nerual.py      LTP.__init__    ->  instantiate(config["model"])
+python/core/ltp_core/models/utils/instantiate.py
+                                    instantiate()   ->  find_callable() -> callable(**kwargs)
+
+Third-party components
+----------------------
+ltp_extension 0.1.13   prebuilt cp37-abi3 manylinux wheel (Rust extension; the
+                       pinned source is not compiled here). It is imported by
+                       ltp/__init__.py but is not part of the vulnerable path.
+torch                  CPU-only build from https://download.pytorch.org/whl/cpu
+transformers           PyPI latest at build time

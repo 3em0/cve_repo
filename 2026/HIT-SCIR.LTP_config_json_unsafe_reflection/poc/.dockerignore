@@ -1,0 +1,5 @@
+screenshots/
+model_positive/
+model_negative/
+__pycache__/
+*.pyc

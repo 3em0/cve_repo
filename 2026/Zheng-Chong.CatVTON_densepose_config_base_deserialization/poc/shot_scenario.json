@@ -1,0 +1,48 @@
+{
+  "shell": "powershell",
+  "input": "console",
+  "capture": "printwindow",
+  "workingDir": "E:\\Reproduce\\Zheng-Chong-CatVTON_config-base-unsafe-yaml_2026-10-14\\poc",
+  "windowWidth": 1400,
+  "windowHeight": 700,
+  "settleMs": 1500,
+  "steps": [
+    { "command": "git -C CatVTON-7818397 rev-parse HEAD" },
+    { "shot": "01-pinned-commit.png" },
+
+    { "command": ".\\.venv\\Scripts\\python.exe --version" },
+    { "command": ".\\.venv\\Scripts\\python.exe -m pip show fvcore" },
+    { "shot": "02-environment.png" },
+
+    { "command": ".\\.venv\\Scripts\\python.exe make_poc.py" },
+    { "shot": "03-make-poc.png" },
+
+    { "command": "Get-ChildItem work\\attack\\DensePose" },
+    { "shot": "04-attack-model-dir.png" },
+
+    { "command": "Get-Content work\\attack\\DensePose\\densepose_rcnn_R_50_FPN_s1x.yaml" },
+    { "shot": "05-top-level-yaml.png" },
+
+    { "command": "Select-String -Path work\\attack\\DensePose\\Base-DensePose-RCNN-FPN.yaml -Pattern MAX_ITER" },
+    { "shot": "06-payload-in-secondary.png" },
+
+    { "command": ".\\.venv\\Scripts\\python.exe run_poc.py attack" },
+    { "wait": 1500 },
+    { "shot": "07-attack-run.png" },
+
+    { "command": "Get-Content work\\attack\\canary_attack.txt" },
+    { "shot": "08-canary-created.png" },
+
+    { "command": ".\\.venv\\Scripts\\python.exe run_poc.py control" },
+    { "wait": 1500 },
+    { "shot": "09-control-run.png" },
+
+    { "command": "Test-Path work\\control\\canary_control.txt" },
+    { "shot": "10-control-no-canary.png" },
+
+    { "command": "Get-Content SHA256SUMS.txt" },
+    { "shot": "11-hashes.png" },
+
+    { "command": "exit" }
+  ]
+}

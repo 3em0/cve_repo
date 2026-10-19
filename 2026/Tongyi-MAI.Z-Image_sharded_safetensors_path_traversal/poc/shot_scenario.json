@@ -1,0 +1,72 @@
+{
+  "shell": "powershell",
+  "workingDir": "E:\\Reproduce\\Tongyi-MAI-Z-Image_path-traversal_2026-10-18\\poc",
+  "windowWidth": 1560,
+  "windowHeight": 920,
+  "settleMs": 1500,
+  "steps": [
+    { "keys": "^-" },
+    { "keys": "^-" },
+    { "keys": "^-" },
+    { "keys": "^-" },
+    { "keys": "^-" },
+
+    { "command": "docker --version" },
+    { "shot": "01-env-docker.png" },
+
+    { "command": "docker build -t zimage-path-traversal-poc:26f23ed ." },
+    { "wait": 30000 },
+    { "shot": "02-build.png" },
+
+    { "command": "docker run -d --name zimage-poc -v \"${PWD}:/work/poc\" -w /work/poc zimage-path-traversal-poc:26f23ed" },
+    { "wait": 5000 },
+
+    { "command": "docker exec zimage-poc python -c \"import sys, torch, transformers, safetensors, loguru; print('python', sys.version.split()[0]); print('torch', torch.__version__); print('transformers', transformers.__version__); print('safetensors', safetensors.__version__); print('loguru', loguru.__version__)\"" },
+    { "wait": 4000 },
+    { "shot": "03-env-versions.png" },
+
+    { "command": "docker exec zimage-poc sed -n 50,71p /opt/Z-Image/src/utils/loader.py" },
+    { "wait": 2500 },
+    { "shot": "04-vulnerable-code.png" },
+
+    { "command": "docker exec zimage-poc sed -n -e 14,16p -e 50,52p /opt/Z-Image/inference.py" },
+    { "wait": 2500 },
+    { "shot": "05-product-entry.png" },
+
+    { "command": "docker exec zimage-poc python make_poc.py" },
+    { "wait": 30000 },
+    { "shot": "06-make-poc.png" },
+
+    { "command": "docker exec zimage-poc tail -n 8 out/positive/Z-Image-Turbo/transformer/diffusion_pytorch_model.safetensors.index.json" },
+    { "wait": 2500 },
+    { "shot": "07-index-positive.png" },
+
+    { "command": "docker exec zimage-poc tail -n 8 out/negative/Z-Image-Turbo/transformer/diffusion_pytorch_model.safetensors.index.json" },
+    { "wait": 2500 },
+    { "shot": "08-index-negative.png" },
+
+    { "command": "docker exec zimage-poc ls -l /victim_private" },
+    { "wait": 2000 },
+    { "shot": "09-victim-file.png" },
+
+    { "command": "docker exec zimage-poc python run_poc.py gate out/positive/Z-Image-Turbo" },
+    { "wait": 6000 },
+    { "shot": "10-gate-passes.png" },
+
+    { "command": "docker exec zimage-poc python run_poc.py shard out/positive/Z-Image-Turbo" },
+    { "wait": 9000 },
+    { "shot": "11-positive-external.png" },
+
+    { "command": "docker exec zimage-poc python run_poc.py load out/positive/Z-Image-Turbo" },
+    { "wait": 9000 },
+    { "shot": "12-positive-shape-error.png" },
+
+    { "command": "docker exec zimage-poc python run_poc.py shard out/negative/Z-Image-Turbo" },
+    { "wait": 9000 },
+    { "shot": "13-negative-in-package.png" },
+
+    { "command": "docker exec zimage-poc python run_poc.py shard out/missing/Z-Image-Turbo" },
+    { "wait": 9000 },
+    { "shot": "14-missing-control.png" }
+  ]
+}

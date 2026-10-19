@@ -1,0 +1,3 @@
+b46b2c06dd2650b3fe90dbc789826118c3b2fc7a48f481c5fbcbf460b9253f8e  benign.gguf
+a01d0629bea245ccaad00eac51a481bbb3ea24b419e67b74aacefb5f3791c9c2  evil_dims5.gguf
+a64830ba30ef3b80333b61bd8dc93e63f59fe399de53ab6369070cba8d81b837  evil_dims9.gguf

@@ -1,0 +1,15 @@
+{
+  "output_dir": "output",
+  "synth_clk_period_ns": 10.0,
+  "rtlsim_batch_size": 1,
+  "generate_outputs": [],
+  "steps": [
+    "step_create_dataflow_partition",
+    "step_create_stitched_ip"
+  ],
+  "verify_steps": [
+    "stitched_ip_rtlsim"
+  ],
+  "save_intermediate_models": true,
+  "enable_build_pdb_debug": false
+}

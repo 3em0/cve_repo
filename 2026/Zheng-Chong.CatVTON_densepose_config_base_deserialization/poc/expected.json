@@ -1,0 +1,14 @@
+{
+  "attack": {
+    "model_dir": "work/attack/DensePose",
+    "base_selected": "Base-DensePose-RCNN-FPN.yaml",
+    "canary": "work/attack/canary_attack.txt",
+    "expect_canary": true
+  },
+  "control": {
+    "model_dir": "work/control/DensePose",
+    "base_selected": "Base-DensePose-RCNN-FPN-vendor.yaml",
+    "canary": "work/control/canary_control.txt",
+    "expect_canary": false
+  }
+}

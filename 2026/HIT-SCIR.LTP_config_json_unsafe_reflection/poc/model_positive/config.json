@@ -1,0 +1,8 @@
+{
+  "nerual": true,
+  "model": {
+    "_ltp_target_": "builtins.open",
+    "file": "/out/pwned_by_ltp_instantiate",
+    "mode": "w"
+  }
+}

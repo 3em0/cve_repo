@@ -1,0 +1,49 @@
+{
+  "shell": "powershell",
+  "windowTitle": "R1OMNI-AUDIO-POC",
+  "windowWidth": 1520,
+  "windowHeight": 915,
+  "settleMs": 1500,
+  "typing": true,
+  "inject": true,
+  "initCommands": ["wsl -d kali-linux"],
+  "steps": [
+    { "command": "source ~/r1omni_repro_venv/bin/activate" },
+    { "wait": 2500 },
+    { "command": "cd ~/r1omni-audio" },
+    { "command": "python --version" },
+    { "command": "python env_info.py" },
+    { "wait": 6000 },
+    { "shot": "01-environment.png" },
+
+    { "command": "python make_poc.py" },
+    { "wait": 18000 },
+    { "shot": "02-make-poc.png" },
+
+    { "command": "grep mm_audio_tower /models/humanomni-redirected/config.json /models/humanomni-trusted/config.json" },
+    { "shot": "03-audio-field.png" },
+
+    { "command": "grep -n -e AutoConfig -e audio_tower R1-Omni-17cafca/humanomni/model/__init__.py" },
+    { "shot": "04-consumer-chain.png" },
+
+    { "command": "grep -n -e whisper -e audio_tower_name R1-Omni-17cafca/humanomni/model/encoder.py" },
+    { "shot": "05-audio-selection.png" },
+
+    { "command": "sed -n '176,198p' R1-Omni-17cafca/humanomni/model/encoder.py" },
+    { "shot": "06-audio-load-model.png" },
+
+    { "command": "ls -l /artifacts/whisper-redirected /artifacts/whisper-trusted" },
+    { "shot": "07-whisper-dirs.png" },
+
+    { "command": "python run_repro.py redirected" },
+    { "wait": 20000 },
+    { "shot": "08-redirected-loaded.png" },
+
+    { "command": "python run_repro.py trusted" },
+    { "wait": 20000 },
+    { "shot": "09-trusted-control.png" },
+
+    { "command": "sha256sum -c work/SHA256SUMS.txt" },
+    { "shot": "10-hashes.png" }
+  ]
+}

@@ -1,0 +1,99 @@
+﻿{
+  "shell": "powershell",
+  "workingDir": "%TEMP%\\poc-work\\colossalai-deser",
+  "windowWidth": 1900,
+  "windowHeight": 1000,
+  "settleMs": 1600,
+  "initCommands": [
+    "docker rm -f cai-deser-lab",
+    "docker run -d --name cai-deser-lab colossalai-deser-poc sleep infinity"
+  ],
+  "steps": [
+    { "wait": 6000 },
+    { "command": "cls" },
+    { "command": "docker exec cai-deser-lab python -V" },
+    { "wait": 1500 },
+    { "command": "docker exec cai-deser-lab python -c \"import torch; print(torch.__version__)\"" },
+    { "wait": 20000 },
+    { "command": "docker exec cai-deser-lab python -c \"import safetensors; print(safetensors.__version__)\"" },
+    { "wait": 8000 },
+    { "command": "docker exec cai-deser-lab python -c \"from torch.distributed.distributed_c10d import _unpickler; print(_unpickler)\"" },
+    { "wait": 20000 },
+    { "shot": "01-runtime.png" },
+
+    { "command": "cls" },
+    { "command": "docker exec cai-deser-lab cat PINNED_COMMIT.txt" },
+    { "wait": 2000 },
+    { "shot": "02-pinned-commit.png" },
+
+    { "command": "cls" },
+    { "command": "docker exec cai-deser-lab grep -n \"non_tensor_keys\\|_cast_to_object\\|_unpickler\" repo/colossalai/utils/safetensors.py" },
+    { "command": "docker exec cai-deser-lab sed -n 35,38p repo/colossalai/utils/safetensors.py" },
+    { "command": "docker exec cai-deser-lab sed -n 96,100p repo/colossalai/utils/safetensors.py" },
+    { "command": "docker exec cai-deser-lab sed -n 200,205p repo/colossalai/utils/safetensors.py" },
+    { "wait": 2500 },
+    { "shot": "03-sink-code.png" },
+
+    { "command": "cls" },
+    { "command": "docker exec cai-deser-lab grep -rn \"load_flat(\" --include=*.py repo/colossalai" },
+    { "command": "docker exec cai-deser-lab sed -n 174,183p repo/colossalai/checkpoint_io/general_checkpoint_io.py" },
+    { "wait": 2500 },
+    { "shot": "04-loader-callers.png" },
+
+    { "command": "cls" },
+    { "command": "docker exec cai-deser-lab python make_poc.py" },
+    { "wait": 25000 },
+    { "shot": "05-make-poc.png" },
+
+    { "command": "cls" },
+    { "command": "docker exec cai-deser-lab python outer_parser_control.py artifacts/pos/optimizer.safetensors" },
+    { "wait": 25000 },
+    { "shot": "06-artifact-and-outer-parser.png" },
+
+    { "command": "cls" },
+    { "command": "docker exec cai-deser-lab ls PWNED.txt" },
+    { "wait": 1500 },
+    { "shot": "07-marker-absent.png" },
+
+    { "command": "cls" },
+    { "command": "docker exec cai-deser-lab python run_load.py artifacts/pos/optimizer.safetensors" },
+    { "wait": 30000 },
+    { "shot": "08-positive-run.png" },
+
+    { "command": "docker exec cai-deser-lab ls -la PWNED.txt" },
+    { "wait": 1500 },
+    { "shot": "09-marker-present.png" },
+
+    { "command": "docker exec cai-deser-lab cat PWNED.txt" },
+    { "wait": 1500 },
+    { "shot": "10-marker-content.png" },
+
+    { "command": "cls" },
+    { "command": "docker exec cai-deser-lab rm -f PWNED.txt" },
+    { "wait": 1200 },
+    { "command": "docker exec cai-deser-lab python run_load.py artifacts/neg/optimizer.safetensors" },
+    { "wait": 30000 },
+    { "command": "docker exec cai-deser-lab ls PWNED.txt" },
+    { "wait": 1500 },
+    { "shot": "11-negative-no-effect.png" },
+
+    { "command": "cls" },
+    { "command": "docker exec cai-deser-lab python probe_flat.py artifacts/missing/optimizer.safetensors" },
+    { "wait": 30000 },
+    { "shot": "12-missing-condition.png" },
+
+    { "command": "cls" },
+    { "command": "docker exec cai-deser-lab cat SHA256SUMS.txt" },
+    { "wait": 1500 },
+    { "shot": "13-sha256.png" },
+
+    { "command": "cls" },
+    { "command": "history" },
+    { "wait": 2500 },
+    { "shot": "14-command-history.png" },
+
+    { "command": "docker rm -f cai-deser-lab" },
+    { "wait": 3000 }
+  ]
+}
+
